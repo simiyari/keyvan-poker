@@ -9,37 +9,35 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.1/jspdf.plugin.autotable.min.js"></script>
 <style>
 :root{
---bg:#0d1117;--bg2:#161b22;--bg3:#1c2333;--bg4:#252d3a;
---green:#22c55e;--green2:#16a34a;--green-bg:rgba(34,197,94,.12);
---red:#ef4444;--red2:#dc2626;--red-bg:rgba(239,68,68,.12);
+--bg:#0b0f14;--bg2:#131a24;--bg3:#1a2332;--bg4:#243042;
+--felt:#1e5c3a;--felt2:#17472d;--felt3:#2a7a4e;--felt-light:rgba(30,92,58,.15);
+--green:#3a9d5e;--green2:#2d8049;--green-bg:rgba(58,157,94,.12);
+--gold:#d4a332;--gold2:#b8892a;--gold-bg:rgba(212,163,50,.12);
+--red:#c0392b;--red2:#a93226;--red-bg:rgba(192,57,43,.12);
 --blue:#3b82f6;--blue-bg:rgba(59,130,246,.12);
---yellow:#f59e0b;--yellow-bg:rgba(245,158,11,.12);
---purple:#a855f7;
---text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
---border:#2d3748;--radius:14px;--radius2:10px;
---shadow:0 4px 20px rgba(0,0,0,.3);
+--purple:#8e6cbf;
+--text:#dce4ee;--text2:#8a9bb5;--text3:#5a6d85;
+--border:#253344;--radius:14px;--radius2:10px;
+--shadow:0 4px 20px rgba(0,0,0,.4);
+--card-bg:linear-gradient(135deg,#131a24,#1a2332);
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{font-family:'Segoe UI',Tahoma,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;padding-bottom:80px}
 input,button,select,textarea{font-family:inherit;font-size:inherit}
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:4px}
 
-/* Navigation */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);display:flex;z-index:1000;padding:6px 0 env(safe-area-inset-bottom,8px)}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(180deg,#131a24,#0e1319);border-top:1px solid var(--border);display:flex;z-index:1000;padding:6px 0 env(safe-area-inset-bottom,8px)}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:8px 4px;cursor:pointer;color:var(--text3);transition:.2s;gap:4px;font-size:10px;user-select:none}
-.nav-item.active{color:var(--green)}
+.nav-item.active{color:var(--gold)}
 .nav-item svg{width:22px;height:22px;transition:.2s}
 .nav-item.active svg{transform:scale(1.1)}
 .nav-item:active{transform:scale(.95)}
 
-/* Pages */
 .page{display:none;padding:16px;padding-bottom:24px;animation:fadeIn .3s}
 .page.active{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-@keyframes slideDown{from{transform:translateY(0)}to{transform:translateY(100%)}}
 
-/* Sub Pages */
 .sub-page{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);z-index:900;overflow-y:auto;padding:16px;padding-bottom:90px;animation:slideUp .3s}
 .sub-page.active{display:block}
 .sub-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding:8px 0}
@@ -47,55 +45,46 @@ input,button,select,textarea{font-family:inherit;font-size:inherit}
 .btn-back{background:var(--bg3);border:none;color:var(--text);width:38px;height:38px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .btn-back:active{transform:scale(.9)}
 
-/* Header */
 .app-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding:4px 0}
 .app-header h1{font-size:20px;display:flex;align-items:center;gap:8px}
 .app-header h1 span{font-size:24px}
 
-/* Widgets */
 .widget{background:var(--bg2);border-radius:var(--radius);padding:16px;margin-bottom:14px;border:1px solid var(--border);transition:.2s}
 .widget-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .widget-title{font-size:14px;color:var(--text2);display:flex;align-items:center;gap:6px}
-.widget-action{color:var(--blue);font-size:12px;cursor:pointer;background:none;border:none}
-.widget.game-active{border-color:var(--green);background:linear-gradient(135deg,rgba(34,197,94,.08),var(--bg2))}
+.widget-action{color:var(--gold);font-size:12px;cursor:pointer;background:none;border:none}
+.widget.game-active{border-color:var(--felt3);background:linear-gradient(135deg,rgba(30,92,58,.18),var(--bg2))}
 
-/* Cards */
 .card{background:var(--bg3);border-radius:var(--radius2);padding:14px;margin-bottom:10px;border:1px solid transparent;transition:.2s;cursor:pointer}
 .card:active{transform:scale(.98);border-color:var(--border)}
-.card.dimmed{opacity:.5;pointer-events:none}
-.card.win{border-right:3px solid var(--green)}
-.card.lose{border-right:3px solid var(--red)}
-.card.even{border-right:3px solid var(--text3)}
 
-/* Buttons */
 .btn{padding:12px 24px;border-radius:var(--radius2);border:none;cursor:pointer;font-size:14px;font-weight:600;transition:.2s;display:inline-flex;align-items:center;justify-content:center;gap:8px}
 .btn:active{transform:scale(.96)}
-.btn-primary{background:var(--green);color:#000}
-.btn-primary:hover{background:var(--green2)}
+.btn-primary{background:var(--felt);color:#fff}
+.btn-primary:hover{background:var(--felt2)}
+.btn-gold{background:var(--gold);color:#1a1a1a}
+.btn-gold:hover{background:var(--gold2)}
 .btn-danger{background:var(--red);color:#fff}
+.btn-danger:hover{background:var(--red2)}
 .btn-secondary{background:var(--bg4);color:var(--text)}
 .btn-outline{background:transparent;border:1px solid var(--border);color:var(--text)}
 .btn-sm{padding:8px 16px;font-size:12px;border-radius:8px}
 .btn-block{width:100%;display:flex}
-.btn-icon{width:42px;height:42px;padding:0;border-radius:50%}
 .btn-group{display:flex;gap:8px;flex-wrap:wrap}
 
-/* Inputs */
 .form-group{margin-bottom:16px}
 .form-label{display:block;font-size:13px;color:var(--text2);margin-bottom:6px}
 .form-input{width:100%;padding:12px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);color:var(--text);font-size:14px;outline:none;transition:.2s}
-.form-input:focus{border-color:var(--green)}
+.form-input:focus{border-color:var(--felt3)}
 .form-input::placeholder{color:var(--text3)}
 textarea.form-input{resize:vertical;min-height:80px}
 
-/* Modal */
-.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:1100;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.75);z-index:1100;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
 .modal-overlay.active{display:flex}
 .modal{background:var(--bg2);border-radius:20px 20px 0 0;padding:24px;width:100%;max-width:500px;max-height:85vh;overflow-y:auto;animation:slideUp .3s;border:1px solid var(--border);border-bottom:none}
 .modal-handle{width:40px;height:4px;background:var(--bg4);border-radius:2px;margin:0 auto 16px}
 .modal h3{margin-bottom:16px;font-size:18px}
 
-/* Stats */
 .stat-row{display:flex;gap:10px;margin-bottom:10px}
 .stat-box{flex:1;background:var(--bg3);border-radius:var(--radius2);padding:12px;text-align:center}
 .stat-value{font-size:20px;font-weight:700;margin-bottom:4px}
@@ -103,12 +92,11 @@ textarea.form-input{resize:vertical;min-height:80px}
 .stat-value.green{color:var(--green)}
 .stat-value.red{color:var(--red)}
 .stat-value.blue{color:var(--blue)}
-.stat-value.yellow{color:var(--yellow)}
+.stat-value.gold{color:var(--gold)}
 
-/* Player Card Table */
 .player-card{display:flex;align-items:center;gap:12px;padding:14px;background:var(--bg3);border-radius:var(--radius2);margin-bottom:8px;transition:.2s;cursor:pointer;border:1px solid transparent}
 .player-card:active{border-color:var(--border);transform:scale(.98)}
-.player-avatar{width:40px;height:40px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:var(--green);flex-shrink:0}
+.player-avatar{width:40px;height:40px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:var(--gold);flex-shrink:0}
 .player-info{flex:1;min-width:0}
 .player-name{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .player-meta{font-size:11px;color:var(--text3);margin-top:2px}
@@ -117,7 +105,6 @@ textarea.form-input{resize:vertical;min-height:80px}
 .player-amount.red{color:var(--red)}
 .player-amount.gray{color:var(--text3)}
 
-/* Table Player Card */
 .table-player{background:var(--bg3);border-radius:var(--radius2);padding:14px;margin-bottom:8px;border:1px solid transparent;transition:.3s}
 .table-player.cashed-out{opacity:.6}
 .table-player.cashed-out.tp-win{border-right:3px solid var(--green);opacity:.8}
@@ -126,91 +113,85 @@ textarea.form-input{resize:vertical;min-height:80px}
 .tp-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .tp-name{font-weight:600;font-size:15px}
 .tp-badge{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:600}
-.tp-badge.active-badge{background:var(--green-bg);color:var(--green)}
+.tp-badge.active-badge{background:var(--felt-light);color:var(--green)}
 .tp-badge.out-badge{background:var(--bg4);color:var(--text3)}
 .tp-stats{display:flex;gap:16px;font-size:12px;color:var(--text2)}
 .tp-stat span{font-weight:600;color:var(--text)}
 .tp-profit{margin-top:6px;font-size:13px;font-weight:700}
 
-/* Settlement */
 .settlement-item{display:flex;align-items:center;gap:10px;padding:14px;background:var(--bg3);border-radius:var(--radius2);margin-bottom:8px}
-.settlement-arrow{color:var(--yellow);font-size:18px}
-.settlement-amount{margin-right:auto;font-weight:700;color:var(--yellow);font-size:15px;direction:ltr}
+.settlement-arrow{color:var(--gold);font-size:18px}
+.settlement-amount{margin-right:auto;font-weight:700;color:var(--gold);font-size:15px;direction:ltr}
 
-/* Slider */
 .slider-container{margin:16px 0}
 .amount-slider{width:100%;-webkit-appearance:none;height:6px;border-radius:3px;background:var(--bg4);outline:none;transition:.2s}
-.amount-slider::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:var(--green);cursor:pointer;box-shadow:0 2px 8px rgba(34,197,94,.4)}
-.slider-value{text-align:center;font-size:24px;font-weight:700;margin:12px 0;direction:ltr}
+.amount-slider::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:var(--gold);cursor:pointer;box-shadow:0 2px 8px rgba(212,163,50,.4)}
+.slider-value{text-align:center;font-size:24px;font-weight:700;margin:12px 0;direction:ltr;color:var(--gold)}
 
-/* Quick Amount Buttons */
 .quick-amounts{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
 .quick-amt{padding:8px 14px;background:var(--bg4);border:1px solid var(--border);border-radius:20px;color:var(--text);cursor:pointer;font-size:12px;transition:.2s;white-space:nowrap}
-.quick-amt:active,.quick-amt.selected{background:var(--green-bg);border-color:var(--green);color:var(--green)}
+.quick-amt:active,.quick-amt.selected{background:var(--gold-bg);border-color:var(--gold);color:var(--gold)}
 
-/* Search */
 .search-box{position:relative;margin-bottom:16px}
 .search-box input{width:100%;padding:12px 14px 12px 40px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);color:var(--text);font-size:14px;outline:none}
-.search-box input:focus{border-color:var(--green)}
+.search-box input:focus{border-color:var(--felt3)}
 .search-box svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);width:18px;height:18px}
 
-/* Toggle */
 .toggle-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--border)}
 .toggle-row:last-child{border-bottom:none}
 .toggle-label{font-size:14px}
-.toggle-desc{font-size:11px;color:var(--text3);margin-top:2px}
 .toggle{width:48px;height:26px;background:var(--bg4);border-radius:13px;position:relative;cursor:pointer;transition:.3s;flex-shrink:0}
-.toggle.on{background:var(--green)}
+.toggle.on{background:var(--felt)}
 .toggle::after{content:'';position:absolute;width:22px;height:22px;background:#fff;border-radius:50%;top:2px;right:2px;transition:.3s}
 .toggle.on::after{right:24px}
 
-/* Chip/Tag */
 .chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600}
 .chip-green{background:var(--green-bg);color:var(--green)}
 .chip-red{background:var(--red-bg);color:var(--red)}
 .chip-blue{background:var(--blue-bg);color:var(--blue)}
+.chip-gold{background:var(--gold-bg);color:var(--gold)}
+.chip-felt{background:var(--felt-light);color:var(--green)}
 
-/* Timer */
-.timer{font-size:28px;font-weight:700;font-variant-numeric:tabular-nums;direction:ltr;text-align:center;letter-spacing:2px}
+.timer{font-size:28px;font-weight:700;font-variant-numeric:tabular-nums;direction:ltr;text-align:center;letter-spacing:2px;color:var(--gold)}
 
-/* Empty State */
 .empty-state{text-align:center;padding:40px 20px;color:var(--text3)}
-.empty-state svg{width:48px;height:48px;margin-bottom:12px;opacity:.4}
 .empty-state p{margin-bottom:16px}
 
-/* Divider */
 .divider{height:1px;background:var(--border);margin:16px 0}
-
-/* Section Title */
 .section-title{font-size:13px;color:var(--text3);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px}
 
-/* Date Time Widget */
 .datetime-widget{text-align:center;padding:20px}
-.datetime-time{font-size:42px;font-weight:700;direction:ltr;font-variant-numeric:tabular-nums}
+.datetime-time{font-size:42px;font-weight:700;direction:ltr;font-variant-numeric:tabular-nums;color:var(--gold)}
 .datetime-date{font-size:14px;color:var(--text2);margin-top:4px}
 
-/* Chart Container */
 .chart-container{position:relative;height:250px;margin:16px 0}
 
-/* Settings Item */
 .setting-item{padding:16px;background:var(--bg2);border-radius:var(--radius2);margin-bottom:10px;border:1px solid var(--border)}
 .setting-item h4{margin-bottom:4px;font-size:14px}
 .setting-item p{font-size:12px;color:var(--text3)}
 
-/* Info Box */
 .info-box{background:var(--bg3);border-radius:var(--radius2);padding:12px;margin-bottom:12px}
 .info-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px}
 .info-row .label{color:var(--text3)}
 .info-row .value{font-weight:600;direction:ltr}
 
-/* Notification Badge */
 .live-dot{width:8px;height:8px;background:var(--green);border-radius:50%;display:inline-block;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
-/* Number formatting */
 .num{direction:ltr;display:inline-block;font-variant-numeric:tabular-nums}
 
-/* Responsive */
+.selectable-player{display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg3);border-radius:var(--radius2);margin-bottom:6px;cursor:pointer;border:2px solid transparent;transition:.2s}
+.selectable-player.selected{border-color:var(--felt3);background:var(--felt-light)}
+.selectable-player:active{transform:scale(.98)}
+.sp-check{width:24px;height:24px;border-radius:50%;border:2px solid var(--text3);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.2s;font-size:14px}
+.selectable-player.selected .sp-check{border-color:var(--green);background:var(--green);color:#fff}
+.sp-name{flex:1;font-size:14px;font-weight:500}
+.sp-buyin{font-size:12px;color:var(--text2);direction:ltr}
+
+.felt-banner{background:linear-gradient(135deg,var(--felt2),var(--felt));border-radius:var(--radius);padding:20px;margin-bottom:14px;border:1px solid rgba(42,122,78,.3);text-align:center;color:#fff}
+.felt-banner h2{font-size:18px;margin-bottom:4px}
+.felt-banner p{font-size:13px;opacity:.85}
+
 @media(min-width:500px){
   .page,.sub-page{max-width:500px;margin:0 auto}
   .modal{max-width:500px}
@@ -219,83 +200,51 @@ textarea.form-input{resize:vertical;min-height:80px}
 </head>
 <body>
 
-<!-- ======================== PAGES ======================== -->
-
-<!-- Dashboard Page -->
 <div id="page-dashboard" class="page active">
-  <div class="app-header">
-    <h1><span>🎰</span> پوکر منیجر</h1>
-  </div>
+  <div class="app-header"><h1><span>🎰</span> پوکر منیجر</h1></div>
   <div id="dashboard-content"></div>
 </div>
 
-<!-- Table Page -->
 <div id="page-table" class="page">
   <div id="table-content"></div>
 </div>
 
-<!-- Players Page -->
 <div id="page-players" class="page">
-  <div class="app-header">
-    <h1>👥 بازیکنان</h1>
-    <button class="btn btn-sm btn-primary" onclick="openAddPlayerModal()">+ جدید</button>
-  </div>
-  <div class="search-box">
-    <input type="text" id="player-search" placeholder="جستجوی بازیکن..." oninput="renderPlayersPage()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-  </div>
+  <div class="app-header"><h1>👥 بازیکنان</h1><button class="btn btn-sm btn-primary" onclick="openAddPlayerModal()">+ جدید</button></div>
+  <div class="search-box"><input type="text" id="player-search" placeholder="جستجوی بازیکن..." oninput="renderPlayersPage()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
   <div id="players-list"></div>
 </div>
 
-<!-- History Page -->
 <div id="page-history" class="page">
-  <div class="app-header">
-    <h1>📊 آمار و تاریخچه</h1>
-  </div>
+  <div class="app-header"><h1>📊 آمار و تاریخچه</h1></div>
   <div id="history-content"></div>
 </div>
 
-<!-- Settings Page -->
 <div id="page-settings" class="page">
-  <div class="app-header">
-    <h1>⚙️ تنظیمات</h1>
-  </div>
+  <div class="app-header"><h1>⚙️ تنظیمات</h1></div>
   <div id="settings-content"></div>
 </div>
 
-<!-- ======================== SUB-PAGES ======================== -->
-
 <div id="sub-player-profile" class="sub-page">
-  <div class="sub-header">
-    <button class="btn-back" onclick="closeSubPage('sub-player-profile')">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
-    </button>
-    <h2 id="profile-title">پروفایل بازیکن</h2>
-  </div>
+  <div class="sub-header"><button class="btn-back" onclick="closeSubPage('sub-player-profile')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></button><h2 id="profile-title">پروفایل بازیکن</h2></div>
   <div id="profile-content"></div>
 </div>
 
 <div id="sub-game-detail" class="sub-page">
-  <div class="sub-header">
-    <button class="btn-back" onclick="closeSubPage('sub-game-detail')">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
-    </button>
-    <h2 id="game-detail-title">جزئیات بازی</h2>
-  </div>
+  <div class="sub-header"><button class="btn-back" onclick="closeSubPage('sub-game-detail')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></button><h2 id="game-detail-title">جزئیات بازی</h2></div>
   <div id="game-detail-content"></div>
 </div>
 
 <div id="sub-settlement" class="sub-page">
-  <div class="sub-header">
-    <button class="btn-back" onclick="closeSubPage('sub-settlement')">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
-    </button>
-    <h2>تسویه حساب</h2>
-  </div>
+  <div class="sub-header"><button class="btn-back" onclick="closeSubPage('sub-settlement')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></button><h2>تسویه حساب</h2></div>
   <div id="settlement-content"></div>
 </div>
 
-<!-- ======================== MODAL ======================== -->
+<div id="sub-create-table" class="sub-page">
+  <div class="sub-header"><button class="btn-back" onclick="closeSubPage('sub-create-table')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></button><h2>ایجاد میز جدید</h2></div>
+  <div id="create-table-content"></div>
+</div>
+
 <div class="modal-overlay" id="modal-overlay" onclick="handleModalOverlayClick(event)">
   <div class="modal" id="modal-body" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
@@ -303,225 +252,51 @@ textarea.form-input{resize:vertical;min-height:80px}
   </div>
 </div>
 
-<!-- ======================== BOTTOM NAV ======================== -->
 <nav class="bottom-nav">
-  <div class="nav-item active" onclick="switchPage('dashboard')" data-page="dashboard">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
-    <span>خانه</span>
-  </div>
-  <div class="nav-item" onclick="switchPage('table')" data-page="table">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 7V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v3"/></svg>
-    <span>میز</span>
-  </div>
-  <div class="nav-item" onclick="switchPage('players')" data-page="players">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-    <span>بازیکنان</span>
-  </div>
-  <div class="nav-item" onclick="switchPage('history')" data-page="history">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-    <span>آمار</span>
-  </div>
-  <div class="nav-item" onclick="switchPage('settings')" data-page="settings">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-    <span>تنظیمات</span>
-  </div>
+  <div class="nav-item active" onclick="switchPage('dashboard')" data-page="dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg><span>خانه</span></div>
+  <div class="nav-item" onclick="switchPage('table')" data-page="table"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 7V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v3"/></svg><span>میز</span></div>
+  <div class="nav-item" onclick="switchPage('players')" data-page="players"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>بازیکنان</span></div>
+  <div class="nav-item" onclick="switchPage('history')" data-page="history"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span>آمار</span></div>
+  <div class="nav-item" onclick="switchPage('settings')" data-page="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg><span>تنظیمات</span></div>
 </nav>
 
 <script>
-// ======================= DATA LAYER =======================
-const DEFAULT_DATA = {
-  players: [],
-  games: [],
-  activeGameId: null,
-  notes: '',
-  settings: {
-    currency: 'تومان',
-    defaultBuyIn: 1000000,
-    sliderMax: 20000000,
-    sliderStep: 100000,
-    quickAmounts: [500000, 1000000, 2000000, 5000000, 10000000, 20000000],
-    widgets: { topPlayers: true, statsSummary: true, notes: true, dateTime: true }
-  }
-};
+const DEFAULT_DATA={players:[],games:[],activeGameId:null,notes:'',settings:{currency:'تومان',defaultBuyIn:1000000,sliderMax:20000000,sliderStep:100000,quickAmounts:[500000,1000000,2000000,5000000,10000000,20000000],widgets:{topPlayers:true,statsSummary:true,notes:true,dateTime:true}}};
+let data={};
+let timerInterval=null,clockInterval=null;
+let createTableState={location:'',defaultBuyIn:1000000,selectedPlayers:{}};
 
-let data = {};
-let timerInterval = null;
-let clockInterval = null;
+function loadData(){try{const s=localStorage.getItem('pokerManagerData');if(s){data=JSON.parse(s);if(!data.settings)data.settings={...DEFAULT_DATA.settings};if(!data.settings.widgets)data.settings.widgets={...DEFAULT_DATA.settings.widgets};if(!data.settings.quickAmounts)data.settings.quickAmounts=[...DEFAULT_DATA.settings.quickAmounts];if(!data.players)data.players=[];if(!data.games)data.games=[];}else{data=JSON.parse(JSON.stringify(DEFAULT_DATA));}}catch(e){data=JSON.parse(JSON.stringify(DEFAULT_DATA));}}
+function saveData(){localStorage.setItem('pokerManagerData',JSON.stringify(data));}
+function genId(){return Date.now().toString(36)+Math.random().toString(36).substr(2,5);}
 
-function loadData() {
-  try {
-    const saved = localStorage.getItem('pokerManagerData');
-    if (saved) {
-      data = JSON.parse(saved);
-      // merge defaults for missing fields
-      if (!data.settings) data.settings = {...DEFAULT_DATA.settings};
-      if (!data.settings.widgets) data.settings.widgets = {...DEFAULT_DATA.settings.widgets};
-      if (!data.settings.quickAmounts) data.settings.quickAmounts = [...DEFAULT_DATA.settings.quickAmounts];
-      if (!data.players) data.players = [];
-      if (!data.games) data.games = [];
-    } else {
-      data = JSON.parse(JSON.stringify(DEFAULT_DATA));
-    }
-  } catch(e) {
-    data = JSON.parse(JSON.stringify(DEFAULT_DATA));
-  }
-}
+function fmt(n){if(n===null||n===undefined)return'0';return Number(n).toLocaleString('en-US');}
+function fmtSign(n){if(n>0)return'+'+fmt(n);if(n<0)return'-'+fmt(Math.abs(n));return'0';}
+function getCurrency(){return data.settings.currency||'تومان';}
+function getTimeStr(ts){if(!ts)return'--:--';const d=new Date(ts);return d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});}
+function getDateStr(ts){if(!ts)return'';const d=new Date(ts);try{return d.toLocaleDateString('fa-IR',{year:'numeric',month:'long',day:'numeric'});}catch(e){return d.toLocaleDateString();}}
+function getDateStrShort(ts){if(!ts)return'';const d=new Date(ts);try{return d.toLocaleDateString('fa-IR',{month:'short',day:'numeric'});}catch(e){return d.toLocaleDateString();}}
+function getDateStrEn(ts){if(!ts)return'';const d=new Date(ts);return d.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'});}
+function elapsedStr(st){if(!st)return'00:00:00';const d=Math.floor((Date.now()-st)/1000);const h=Math.floor(d/3600),m=Math.floor((d%3600)/60),s=d%60;return`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;}
+function durationStr(s,e){if(!s||!e)return'--';const d=Math.floor((e-s)/1000);const h=Math.floor(d/3600),m=Math.floor((d%3600)/60);return`${h} ساعت و ${m} دقیقه`;}
+function persianToFinglish(t){if(!t)return'';if(!/[\u0600-\u06FF\u0750-\u077F]/.test(t))return t;const m={'ا':'a','آ':'a','ب':'b','پ':'p','ت':'t','ث':'s','ج':'j','چ':'ch','ح':'h','خ':'kh','د':'d','ذ':'z','ر':'r','ز':'z','ژ':'zh','س':'s','ش':'sh','ص':'s','ض':'z','ط':'t','ظ':'z','ع':'a','غ':'gh','ف':'f','ق':'gh','ک':'k','ك':'k','گ':'g','ل':'l','م':'m','ن':'n','و':'v','ه':'h','ی':'y','ي':'y','ئ':'y','ة':'h','ء':'','ِ':'e','َ':'a','ُ':'o'};let r='';for(let i=0;i<t.length;i++){const c=t[i];r+=m[c]!==undefined?m[c]:c;}return r.split(' ').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');}
+function getActiveGame(){if(!data.activeGameId)return null;return data.games.find(g=>g.id===data.activeGameId)||null;}
+function getPlayerById(id){return data.players.find(p=>p.id===id)||null;}
+function getPlayerStats(pid){let tg=0,w=0,l=0,dr=0,tb=0,tc=0;const h=[];data.games.filter(g=>g.status==='closed').forEach(g=>{const gp=g.players.find(p=>p.playerId===pid);if(gp&&gp.cashedOut){tg++;const b=gp.buyIns.reduce((s,x)=>s+x.amount,0);const c=gp.cashOutAmount||0;const pr=c-b;tb+=b;tc+=c;if(pr>0)w++;else if(pr<0)l++;else dr++;h.push({gameId:g.id,date:g.startTime,buyIn:b,cashOut:c,profit:pr});}});return{totalGames:tg,wins:w,losses:l,draws:dr,totalBuyIn:tb,totalCashOut:tc,totalProfit:tc-tb,history:h};}
 
-function saveData() {
-  localStorage.setItem('pokerManagerData', JSON.stringify(data));
-}
+function switchPage(p){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById('page-'+p).classList.add('active');document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.querySelector(`.nav-item[data-page="${p}"]`).classList.add('active');document.querySelectorAll('.sub-page').forEach(s=>s.classList.remove('active'));renderPage(p);}
+function renderPage(p){switch(p){case'dashboard':renderDashboard();break;case'table':renderTablePage();break;case'players':renderPlayersPage();break;case'history':renderHistoryPage();break;case'settings':renderSettingsPage();break;}}
+function openSubPage(id){document.getElementById(id).classList.add('active');}
+function closeSubPage(id){document.getElementById(id).classList.remove('active');}
+function showModal(h){document.getElementById('modal-content').innerHTML=h;document.getElementById('modal-overlay').classList.add('active');}
+function hideModal(){document.getElementById('modal-overlay').classList.remove('active');}
+function handleModalOverlayClick(e){if(e.target===e.currentTarget)hideModal();}
 
-function genId() { return Date.now().toString(36) + Math.random().toString(36).substr(2, 5); }
-
-// ======================= UTILS =======================
-function fmt(n) {
-  if (n === null || n === undefined) return '0';
-  return Number(n).toLocaleString('en-US');
-}
-
-function fmtSign(n) {
-  if (n > 0) return '+' + fmt(n);
-  if (n < 0) return '-' + fmt(Math.abs(n));
-  return '0';
-}
-
-function getCurrency() { return data.settings.currency || 'تومان'; }
-
-function getTimeStr(ts) {
-  if (!ts) return '--:--';
-  const d = new Date(ts);
-  return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
-}
-
-function getDateStr(ts) {
-  if (!ts) return '';
-  const d = new Date(ts);
-  try {
-    return d.toLocaleDateString('fa-IR', { year: 'numeric', month: 'long', day: 'numeric' });
-  } catch(e) {
-    return d.toLocaleDateString();
-  }
-}
-
-function getDateStrShort(ts) {
-  if (!ts) return '';
-  const d = new Date(ts);
-  try {
-    return d.toLocaleDateString('fa-IR', { month: 'short', day: 'numeric' });
-  } catch(e) {
-    return d.toLocaleDateString();
-  }
-}
-
-function getDateStrEn(ts) {
-  if (!ts) return '';
-  const d = new Date(ts);
-  return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-}
-
-function elapsedStr(startTs) {
-  if (!startTs) return '00:00:00';
-  const diff = Math.floor((Date.now() - startTs) / 1000);
-  const h = Math.floor(diff / 3600);
-  const m = Math.floor((diff % 3600) / 60);
-  const s = diff % 60;
-  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-}
-
-function durationStr(startTs, endTs) {
-  if (!startTs || !endTs) return '--';
-  const diff = Math.floor((endTs - startTs) / 1000);
-  const h = Math.floor(diff / 3600);
-  const m = Math.floor((diff % 3600) / 60);
-  return `${h} ساعت و ${m} دقیقه`;
-}
-
-function persianToFinglish(text) {
-  if (!text) return '';
-  if (!/[\u0600-\u06FF\u0750-\u077F]/.test(text)) return text;
-  const map = {'ا':'a','آ':'a','ب':'b','پ':'p','ت':'t','ث':'s','ج':'j','چ':'ch','ح':'h','خ':'kh','د':'d','ذ':'z','ر':'r','ز':'z','ژ':'zh','س':'s','ش':'sh','ص':'s','ض':'z','ط':'t','ظ':'z','ع':'a','غ':'gh','ف':'f','ق':'gh','ک':'k','ك':'k','گ':'g','ل':'l','م':'m','ن':'n','و':'v','ه':'h','ی':'y','ي':'y','ئ':'y','ة':'h','ء':'','ِ':'e','َ':'a','ُ':'o'};
-  let result = '';
-  for (let i = 0; i < text.length; i++) {
-    const c = text[i];
-    if (map[c] !== undefined) result += map[c];
-    else result += c;
-  }
-  // Capitalize first letter of each word
-  return result.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-}
-
-function getActiveGame() {
-  if (!data.activeGameId) return null;
-  return data.games.find(g => g.id === data.activeGameId) || null;
-}
-
-function getPlayerById(id) {
-  return data.players.find(p => p.id === id) || null;
-}
-
-function getPlayerStats(playerId) {
-  let totalGames = 0, wins = 0, losses = 0, draws = 0, totalBuyIn = 0, totalCashOut = 0;
-  const history = [];
-  data.games.filter(g => g.status === 'closed').forEach(g => {
-    const gp = g.players.find(p => p.playerId === playerId);
-    if (gp && gp.cashedOut) {
-      totalGames++;
-      const buyIn = gp.buyIns.reduce((s, b) => s + b.amount, 0);
-      const cashOut = gp.cashOutAmount || 0;
-      const profit = cashOut - buyIn;
-      totalBuyIn += buyIn;
-      totalCashOut += cashOut;
-      if (profit > 0) wins++;
-      else if (profit < 0) losses++;
-      else draws++;
-      history.push({ gameId: g.id, date: g.startTime, buyIn, cashOut, profit });
-    }
-  });
-  return { totalGames, wins, losses, draws, totalBuyIn, totalCashOut, totalProfit: totalCashOut - totalBuyIn, history };
-}
-
-// ======================= PAGE NAVIGATION =======================
-function switchPage(page) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + page).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.querySelector(`.nav-item[data-page="${page}"]`).classList.add('active');
-  // Close any open sub-pages
-  document.querySelectorAll('.sub-page').forEach(s => s.classList.remove('active'));
-  renderPage(page);
-}
-
-function renderPage(page) {
-  switch(page) {
-    case 'dashboard': renderDashboard(); break;
-    case 'table': renderTablePage(); break;
-    case 'players': renderPlayersPage(); break;
-    case 'history': renderHistoryPage(); break;
-    case 'settings': renderSettingsPage(); break;
-  }
-}
-
-function openSubPage(id) { document.getElementById(id).classList.add('active'); }
-function closeSubPage(id) { document.getElementById(id).classList.remove('active'); }
-
-// ======================= MODAL =======================
-function showModal(html) {
-  document.getElementById('modal-content').innerHTML = html;
-  document.getElementById('modal-overlay').classList.add('active');
-}
-function hideModal() { document.getElementById('modal-overlay').classList.remove('active'); }
-function handleModalOverlayClick(e) { if (e.target === e.currentTarget) hideModal(); }
-
-// ======================= DASHBOARD =======================
-function renderDashboard() {
-  const el = document.getElementById('dashboard-content');
-  let html = '';
-  const game = getActiveGame();
-  
-  // Table Status Widget (always shown)
-  if (game) {
-    html += `<div class="widget game-active" onclick="switchPage('table')" style="cursor:pointer">
-      <div class="widget-header"><span class="widget-title"><span class="live-dot"></span> وضعیت میز</span><span class="chip chip-green">فعال</span></div>
+function renderDashboard(){
+  const el=document.getElementById('dashboard-content');let html='';const game=getActiveGame();
+  if(game){
+    html+=`<div class="widget game-active" onclick="switchPage('table')" style="cursor:pointer">
+      <div class="widget-header"><span class="widget-title"><span class="live-dot"></span> وضعیت میز</span><span class="chip chip-felt">فعال</span></div>
       <div style="font-size:16px;font-weight:700;margin-bottom:8px">🎮 بازی در جریان است</div>
       <div style="display:flex;gap:16px;font-size:13px;color:var(--text2)">
         <span>👥 ${game.players.length} بازیکن</span>
@@ -529,1138 +304,387 @@ function renderDashboard() {
       </div>
       <div class="timer" id="dash-timer" style="margin-top:12px;font-size:24px">${elapsedStr(game.startTime)}</div>
     </div>`;
-  } else {
-    html += `<div class="widget" style="text-align:center;padding:24px">
-      <div class="widget-header"><span class="widget-title">🎯 وضعیت میز</span></div>
-      <p style="color:var(--text3);margin-bottom:16px;font-size:13px">هیچ بازی فعالی وجود ندارد</p>
-      <button class="btn btn-primary" onclick="openCreateTableModal()">+ ایجاد میز جدید</button>
+  }else{
+    html+=`<div class="felt-banner">
+      <div style="font-size:48px;margin-bottom:8px">🃏</div>
+      <h2>میز آماده است</h2>
+      <p style="margin-bottom:16px">برای شروع بازی یک میز جدید ایجاد کنید</p>
+      <button class="btn btn-gold" onclick="openCreateTablePage()" style="padding:14px 32px;font-size:15px">+ ایجاد میز جدید</button>
     </div>`;
   }
-
-  // Date Time Widget
-  if (data.settings.widgets.dateTime) {
-    html += `<div class="widget datetime-widget">
+  if(data.settings.widgets.dateTime){
+    html+=`<div class="widget datetime-widget">
       <div class="widget-title" style="justify-content:center;margin-bottom:8px">📅 تاریخ و زمان</div>
       <div class="datetime-time" id="dash-clock">${new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false})}</div>
       <div class="datetime-date">${getDateStr(Date.now())}</div>
     </div>`;
   }
-
-  // Stats Summary Widget
-  if (data.settings.widgets.statsSummary) {
-    const closedGames = data.games.filter(g => g.status === 'closed');
-    const totalMoney = closedGames.reduce((s, g) => s + g.players.reduce((ss, p) => ss + p.buyIns.reduce((sss, b) => sss + b.amount, 0), 0), 0);
-    let biggestWin = 0;
-    closedGames.forEach(g => g.players.forEach(p => {
-      if (p.cashedOut) {
-        const profit = (p.cashOutAmount||0) - p.buyIns.reduce((s,b)=>s+b.amount,0);
-        if (profit > biggestWin) biggestWin = profit;
-      }
-    }));
-    html += `<div class="widget">
+  if(data.settings.widgets.statsSummary){
+    const cg=data.games.filter(g=>g.status==='closed');
+    const tm=cg.reduce((s,g)=>s+g.players.reduce((ss,p)=>ss+p.buyIns.reduce((sss,b)=>sss+b.amount,0),0),0);
+    let bw=0;cg.forEach(g=>g.players.forEach(p=>{if(p.cashedOut){const pr=(p.cashOutAmount||0)-p.buyIns.reduce((s,b)=>s+b.amount,0);if(pr>bw)bw=pr;}}));
+    html+=`<div class="widget">
       <div class="widget-header"><span class="widget-title">📈 خلاصه آمار</span></div>
-      <div class="stat-row">
-        <div class="stat-box"><div class="stat-value blue">${fmt(closedGames.length)}</div><div class="stat-label">کل بازی‌ها</div></div>
-        <div class="stat-box"><div class="stat-value yellow">${fmt(data.players.length)}</div><div class="stat-label">بازیکنان</div></div>
-      </div>
-      <div class="stat-row">
-        <div class="stat-box"><div class="stat-value">${fmt(totalMoney)}</div><div class="stat-label">پول در گردش (${getCurrency()})</div></div>
-        <div class="stat-box"><div class="stat-value green">${fmt(biggestWin)}</div><div class="stat-label">بزرگترین برد</div></div>
-      </div>
+      <div class="stat-row"><div class="stat-box"><div class="stat-value blue">${fmt(cg.length)}</div><div class="stat-label">کل بازی‌ها</div></div><div class="stat-box"><div class="stat-value gold">${fmt(data.players.length)}</div><div class="stat-label">بازیکنان</div></div></div>
+      <div class="stat-row"><div class="stat-box"><div class="stat-value">${fmt(tm)}</div><div class="stat-label">پول در گردش (${getCurrency()})</div></div><div class="stat-box"><div class="stat-value green">${fmt(bw)}</div><div class="stat-label">بزرگترین برد</div></div></div>
     </div>`;
   }
-
-  // Top Players Widget
-  if (data.settings.widgets.topPlayers) {
-    const ranked = data.players.map(p => ({...p, stats: getPlayerStats(p.id)})).filter(p => p.stats.totalGames > 0).sort((a,b) => b.stats.totalProfit - a.stats.totalProfit).slice(0, 5);
-    html += `<div class="widget">
-      <div class="widget-header"><span class="widget-title">🏆 برترین بازیکنان</span><button class="widget-action" onclick="switchPage('players')">نمایش همه ←</button></div>`;
-    if (ranked.length === 0) {
-      html += `<p style="text-align:center;color:var(--text3);font-size:13px;padding:16px">هنوز بازی‌ای انجام نشده</p>`;
-    } else {
-      ranked.forEach((p, i) => {
-        const pClass = p.stats.totalProfit > 0 ? 'green' : p.stats.totalProfit < 0 ? 'red' : 'gray';
-        html += `<div class="player-card" onclick="openPlayerProfile('${p.id}')">
-          <div class="player-avatar">${i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)}</div>
-          <div class="player-info"><div class="player-name">${p.name}</div><div class="player-meta">${p.stats.totalGames} بازی · ${p.stats.totalGames>0?Math.round(p.stats.wins/p.stats.totalGames*100):0}% برد</div></div>
-          <div class="player-amount ${pClass}"><span class="num">${fmtSign(p.stats.totalProfit)}</span></div>
-        </div>`;
-      });
-    }
-    html += `</div>`;
+  if(data.settings.widgets.topPlayers){
+    const ranked=data.players.map(p=>({...p,stats:getPlayerStats(p.id)})).filter(p=>p.stats.totalGames>0).sort((a,b)=>b.stats.totalProfit-a.stats.totalProfit).slice(0,5);
+    html+=`<div class="widget"><div class="widget-header"><span class="widget-title">🏆 برترین بازیکنان</span><button class="widget-action" onclick="switchPage('players')">نمایش همه ←</button></div>`;
+    if(!ranked.length){html+=`<p style="text-align:center;color:var(--text3);font-size:13px;padding:16px">هنوز بازی‌ای انجام نشده</p>`;}
+    else{ranked.forEach((p,i)=>{const pc=p.stats.totalProfit>0?'green':p.stats.totalProfit<0?'red':'gray';html+=`<div class="player-card" onclick="openPlayerProfile('${p.id}')"><div class="player-avatar">${i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)}</div><div class="player-info"><div class="player-name">${p.name}</div><div class="player-meta">${p.stats.totalGames} بازی · ${p.stats.totalGames>0?Math.round(p.stats.wins/p.stats.totalGames*100):0}% برد</div></div><div class="player-amount ${pc}"><span class="num">${fmtSign(p.stats.totalProfit)}</span></div></div>`;});}
+    html+=`</div>`;
   }
-
-  // Notes Widget
-  if (data.settings.widgets.notes) {
-    html += `<div class="widget">
-      <div class="widget-header"><span class="widget-title">📝 یادداشت‌ها</span></div>
-      <textarea class="form-input" placeholder="یادداشت‌های خود را اینجا بنویسید..." oninput="data.notes=this.value;saveData()" style="min-height:100px">${data.notes||''}</textarea>
-    </div>`;
+  if(data.settings.widgets.notes){
+    html+=`<div class="widget"><div class="widget-header"><span class="widget-title">📝 یادداشت‌ها</span></div><textarea class="form-input" placeholder="یادداشت‌های خود را اینجا بنویسید..." oninput="data.notes=this.value;saveData()" style="min-height:100px">${data.notes||''}</textarea></div>`;
   }
-
-  el.innerHTML = html;
-  startDashboardTimers();
+  el.innerHTML=html;startDashboardTimers();
 }
+function startDashboardTimers(){if(clockInterval)clearInterval(clockInterval);clockInterval=setInterval(()=>{const c=document.getElementById('dash-clock');if(c)c.textContent=new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});const t=document.getElementById('dash-timer');const g=getActiveGame();if(t&&g)t.textContent=elapsedStr(g.startTime);},1000);}
 
-function startDashboardTimers() {
-  if (clockInterval) clearInterval(clockInterval);
-  clockInterval = setInterval(() => {
-    const clockEl = document.getElementById('dash-clock');
-    if (clockEl) clockEl.textContent = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
-    const timerEl = document.getElementById('dash-timer');
-    const game = getActiveGame();
-    if (timerEl && game) timerEl.textContent = elapsedStr(game.startTime);
-  }, 1000);
-}
-
-// ======================= TABLE PAGE =======================
-function renderTablePage() {
-  const el = document.getElementById('table-content');
-  const game = getActiveGame();
-
-  if (!game) {
-    el.innerHTML = `<div class="empty-state" style="padding-top:60px">
+function renderTablePage(){
+  const el=document.getElementById('table-content');const game=getActiveGame();
+  if(!game){
+    el.innerHTML=`<div class="empty-state" style="padding-top:60px">
       <div style="font-size:64px;margin-bottom:16px">🃏</div>
       <h2 style="margin-bottom:8px;color:var(--text)">میز خالی است</h2>
       <p>برای شروع بازی یک میز جدید ایجاد کنید</p>
-      <button class="btn btn-primary btn-block" onclick="openCreateTableModal()" style="margin-top:16px">+ ایجاد میز جدید</button>
-    </div>`;
-    return;
+      <button class="btn btn-gold btn-block" onclick="openCreateTablePage()" style="margin-top:16px">+ ایجاد میز جدید</button>
+    </div>`;return;
   }
-
-  const allCashedOut = game.players.length > 0 && game.players.every(p => p.cashedOut);
-  const totalBuyIns = game.players.reduce((s, p) => s + p.buyIns.reduce((ss, b) => ss + b.amount, 0), 0);
-  const totalCashOuts = game.players.filter(p => p.cashedOut).reduce((s, p) => s + (p.cashOutAmount || 0), 0);
-  const activePlayers = game.players.filter(p => !p.cashedOut).length;
-
-  let html = `
-    <div class="widget" style="margin-bottom:14px">
+  const totalBI=game.players.reduce((s,p)=>s+p.buyIns.reduce((ss,b)=>ss+b.amount,0),0);
+  const totalCO=game.players.filter(p=>p.cashedOut).reduce((s,p)=>s+(p.cashOutAmount||0),0);
+  const active=game.players.filter(p=>!p.cashedOut).length;
+  const allOut=game.players.length>0&&game.players.every(p=>p.cashedOut);
+  let html=`
+    <div class="widget" style="margin-bottom:14px;border-color:var(--felt3);background:linear-gradient(135deg,rgba(30,92,58,.12),var(--bg2))">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
         <div>
           <div style="font-size:12px;color:var(--text3)">📅 ${getDateStr(game.startTime)}</div>
-          <div style="font-size:12px;color:var(--text3);margin-top:2px">🕐 شروع: <span class="num">${getTimeStr(game.startTime)}</span>${game.location ? ' · 📍 '+game.location : ''}</div>
+          <div style="font-size:12px;color:var(--text3);margin-top:2px">🕐 شروع: <span class="num">${getTimeStr(game.startTime)}</span>${game.location?' · 📍 '+game.location:''}</div>
         </div>
-        <span class="chip chip-green"><span class="live-dot" style="margin-left:4px"></span> در جریان</span>
+        <span class="chip chip-felt"><span class="live-dot" style="margin-left:4px"></span> در جریان</span>
       </div>
       <div class="timer" id="table-timer">${elapsedStr(game.startTime)}</div>
       <div style="display:flex;gap:8px;margin-top:14px">
         <button class="btn btn-danger btn-sm" style="flex:1" onclick="confirmEndGame()">⏹ پایان بازی</button>
       </div>
     </div>
-
     <div class="stat-row">
       <div class="stat-box"><div class="stat-value blue">${game.players.length}</div><div class="stat-label">کل بازیکنان</div></div>
-      <div class="stat-box"><div class="stat-value green">${activePlayers}</div><div class="stat-label">سر میز</div></div>
+      <div class="stat-box"><div class="stat-value green">${active}</div><div class="stat-label">سر میز</div></div>
     </div>
     <div class="stat-row">
-      <div class="stat-box"><div class="stat-value"><span class="num">${fmt(totalBuyIns)}</span></div><div class="stat-label">کل خرید (${getCurrency()})</div></div>
-      <div class="stat-box"><div class="stat-value"><span class="num">${fmt(totalCashOuts)}</span></div><div class="stat-label">کل خروجی</div></div>
+      <div class="stat-box"><div class="stat-value"><span class="num">${fmt(totalBI)}</span></div><div class="stat-label">کل خرید (${getCurrency()})</div></div>
+      <div class="stat-box"><div class="stat-value"><span class="num">${fmt(totalCO)}</span></div><div class="stat-label">کل خروجی</div></div>
     </div>
-
     <div style="display:flex;justify-content:space-between;align-items:center;margin:16px 0 10px">
       <span class="section-title" style="margin:0">بازیکنان سر میز</span>
       <button class="btn btn-sm btn-primary" onclick="openAddToTableModal()">+ افزودن</button>
     </div>`;
-
-  if (game.players.length === 0) {
-    html += `<div class="empty-state"><p>هنوز بازیکنی اضافه نشده</p></div>`;
-  } else {
-    // Show active players first, then cashed out
-    const sorted = [...game.players].sort((a,b) => (a.cashedOut?1:0) - (b.cashedOut?1:0));
-    sorted.forEach(p => {
-      const totalBuy = p.buyIns.reduce((s,b) => s + b.amount, 0);
-      const rebuys = p.buyIns.length - 1;
-      let profitHtml = '';
-      let extraClass = '';
-      if (p.cashedOut) {
-        const profit = (p.cashOutAmount||0) - totalBuy;
-        const pClass = profit > 0 ? 'green' : profit < 0 ? 'red' : '';
-        const tpClass = profit > 0 ? 'tp-win' : profit < 0 ? 'tp-lose' : 'tp-even';
-        extraClass = 'cashed-out ' + tpClass;
-        profitHtml = `<div class="tp-profit" style="color:var(--${profit>0?'green':profit<0?'red':'text3'})">${profit>0?'+':''}${fmt(profit)} ${getCurrency()}</div>`;
-      }
-      html += `<div class="table-player ${extraClass}" onclick="openPlayerActionModal('${p.odId}')">
-        <div class="tp-top">
-          <span class="tp-name">${p.name}</span>
-          <span class="tp-badge ${p.cashedOut?'out-badge':'active-badge'}">${p.cashedOut?'خارج شده':'فعال'}</span>
-        </div>
-        <div class="tp-stats">
-          <span class="tp-stat">خرید: <span class="num">${fmt(totalBuy)}</span></span>
-          <span class="tp-stat">دفعات: <span>${p.buyIns.length}</span></span>
-          ${p.cashedOut?`<span class="tp-stat">خروج: <span class="num">${fmt(p.cashOutAmount)}</span></span>`:''}
-        </div>
-        ${profitHtml}
-      </div>`;
+  if(!game.players.length){html+=`<div class="empty-state"><p>هنوز بازیکنی اضافه نشده</p></div>`;}
+  else{
+    const sorted=[...game.players].sort((a,b)=>(a.cashedOut?1:0)-(b.cashedOut?1:0));
+    sorted.forEach(p=>{
+      const tb=p.buyIns.reduce((s,b)=>s+b.amount,0);let profitHtml='',extraClass='';
+      if(p.cashedOut){const pr=(p.cashOutAmount||0)-tb;const tpC=pr>0?'tp-win':pr<0?'tp-lose':'tp-even';extraClass='cashed-out '+tpC;profitHtml=`<div class="tp-profit" style="color:var(--${pr>0?'green':pr<0?'red':'text3'})">${pr>0?'+':''}${fmt(pr)} ${getCurrency()}</div>`;}
+      html+=`<div class="table-player ${extraClass}" onclick="openPlayerActionModal('${p.odId}')">
+        <div class="tp-top"><span class="tp-name">${p.name}</span><span class="tp-badge ${p.cashedOut?'out-badge':'active-badge'}">${p.cashedOut?'خارج شده':'فعال'}</span></div>
+        <div class="tp-stats"><span class="tp-stat">خرید: <span class="num">${fmt(tb)}</span></span><span class="tp-stat">دفعات: <span>${p.buyIns.length}</span></span>${p.cashedOut?`<span class="tp-stat">خروج: <span class="num">${fmt(p.cashOutAmount)}</span></span>`:''}</div>
+        ${profitHtml}</div>`;
     });
   }
-
-  if (allCashedOut && game.players.length > 0) {
-    html += `<div style="margin-top:16px">
-      <button class="btn btn-primary btn-block" onclick="showSettlement('${game.id}')">💰 مشاهده تسویه حساب</button>
-    </div>`;
-  }
-
-  el.innerHTML = html;
-  startTableTimer();
+  if(allOut&&game.players.length>0){html+=`<div style="margin-top:16px"><button class="btn btn-gold btn-block" onclick="showSettlement('${game.id}')">💰 مشاهده تسویه حساب</button></div>`;}
+  el.innerHTML=html;startTableTimer();
 }
+function startTableTimer(){if(timerInterval)clearInterval(timerInterval);timerInterval=setInterval(()=>{const el=document.getElementById('table-timer');const g=getActiveGame();if(el&&g)el.textContent=elapsedStr(g.startTime);},1000);}
 
-function startTableTimer() {
-  if (timerInterval) clearInterval(timerInterval);
-  timerInterval = setInterval(() => {
-    const el = document.getElementById('table-timer');
-    const game = getActiveGame();
-    if (el && game) el.textContent = elapsedStr(game.startTime);
-  }, 1000);
+function openCreateTablePage(){
+  createTableState={location:'',defaultBuyIn:data.settings.defaultBuyIn,selectedPlayers:{}};
+  renderCreateTablePage();openSubPage('sub-create-table');
 }
-
-// ======================= CREATE TABLE =======================
-function openCreateTableModal() {
-  const s = data.settings;
-  showModal(`
-    <h3>🃏 ایجاد میز جدید</h3>
+function renderCreateTablePage(){
+  const s=data.settings;const st=createTableState;
+  let html=`
+    <div class="felt-banner" style="text-align:right;padding:16px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <span style="font-size:32px">🃏</span>
+        <div><h2 style="font-size:16px">تنظیمات میز جدید</h2><p style="font-size:12px">مکان، ورودی و بازیکنان را مشخص کنید</p></div>
+      </div>
+    </div>
     <div class="form-group">
-      <label class="form-label">📍 مکان (اختیاری)</label>
-      <input class="form-input" id="new-table-location" placeholder="مثال: خانه علی">
+      <label class="form-label">📍 مکان برگزاری (اختیاری)</label>
+      <input class="form-input" id="ct-location" placeholder="مثال: خانه علی" value="${st.location}" oninput="createTableState.location=this.value">
     </div>
     <div class="form-group">
       <label class="form-label">💰 مبلغ پیش‌فرض ورودی (${getCurrency()})</label>
-      <input class="form-input" id="new-table-buyin" type="number" value="${s.defaultBuyIn}" style="direction:ltr">
+      <div class="slider-value" id="ct-buyin-display">${fmt(st.defaultBuyIn)} ${getCurrency()}</div>
+      <div class="slider-container">
+        <input type="range" class="amount-slider" id="ct-buyin-slider" min="0" max="${s.sliderMax}" step="${s.sliderStep}" value="${st.defaultBuyIn}" oninput="updateCTBuyIn()">
+      </div>
+      <div class="quick-amounts">`;
+  s.quickAmounts.forEach(a=>{html+=`<button class="quick-amt" onclick="setCTBuyIn(${a})">${fmt(a)}</button>`;});
+  html+=`</div>
+      <input class="form-input" id="ct-buyin-custom" type="number" placeholder="مبلغ دلخواه" style="direction:ltr;margin-top:8px" oninput="syncCTBuyInSlider()">
     </div>
-    <button class="btn btn-primary btn-block" onclick="createNewTable()">شروع بازی</button>
-  `);
-}
-
-function createNewTable() {
-  const location = document.getElementById('new-table-location').value.trim();
-  const defaultBuyIn = parseInt(document.getElementById('new-table-buyin').value) || data.settings.defaultBuyIn;
-  
-  const game = {
-    id: genId(),
-    startTime: Date.now(),
-    endTime: null,
-    location: location,
-    defaultBuyIn: defaultBuyIn,
-    status: 'active',
-    players: []
-  };
-  
-  data.games.push(game);
-  data.activeGameId = game.id;
-  saveData();
-  hideModal();
-  switchPage('table');
-}
-
-// ======================= ADD PLAYER TO TABLE =======================
-function openAddToTableModal() {
-  const game = getActiveGame();
-  if (!game) return;
-  
-  const existingIds = game.players.map(p => p.playerId);
-  const available = data.players.filter(p => !existingIds.includes(p.id));
-  
-  let html = `<h3>➕ افزودن بازیکن</h3>`;
-  
-  html += `<div class="form-group">
-    <label class="form-label">ایجاد بازیکن جدید</label>
-    <div style="display:flex;gap:8px">
-      <input class="form-input" id="new-player-name-table" placeholder="نام بازیکن" style="flex:1">
-      <button class="btn btn-primary btn-sm" onclick="addNewPlayerToTable()">افزودن</button>
-    </div>
-  </div>`;
-
-  if (available.length > 0) {
-    html += `<div class="divider"></div><label class="form-label">بازیکنان ذخیره شده</label>`;
-    available.forEach(p => {
-      html += `<div class="player-card" onclick="addExistingPlayerToTable('${p.id}')">
-        <div class="player-avatar">${p.name.charAt(0)}</div>
-        <div class="player-info"><div class="player-name">${p.name}</div></div>
-        <span style="color:var(--green);font-size:13px">+ افزودن</span>
+    <div class="divider"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <span class="section-title" style="margin:0">👥 انتخاب بازیکنان</span>
+      <button class="btn btn-sm btn-secondary" onclick="openAddPlayerInCreateTable()">+ بازیکن جدید</button>
+    </div>`;
+  if(!data.players.length){
+    html+=`<div class="empty-state" style="padding:20px"><p>هنوز بازیکنی ثبت نشده. از دکمه بالا بازیکن جدید اضافه کنید.</p></div>`;
+  }else{
+    data.players.forEach(p=>{
+      const sel=!!st.selectedPlayers[p.id];
+      const buyIn=sel?(st.selectedPlayers[p.id].buyIn||st.defaultBuyIn):st.defaultBuyIn;
+      html+=`<div class="selectable-player ${sel?'selected':''}" onclick="togglePlayerSelection('${p.id}')">
+        <div class="sp-check">${sel?'✓':''}</div>
+        <span class="sp-name">${p.name}</span>
+        ${sel?`<span class="sp-buyin">${fmt(buyIn)}</span>`:''}
       </div>`;
+      if(sel){
+        html+=`<div style="padding:4px 12px 10px 12px;margin-top:-6px;margin-bottom:6px;background:var(--bg3);border-radius:0 0 10px 10px;border-top:1px solid var(--border)">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <span style="font-size:11px;color:var(--text3)">ورودی:</span>`;
+        s.quickAmounts.slice(0,4).forEach(a=>{
+          html+=`<button class="quick-amt ${buyIn===a?'selected':''}" onclick="event.stopPropagation();setPlayerBuyIn('${p.id}',${a})" style="padding:4px 10px;font-size:11px">${fmt(a)}</button>`;
+        });
+        html+=`<input class="form-input" type="number" placeholder="دلخواه" style="direction:ltr;width:90px;padding:6px 8px;font-size:11px" value="${buyIn}" onclick="event.stopPropagation()" oninput="event.stopPropagation();setPlayerBuyIn('${p.id}',parseInt(this.value)||0)">
+          </div></div>`;
+      }
     });
   }
-  
+  const selCount=Object.keys(st.selectedPlayers).length;
+  html+=`<div style="margin-top:24px;padding-bottom:20px">
+    <button class="btn btn-gold btn-block" onclick="confirmCreateTable()" ${selCount===0?'disabled style="opacity:.5;pointer-events:none"':''}>
+      🎮 شروع بازی ${selCount>0?`(${selCount} بازیکن)`:''}
+    </button></div>`;
+  document.getElementById('create-table-content').innerHTML=html;
+}
+function updateCTBuyIn(){const v=parseInt(document.getElementById('ct-buyin-slider').value);createTableState.defaultBuyIn=v;document.getElementById('ct-buyin-display').textContent=fmt(v)+' '+getCurrency();document.getElementById('ct-buyin-custom').value='';Object.keys(createTableState.selectedPlayers).forEach(pid=>{if(!createTableState.selectedPlayers[pid].customBuyIn){createTableState.selectedPlayers[pid].buyIn=v;}});renderCreateTablePage();}
+function setCTBuyIn(a){document.getElementById('ct-buyin-slider').value=Math.min(a,data.settings.sliderMax);createTableState.defaultBuyIn=a;document.getElementById('ct-buyin-display').textContent=fmt(a)+' '+getCurrency();document.getElementById('ct-buyin-custom').value=a;Object.keys(createTableState.selectedPlayers).forEach(pid=>{if(!createTableState.selectedPlayers[pid].customBuyIn){createTableState.selectedPlayers[pid].buyIn=a;}});renderCreateTablePage();}
+function syncCTBuyInSlider(){const v=parseInt(document.getElementById('ct-buyin-custom').value)||0;document.getElementById('ct-buyin-slider').value=Math.min(v,data.settings.sliderMax);createTableState.defaultBuyIn=v;document.getElementById('ct-buyin-display').textContent=fmt(v)+' '+getCurrency();Object.keys(createTableState.selectedPlayers).forEach(pid=>{if(!createTableState.selectedPlayers[pid].customBuyIn){createTableState.selectedPlayers[pid].buyIn=v;}});}
+function togglePlayerSelection(pid){if(createTableState.selectedPlayers[pid]){delete createTableState.selectedPlayers[pid];}else{createTableState.selectedPlayers[pid]={buyIn:createTableState.defaultBuyIn,customBuyIn:false};}renderCreateTablePage();}
+function setPlayerBuyIn(pid,amt){if(createTableState.selectedPlayers[pid]){createTableState.selectedPlayers[pid].buyIn=amt;createTableState.selectedPlayers[pid].customBuyIn=true;}renderCreateTablePage();}
+function openAddPlayerInCreateTable(){showModal(`<h3>➕ بازیکن جدید</h3><div class="form-group"><label class="form-label">نام بازیکن</label><input class="form-input" id="ct-new-name" placeholder="مثال: علی احمدی"></div><button class="btn btn-primary btn-block" onclick="addPlayerInCreateTable()">ذخیره و افزودن</button>`);}
+function addPlayerInCreateTable(){const name=document.getElementById('ct-new-name').value.trim();if(!name)return;if(data.players.find(p=>p.name.toLowerCase()===name.toLowerCase())){alert('این بازیکن قبلاً ثبت شده');return;}const np={id:genId(),name};data.players.push(np);createTableState.selectedPlayers[np.id]={buyIn:createTableState.defaultBuyIn,customBuyIn:false};saveData();hideModal();renderCreateTablePage();}
+function confirmCreateTable(){const st=createTableState;const selIds=Object.keys(st.selectedPlayers);if(!selIds.length){alert('حداقل یک بازیکن انتخاب کنید');return;}const game={id:genId(),startTime:Date.now(),endTime:null,location:st.location,defaultBuyIn:st.defaultBuyIn,status:'active',players:[]};selIds.forEach(pid=>{const player=getPlayerById(pid);if(!player)return;game.players.push({odId:genId(),playerId:pid,name:player.name,buyIns:[{amount:st.selectedPlayers[pid].buyIn,time:Date.now()}],cashedOut:false,cashOutAmount:null,cashOutTime:null});});data.games.push(game);data.activeGameId=game.id;saveData();closeSubPage('sub-create-table');switchPage('table');}
+
+function openAddToTableModal(){
+  const game=getActiveGame();if(!game)return;
+  const existIds=game.players.map(p=>p.playerId);const avail=data.players.filter(p=>!existIds.includes(p.id));
+  let html=`<h3>➕ افزودن بازیکن</h3><div class="form-group"><label class="form-label">ایجاد بازیکن جدید</label><div style="display:flex;gap:8px"><input class="form-input" id="new-player-name-table" placeholder="نام بازیکن" style="flex:1"><button class="btn btn-primary btn-sm" onclick="addNewPlayerToTable()">افزودن</button></div></div>`;
+  if(avail.length>0){html+=`<div class="divider"></div><label class="form-label">بازیکنان ذخیره شده</label>`;avail.forEach(p=>{html+=`<div class="player-card" onclick="addExistingPlayerToTable('${p.id}')"><div class="player-avatar">${p.name.charAt(0)}</div><div class="player-info"><div class="player-name">${p.name}</div></div><span style="color:var(--green);font-size:13px">+ افزودن</span></div>`;});}
   showModal(html);
 }
+function addExistingPlayerToTable(pid){const g=getActiveGame();if(!g)return;const p=getPlayerById(pid);if(!p)return;if(g.players.find(x=>x.playerId===pid))return;hideModal();openBuyInModal(pid,p.name,true);}
+function addNewPlayerToTable(){const n=document.getElementById('new-player-name-table').value.trim();if(!n)return;let p=data.players.find(x=>x.name.toLowerCase()===n.toLowerCase());if(!p){p={id:genId(),name:n};data.players.push(p);saveData();}const g=getActiveGame();if(g.players.find(x=>x.playerId===p.id)){alert('این بازیکن قبلاً اضافه شده');return;}hideModal();openBuyInModal(p.id,p.name,true);}
 
-function addExistingPlayerToTable(playerId) {
-  const game = getActiveGame();
-  if (!game) return;
-  const player = getPlayerById(playerId);
-  if (!player) return;
-  if (game.players.find(p => p.playerId === playerId)) return;
-  
-  hideModal();
-  openBuyInModal(playerId, player.name, true);
-}
-
-function addNewPlayerToTable() {
-  const nameInput = document.getElementById('new-player-name-table');
-  const name = nameInput.value.trim();
-  if (!name) return;
-  
-  // Check if player exists
-  let player = data.players.find(p => p.name.toLowerCase() === name.toLowerCase());
-  if (!player) {
-    player = { id: genId(), name: name };
-    data.players.push(player);
-    saveData();
-  }
-  
-  const game = getActiveGame();
-  if (game.players.find(p => p.playerId === player.id)) {
-    alert('این بازیکن قبلاً اضافه شده');
-    return;
-  }
-  
-  hideModal();
-  openBuyInModal(player.id, player.name, true);
-}
-
-function openBuyInModal(playerId, playerName, isInitial) {
-  const game = getActiveGame();
-  const defaultAmt = game ? game.defaultBuyIn : data.settings.defaultBuyIn;
-  const s = data.settings;
-  
-  let html = `<h3>💰 ${isInitial ? 'ورودی' : 'خرید مجدد'} - ${playerName}</h3>
-    <div class="slider-value" id="buyin-display">${fmt(defaultAmt)} ${getCurrency()}</div>
-    <div class="slider-container">
-      <input type="range" class="amount-slider" id="buyin-slider" min="0" max="${s.sliderMax}" step="${s.sliderStep}" value="${defaultAmt}" oninput="updateBuyInDisplay()">
-    </div>
+function openBuyInModal(pid,pname,isInit){
+  const g=getActiveGame();const da=g?g.defaultBuyIn:data.settings.defaultBuyIn;const s=data.settings;
+  let html=`<h3>💰 ${isInit?'ورودی':'خرید مجدد'} - ${pname}</h3>
+    <div class="slider-value" id="buyin-display">${fmt(da)} ${getCurrency()}</div>
+    <div class="slider-container"><input type="range" class="amount-slider" id="buyin-slider" min="0" max="${s.sliderMax}" step="${s.sliderStep}" value="${da}" oninput="updateBuyInDisplay()"></div>
     <div class="quick-amounts">`;
-  s.quickAmounts.forEach(a => {
-    html += `<button class="quick-amt" onclick="setBuyInAmount(${a})">${fmt(a)}</button>`;
-  });
-  html += `</div>
-    <div class="form-group" style="margin-top:12px">
-      <label class="form-label">یا مبلغ دلخواه (${getCurrency()})</label>
-      <input class="form-input" id="buyin-custom" type="number" placeholder="مبلغ دلخواه" style="direction:ltr" oninput="syncBuyInSlider()">
-    </div>
-    <button class="btn btn-primary btn-block" onclick="confirmBuyIn('${playerId}','${playerName}',${isInitial})">✅ تأیید خرید</button>`;
-  
+  s.quickAmounts.forEach(a=>{html+=`<button class="quick-amt" onclick="setBuyInAmount(${a})">${fmt(a)}</button>`;});
+  html+=`</div><div class="form-group" style="margin-top:12px"><label class="form-label">یا مبلغ دلخواه (${getCurrency()})</label><input class="form-input" id="buyin-custom" type="number" placeholder="مبلغ دلخواه" style="direction:ltr" oninput="syncBuyInSlider()"></div>
+    <button class="btn btn-primary btn-block" onclick="confirmBuyIn('${pid}','${pname}',${isInit})">✅ تأیید خرید</button>`;
   showModal(html);
 }
+function updateBuyInDisplay(){const v=parseInt(document.getElementById('buyin-slider').value);document.getElementById('buyin-display').textContent=fmt(v)+' '+getCurrency();document.getElementById('buyin-custom').value='';}
+function setBuyInAmount(a){document.getElementById('buyin-slider').value=Math.min(a,data.settings.sliderMax);document.getElementById('buyin-display').textContent=fmt(a)+' '+getCurrency();document.getElementById('buyin-custom').value=a;}
+function syncBuyInSlider(){const v=parseInt(document.getElementById('buyin-custom').value)||0;document.getElementById('buyin-slider').value=Math.min(v,data.settings.sliderMax);document.getElementById('buyin-display').textContent=fmt(v)+' '+getCurrency();}
+function confirmBuyIn(pid,pname,isInit){const c=document.getElementById('buyin-custom').value;const sl=document.getElementById('buyin-slider').value;const amt=parseInt(c)||parseInt(sl)||0;if(amt<=0){alert('مبلغ باید بیشتر از صفر باشد');return;}const g=getActiveGame();if(!g)return;if(isInit){g.players.push({odId:genId(),playerId:pid,name:pname,buyIns:[{amount:amt,time:Date.now()}],cashedOut:false,cashOutAmount:null,cashOutTime:null});}else{const gp=g.players.find(p=>p.playerId===pid);if(gp){gp.buyIns.push({amount:amt,time:Date.now()});gp.cashedOut=false;gp.cashOutAmount=null;gp.cashOutTime=null;}}saveData();hideModal();renderTablePage();}
 
-function updateBuyInDisplay() {
-  const v = parseInt(document.getElementById('buyin-slider').value);
-  document.getElementById('buyin-display').textContent = fmt(v) + ' ' + getCurrency();
-  document.getElementById('buyin-custom').value = '';
-}
-
-function setBuyInAmount(amt) {
-  document.getElementById('buyin-slider').value = Math.min(amt, data.settings.sliderMax);
-  document.getElementById('buyin-display').textContent = fmt(amt) + ' ' + getCurrency();
-  document.getElementById('buyin-custom').value = amt;
-}
-
-function syncBuyInSlider() {
-  const v = parseInt(document.getElementById('buyin-custom').value) || 0;
-  document.getElementById('buyin-slider').value = Math.min(v, data.settings.sliderMax);
-  document.getElementById('buyin-display').textContent = fmt(v) + ' ' + getCurrency();
-}
-
-function confirmBuyIn(playerId, playerName, isInitial) {
-  const custom = document.getElementById('buyin-custom').value;
-  const slider = document.getElementById('buyin-slider').value;
-  const amount = parseInt(custom) || parseInt(slider) || 0;
-  if (amount <= 0) { alert('مبلغ باید بیشتر از صفر باشد'); return; }
-  
-  const game = getActiveGame();
-  if (!game) return;
-  
-  if (isInitial) {
-    game.players.push({
-      odId: genId(),
-      playerId: playerId,
-      name: playerName,
-      buyIns: [{ amount: amount, time: Date.now() }],
-      cashedOut: false,
-      cashOutAmount: null,
-      cashOutTime: null
-    });
-  } else {
-    const gp = game.players.find(p => p.playerId === playerId);
-    if (gp) {
-      gp.buyIns.push({ amount: amount, time: Date.now() });
-      gp.cashedOut = false;
-      gp.cashOutAmount = null;
-      gp.cashOutTime = null;
-    }
-  }
-  
-  saveData();
-  hideModal();
-  renderTablePage();
-}
-
-// ======================= PLAYER ACTIONS ON TABLE =======================
-function openPlayerActionModal(odId) {
-  const game = getActiveGame();
-  if (!game) return;
-  const gp = game.players.find(p => p.odId === odId);
-  if (!gp) return;
-  
-  const totalBuy = gp.buyIns.reduce((s,b) => s + b.amount, 0);
-  
-  let html = `<h3>🎯 ${gp.name}</h3>
+function openPlayerActionModal(odId){
+  const g=getActiveGame();if(!g)return;const gp=g.players.find(p=>p.odId===odId);if(!gp)return;
+  const tb=gp.buyIns.reduce((s,b)=>s+b.amount,0);
+  let html=`<h3>🎯 ${gp.name}</h3>
     <div class="info-box">
-      <div class="info-row"><span class="label">مجموع خرید</span><span class="value num">${fmt(totalBuy)} ${getCurrency()}</span></div>
+      <div class="info-row"><span class="label">مجموع خرید</span><span class="value num">${fmt(tb)} ${getCurrency()}</span></div>
       <div class="info-row"><span class="label">تعداد خرید</span><span class="value">${gp.buyIns.length} بار</span></div>
       <div class="info-row"><span class="label">وضعیت</span><span class="value">${gp.cashedOut?'خارج شده':'فعال'}</span></div>
       ${gp.cashedOut?`<div class="info-row"><span class="label">مبلغ خروج</span><span class="value num">${fmt(gp.cashOutAmount)} ${getCurrency()}</span></div>`:''}
     </div>
-    
     <div class="section-title">تراکنش‌ها</div>`;
-  
-  gp.buyIns.forEach((b, i) => {
-    html += `<div style="padding:6px 0;font-size:13px;display:flex;justify-content:space-between;border-bottom:1px solid var(--border)">
-      <span style="color:var(--text2)">خرید ${i+1} - ${getTimeStr(b.time)}</span>
-      <span class="num" style="color:var(--green)">+${fmt(b.amount)}</span>
-    </div>`;
-  });
-  if (gp.cashedOut) {
-    html += `<div style="padding:6px 0;font-size:13px;display:flex;justify-content:space-between">
-      <span style="color:var(--text2)">خروج - ${getTimeStr(gp.cashOutTime)}</span>
-      <span class="num" style="color:var(--blue)">${fmt(gp.cashOutAmount)}</span>
-    </div>`;
+  gp.buyIns.forEach((b,i)=>{html+=`<div style="padding:6px 0;font-size:13px;display:flex;justify-content:space-between;border-bottom:1px solid var(--border)"><span style="color:var(--text2)">خرید ${i+1} - ${getTimeStr(b.time)}</span><span class="num" style="color:var(--green)">+${fmt(b.amount)}</span></div>`;});
+  if(gp.cashedOut){html+=`<div style="padding:6px 0;font-size:13px;display:flex;justify-content:space-between"><span style="color:var(--text2)">خروج - ${getTimeStr(gp.cashOutTime)}</span><span class="num" style="color:var(--blue)">${fmt(gp.cashOutAmount)}</span></div>`;}
+  html+=`<div class="divider"></div><div class="btn-group" style="flex-direction:column">`;
+  if(!gp.cashedOut){
+    html+=`<button class="btn btn-block" style="background:var(--felt);color:#fff" onclick="hideModal();openBuyInModal('${gp.playerId}','${gp.name}',false)">🔄 خرید مجدد ژتون</button>
+      <button class="btn btn-gold btn-block" onclick="hideModal();openCashOutModal('${gp.odId}')">💵 ثبت خروج (Cash Out)</button>`;
+  }else{
+    html+=`<button class="btn btn-secondary btn-block" onclick="hideModal();undoCashOut('${gp.odId}')">↩️ لغو خروج</button>`;
   }
-  
-  html += `<div class="divider"></div><div class="btn-group" style="flex-direction:column">`;
-  
-  if (!gp.cashedOut) {
-    html += `<button class="btn btn-secondary btn-block" onclick="hideModal();openBuyInModal('${gp.playerId}','${gp.name}',false)">🔄 خرید مجدد ژتون</button>
-      <button class="btn btn-primary btn-block" onclick="hideModal();openCashOutModal('${gp.odId}')">💵 ثبت خروج (Cash Out)</button>`;
-  } else {
-    html += `<button class="btn btn-secondary btn-block" onclick="hideModal();undoCashOut('${gp.odId}')">↩️ لغو خروج</button>`;
-  }
-  html += `<button class="btn btn-danger btn-sm" style="margin-top:8px" onclick="hideModal();removePlayerFromTable('${gp.odId}')">🗑 حذف از میز</button>`;
-  html += `</div>`;
-  
-  showModal(html);
+  html+=`<button class="btn btn-danger btn-sm" style="margin-top:8px" onclick="hideModal();removePlayerFromTable('${gp.odId}')">🗑 حذف از میز</button>`;
+  html+=`</div>`;showModal(html);
 }
 
-function openCashOutModal(odId) {
-  const game = getActiveGame();
-  const gp = game.players.find(p => p.odId === odId);
-  if (!gp) return;
-  const totalBuy = gp.buyIns.reduce((s,b) => s + b.amount, 0);
-  const s = data.settings;
-  
-  let html = `<h3>💵 خروج ${gp.name}</h3>
-    <div class="info-box"><div class="info-row"><span class="label">مجموع خرید</span><span class="value num">${fmt(totalBuy)} ${getCurrency()}</span></div></div>
-    <div class="slider-value" id="cashout-display">${fmt(totalBuy)} ${getCurrency()}</div>
+function openCashOutModal(odId){
+  const g=getActiveGame();const gp=g.players.find(p=>p.odId===odId);if(!gp)return;
+  const tb=gp.buyIns.reduce((s,b)=>s+b.amount,0);const s=data.settings;
+  let html=`<h3>💵 خروج ${gp.name}</h3>
+    <div class="info-box"><div class="info-row"><span class="label">مجموع خرید</span><span class="value num">${fmt(tb)} ${getCurrency()}</span></div></div>
+    <div class="slider-value" id="cashout-display">${fmt(tb)} ${getCurrency()}</div>
     <div id="cashout-profit" style="text-align:center;font-size:14px;margin-bottom:8px;color:var(--text3)">بی‌حساب</div>
-    <div class="slider-container">
-      <input type="range" class="amount-slider" id="cashout-slider" min="0" max="${s.sliderMax}" step="${s.sliderStep}" value="${totalBuy}" oninput="updateCashOutDisplay(${totalBuy})">
-    </div>
+    <div class="slider-container"><input type="range" class="amount-slider" id="cashout-slider" min="0" max="${s.sliderMax}" step="${s.sliderStep}" value="${tb}" oninput="updateCashOutDisplay(${tb})"></div>
     <div class="quick-amounts">`;
-  s.quickAmounts.forEach(a => {
-    html += `<button class="quick-amt" onclick="setCashOutAmount(${a},${totalBuy})">${fmt(a)}</button>`;
-  });
-  html += `</div>
-    <div class="form-group" style="margin-top:12px">
-      <label class="form-label">یا مبلغ دلخواه</label>
-      <input class="form-input" id="cashout-custom" type="number" placeholder="مبلغ خروج" style="direction:ltr" oninput="syncCashOutSlider(${totalBuy})">
-    </div>
-    <button class="btn btn-primary btn-block" onclick="confirmCashOut('${odId}')">✅ تأیید خروج</button>`;
-  
+  s.quickAmounts.forEach(a=>{html+=`<button class="quick-amt" onclick="setCashOutAmount(${a},${tb})">${fmt(a)}</button>`;});
+  html+=`</div><div class="form-group" style="margin-top:12px"><label class="form-label">یا مبلغ دلخواه</label><input class="form-input" id="cashout-custom" type="number" placeholder="مبلغ خروج" style="direction:ltr" oninput="syncCashOutSlider(${tb})"></div>
+    <button class="btn btn-gold btn-block" onclick="confirmCashOut('${odId}')">✅ تأیید خروج</button>`;
   showModal(html);
 }
+function updateCashOutDisplay(tb){const v=parseInt(document.getElementById('cashout-slider').value);document.getElementById('cashout-display').textContent=fmt(v)+' '+getCurrency();const pr=v-tb;const e=document.getElementById('cashout-profit');if(pr>0){e.textContent='🟢 سود: +'+fmt(pr);e.style.color='var(--green)';}else if(pr<0){e.textContent='🔴 ضرر: '+fmt(pr);e.style.color='var(--red)';}else{e.textContent='⚪ بی‌حساب';e.style.color='var(--text3)';} document.getElementById('cashout-custom').value='';}
+function setCashOutAmount(a,tb){document.getElementById('cashout-slider').value=Math.min(a,data.settings.sliderMax);document.getElementById('cashout-display').textContent=fmt(a)+' '+getCurrency();document.getElementById('cashout-custom').value=a;const pr=a-tb;const e=document.getElementById('cashout-profit');if(pr>0){e.textContent='🟢 سود: +'+fmt(pr);e.style.color='var(--green)';}else if(pr<0){e.textContent='🔴 ضرر: '+fmt(pr);e.style.color='var(--red)';}else{e.textContent='⚪ بی‌حساب';e.style.color='var(--text3)';}}
+function syncCashOutSlider(tb){const v=parseInt(document.getElementById('cashout-custom').value)||0;document.getElementById('cashout-slider').value=Math.min(v,data.settings.sliderMax);document.getElementById('cashout-display').textContent=fmt(v)+' '+getCurrency();const pr=v-tb;const e=document.getElementById('cashout-profit');if(pr>0){e.textContent='🟢 سود: +'+fmt(pr);e.style.color='var(--green)';}else if(pr<0){e.textContent='🔴 ضرر: '+fmt(pr);e.style.color='var(--red)';}else{e.textContent='⚪ بی‌حساب';e.style.color='var(--text3)';}}
+function confirmCashOut(odId){const c=document.getElementById('cashout-custom').value;const sl=document.getElementById('cashout-slider').value;const amt=parseInt(c)||parseInt(sl)||0;const g=getActiveGame();const gp=g.players.find(p=>p.odId===odId);if(!gp)return;gp.cashedOut=true;gp.cashOutAmount=amt;gp.cashOutTime=Date.now();saveData();hideModal();renderTablePage();}
+function undoCashOut(odId){const g=getActiveGame();const gp=g.players.find(p=>p.odId===odId);if(gp){gp.cashedOut=false;gp.cashOutAmount=null;gp.cashOutTime=null;saveData();renderTablePage();}}
+function removePlayerFromTable(odId){if(!confirm('آیا مطمئنید؟'))return;const g=getActiveGame();g.players=g.players.filter(p=>p.odId!==odId);saveData();renderTablePage();}
 
-function updateCashOutDisplay(totalBuy) {
-  const v = parseInt(document.getElementById('cashout-slider').value);
-  document.getElementById('cashout-display').textContent = fmt(v) + ' ' + getCurrency();
-  const profit = v - totalBuy;
-  const profitEl = document.getElementById('cashout-profit');
-  if (profit > 0) { profitEl.textContent = '🟢 سود: +' + fmt(profit); profitEl.style.color = 'var(--green)'; }
-  else if (profit < 0) { profitEl.textContent = '🔴 ضرر: ' + fmt(profit); profitEl.style.color = 'var(--red)'; }
-  else { profitEl.textContent = '⚪ بی‌حساب'; profitEl.style.color = 'var(--text3)'; }
-  document.getElementById('cashout-custom').value = '';
+function confirmEndGame(){
+  const g=getActiveGame();if(!g)return;const uc=g.players.filter(p=>!p.cashedOut);
+  if(uc.length>0){showModal(`<h3>⚠️ توجه</h3><p style="margin-bottom:16px">هنوز ${uc.length} بازیکن خروج خود را ثبت نکرده‌اند.</p><p style="color:var(--text3);font-size:13px;margin-bottom:16px">بازیکنان: ${uc.map(p=>p.name).join('، ')}</p><button class="btn btn-secondary btn-block" onclick="hideModal()">بازگشت</button>`);return;}
+  showModal(`<h3>⏹ پایان بازی</h3><p style="margin-bottom:16px">آیا مطمئنید؟</p><div class="btn-group" style="flex-direction:column"><button class="btn btn-danger btn-block" onclick="endGame()">بله، پایان بازی</button><button class="btn btn-secondary btn-block" onclick="hideModal()">انصراف</button></div>`);
+}
+function endGame(){const g=getActiveGame();if(!g)return;g.status='closed';g.endTime=Date.now();data.activeGameId=null;saveData();hideModal();showSettlement(g.id);}
+
+function calculateSettlements(game){
+  const results=[];game.players.forEach(p=>{const tb=p.buyIns.reduce((s,b)=>s+b.amount,0);const co=p.cashOutAmount||0;results.push({name:p.name,buyIn:tb,cashOut:co,profit:co-tb});});
+  const debtors=[],creditors=[];
+  results.forEach(r=>{if(r.profit<0)debtors.push({name:r.name,amount:Math.abs(r.profit)});else if(r.profit>0)creditors.push({name:r.name,amount:r.profit});});
+  debtors.sort((a,b)=>b.amount-a.amount);creditors.sort((a,b)=>b.amount-a.amount);
+  const settlements=[];let i=0,j=0;
+  while(i<debtors.length&&j<creditors.length){const amt=Math.min(debtors[i].amount,creditors[j].amount);if(amt>0)settlements.push({from:debtors[i].name,to:creditors[j].name,amount:amt});debtors[i].amount-=amt;creditors[j].amount-=amt;if(debtors[i].amount<=0)i++;if(creditors[j].amount<=0)j++;}
+  return{results,settlements};
+}
+function showSettlement(gid){
+  const game=data.games.find(g=>g.id===gid);if(!game)return;const{results,settlements}=calculateSettlements(game);
+  let html=`<div class="widget"><div class="widget-header"><span class="widget-title">📊 نتایج بازی</span></div>
+    <div class="info-box"><div class="info-row"><span class="label">تاریخ</span><span class="value">${getDateStr(game.startTime)}</span></div><div class="info-row"><span class="label">مدت بازی</span><span class="value">${durationStr(game.startTime,game.endTime)}</span></div>${game.location?`<div class="info-row"><span class="label">مکان</span><span class="value">${game.location}</span></div>`:''}</div></div>`;
+  html+=`<div class="section-title">عملکرد بازیکنان</div>`;
+  results.sort((a,b)=>b.profit-a.profit).forEach(r=>{const pc=r.profit>0?'green':r.profit<0?'red':'gray';html+=`<div class="player-card"><div class="player-avatar" style="color:var(--${r.profit>0?'green':r.profit<0?'red':'text3'})">${r.profit>0?'▲':r.profit<0?'▼':'●'}</div><div class="player-info"><div class="player-name">${r.name}</div><div class="player-meta">خرید: <span class="num">${fmt(r.buyIn)}</span> · خروج: <span class="num">${fmt(r.cashOut)}</span></div></div><div class="player-amount ${pc}"><span class="num">${fmtSign(r.profit)}</span></div></div>`;});
+  if(settlements.length>0){html+=`<div class="section-title" style="margin-top:20px">💸 تسویه حساب</div><p style="font-size:12px;color:var(--text3);margin-bottom:10px">چه کسی به چه کسی باید پرداخت کند:</p>`;settlements.forEach(s=>{html+=`<div class="settlement-item"><span style="font-weight:600;color:var(--red)">${s.from}</span><span class="settlement-arrow">→</span><span style="font-weight:600;color:var(--green)">${s.to}</span><span class="settlement-amount"><span class="num">${fmt(s.amount)}</span> ${getCurrency()}</span></div>`;});}
+  html+=`<div style="margin-top:20px"><button class="btn btn-secondary btn-block" onclick="generatePDF('${gid}')" style="margin-bottom:8px">📄 دانلود PDF</button><button class="btn btn-outline btn-block" onclick="closeSubPage('sub-settlement')">بستن</button></div>`;
+  document.getElementById('settlement-content').innerHTML=html;openSubPage('sub-settlement');
 }
 
-function setCashOutAmount(amt, totalBuy) {
-  document.getElementById('cashout-slider').value = Math.min(amt, data.settings.sliderMax);
-  document.getElementById('cashout-display').textContent = fmt(amt) + ' ' + getCurrency();
-  document.getElementById('cashout-custom').value = amt;
-  const profit = amt - totalBuy;
-  const profitEl = document.getElementById('cashout-profit');
-  if (profit > 0) { profitEl.textContent = '🟢 سود: +' + fmt(profit); profitEl.style.color = 'var(--green)'; }
-  else if (profit < 0) { profitEl.textContent = '🔴 ضرر: ' + fmt(profit); profitEl.style.color = 'var(--red)'; }
-  else { profitEl.textContent = '⚪ بی‌حساب'; profitEl.style.color = 'var(--text3)'; }
-}
-
-function syncCashOutSlider(totalBuy) {
-  const v = parseInt(document.getElementById('cashout-custom').value) || 0;
-  document.getElementById('cashout-slider').value = Math.min(v, data.settings.sliderMax);
-  document.getElementById('cashout-display').textContent = fmt(v) + ' ' + getCurrency();
-  const profit = v - totalBuy;
-  const profitEl = document.getElementById('cashout-profit');
-  if (profit > 0) { profitEl.textContent = '🟢 سود: +' + fmt(profit); profitEl.style.color = 'var(--green)'; }
-  else if (profit < 0) { profitEl.textContent = '🔴 ضرر: ' + fmt(profit); profitEl.style.color = 'var(--red)'; }
-  else { profitEl.textContent = '⚪ بی‌حساب'; profitEl.style.color = 'var(--text3)'; }
-}
-
-function confirmCashOut(odId) {
-  const custom = document.getElementById('cashout-custom').value;
-  const slider = document.getElementById('cashout-slider').value;
-  const amount = parseInt(custom) || parseInt(slider) || 0;
-  
-  const game = getActiveGame();
-  const gp = game.players.find(p => p.odId === odId);
-  if (!gp) return;
-  
-  gp.cashedOut = true;
-  gp.cashOutAmount = amount;
-  gp.cashOutTime = Date.now();
-  
-  saveData();
-  hideModal();
-  renderTablePage();
-}
-
-function undoCashOut(odId) {
-  const game = getActiveGame();
-  const gp = game.players.find(p => p.odId === odId);
-  if (gp) {
-    gp.cashedOut = false;
-    gp.cashOutAmount = null;
-    gp.cashOutTime = null;
-    saveData();
-    renderTablePage();
-  }
-}
-
-function removePlayerFromTable(odId) {
-  if (!confirm('آیا مطمئنید؟')) return;
-  const game = getActiveGame();
-  game.players = game.players.filter(p => p.odId !== odId);
-  saveData();
-  renderTablePage();
-}
-
-// ======================= END GAME =======================
-function confirmEndGame() {
-  const game = getActiveGame();
-  if (!game) return;
-  
-  const uncashed = game.players.filter(p => !p.cashedOut);
-  if (uncashed.length > 0) {
-    showModal(`<h3>⚠️ توجه</h3>
-      <p style="margin-bottom:16px">هنوز ${uncashed.length} بازیکن خروج خود را ثبت نکرده‌اند. ابتدا خروج همه بازیکنان را ثبت کنید.</p>
-      <p style="color:var(--text3);font-size:13px;margin-bottom:16px">بازیکنان باقیمانده: ${uncashed.map(p=>p.name).join('، ')}</p>
-      <button class="btn btn-secondary btn-block" onclick="hideModal()">بازگشت</button>`);
-    return;
-  }
-  
-  showModal(`<h3>⏹ پایان بازی</h3>
-    <p style="margin-bottom:16px">آیا مطمئنید می‌خواهید بازی را پایان دهید؟</p>
-    <div class="btn-group" style="flex-direction:column">
-      <button class="btn btn-danger btn-block" onclick="endGame()">بله، پایان بازی</button>
-      <button class="btn btn-secondary btn-block" onclick="hideModal()">انصراف</button>
-    </div>`);
-}
-
-function endGame() {
-  const game = getActiveGame();
-  if (!game) return;
-  game.status = 'closed';
-  game.endTime = Date.now();
-  data.activeGameId = null;
-  saveData();
-  hideModal();
-  showSettlement(game.id);
-}
-
-// ======================= SETTLEMENT =======================
-function calculateSettlements(game) {
-  const results = [];
-  game.players.forEach(p => {
-    const totalBuy = p.buyIns.reduce((s,b) => s + b.amount, 0);
-    const cashOut = p.cashOutAmount || 0;
-    results.push({ name: p.name, buyIn: totalBuy, cashOut: cashOut, profit: cashOut - totalBuy });
-  });
-  
-  const debtors = [];
-  const creditors = [];
-  results.forEach(r => {
-    if (r.profit < 0) debtors.push({ name: r.name, amount: Math.abs(r.profit) });
-    else if (r.profit > 0) creditors.push({ name: r.name, amount: r.profit });
-  });
-  
-  debtors.sort((a,b) => b.amount - a.amount);
-  creditors.sort((a,b) => b.amount - a.amount);
-  
-  const settlements = [];
-  let i = 0, j = 0;
-  while (i < debtors.length && j < creditors.length) {
-    const amt = Math.min(debtors[i].amount, creditors[j].amount);
-    if (amt > 0) {
-      settlements.push({ from: debtors[i].name, to: creditors[j].name, amount: amt });
-    }
-    debtors[i].amount -= amt;
-    creditors[j].amount -= amt;
-    if (debtors[i].amount <= 0) i++;
-    if (creditors[j].amount <= 0) j++;
-  }
-  
-  return { results, settlements };
-}
-
-function showSettlement(gameId) {
-  const game = data.games.find(g => g.id === gameId);
-  if (!game) return;
-  
-  const { results, settlements } = calculateSettlements(game);
-  
-  let html = `<div class="widget">
-    <div class="widget-header"><span class="widget-title">📊 نتایج بازی</span></div>
-    <div class="info-box">
-      <div class="info-row"><span class="label">تاریخ</span><span class="value">${getDateStr(game.startTime)}</span></div>
-      <div class="info-row"><span class="label">مدت بازی</span><span class="value">${durationStr(game.startTime, game.endTime)}</span></div>
-      ${game.location?`<div class="info-row"><span class="label">مکان</span><span class="value">${game.location}</span></div>`:''}
-    </div>
-  </div>`;
-  
-  html += `<div class="section-title">عملکرد بازیکنان</div>`;
-  results.sort((a,b) => b.profit - a.profit).forEach(r => {
-    const pClass = r.profit > 0 ? 'green' : r.profit < 0 ? 'red' : 'gray';
-    html += `<div class="player-card">
-      <div class="player-avatar" style="color:var(--${r.profit>0?'green':r.profit<0?'red':'text3'})">${r.profit>0?'▲':r.profit<0?'▼':'●'}</div>
-      <div class="player-info">
-        <div class="player-name">${r.name}</div>
-        <div class="player-meta">خرید: <span class="num">${fmt(r.buyIn)}</span> · خروج: <span class="num">${fmt(r.cashOut)}</span></div>
-      </div>
-      <div class="player-amount ${pClass}"><span class="num">${fmtSign(r.profit)}</span></div>
-    </div>`;
-  });
-  
-  if (settlements.length > 0) {
-    html += `<div class="section-title" style="margin-top:20px">💸 تسویه حساب</div>
-      <p style="font-size:12px;color:var(--text3);margin-bottom:10px">چه کسی به چه کسی باید پرداخت کند:</p>`;
-    settlements.forEach(s => {
-      html += `<div class="settlement-item">
-        <span style="font-weight:600;color:var(--red)">${s.from}</span>
-        <span class="settlement-arrow">→</span>
-        <span style="font-weight:600;color:var(--green)">${s.to}</span>
-        <span class="settlement-amount"><span class="num">${fmt(s.amount)}</span> ${getCurrency()}</span>
-      </div>`;
-    });
-  }
-  
-  html += `<div style="margin-top:20px">
-    <button class="btn btn-secondary btn-block" onclick="generatePDF('${gameId}')" style="margin-bottom:8px">📄 دانلود PDF</button>
-    <button class="btn btn-outline btn-block" onclick="closeSubPage('sub-settlement')">بستن</button>
-  </div>`;
-  
-  document.getElementById('settlement-content').innerHTML = html;
-  openSubPage('sub-settlement');
-}
-
-// ======================= PDF EXPORT =======================
-function generatePDF(gameId) {
-  const game = data.games.find(g => g.id === gameId);
-  if (!game) return;
-  
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  const { results, settlements } = calculateSettlements(game);
-  
-  let y = 20;
-  doc.setFontSize(20);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Poker Game Report', 105, y, { align: 'center' });
-  y += 15;
-  
-  doc.setFontSize(11);
-  doc.setFont('helvetica', 'normal');
-  doc.text(`Date: ${getDateStrEn(game.startTime)}`, 20, y); y += 7;
-  doc.text(`Start: ${getTimeStr(game.startTime)}`, 20, y);
-  if (game.endTime) { doc.text(`End: ${getTimeStr(game.endTime)}`, 100, y); }
-  y += 7;
-  if (game.location) { doc.text(`Location: ${persianToFinglish(game.location)}`, 20, y); y += 7; }
-  doc.text(`Players: ${game.players.length}`, 20, y); y += 7;
-  
-  const totalBuyIns = game.players.reduce((s,p) => s + p.buyIns.reduce((ss,b) => ss + b.amount, 0), 0);
-  doc.text(`Total Buy-ins: ${fmt(totalBuyIns)}`, 20, y); y += 12;
-  
-  // Player Results Table
-  doc.setFontSize(14);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Player Results', 20, y); y += 8;
-  
-  const tableData = results.sort((a,b) => b.profit - a.profit).map(r => [
-    persianToFinglish(r.name),
-    fmt(r.buyIn),
-    fmt(r.cashOut),
-    (r.profit >= 0 ? '+' : '') + fmt(r.profit),
-    r.profit > 0 ? 'WIN' : r.profit < 0 ? 'LOSS' : 'EVEN'
-  ]);
-  
-  doc.autoTable({
-    startY: y,
-    head: [['Player', 'Buy-in', 'Cash-out', 'Profit/Loss', 'Result']],
-    body: tableData,
-    theme: 'grid',
-    headStyles: { fillColor: [34, 197, 94], textColor: 0, fontStyle: 'bold' },
-    styles: { halign: 'center', fontSize: 10 },
-    columnStyles: { 0: { halign: 'left' } }
-  });
-  
-  y = doc.lastAutoTable.finalY + 15;
-  
-  // Settlements
-  if (settlements.length > 0) {
-    doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Settlements', 20, y); y += 8;
-    
-    const settleData = settlements.map(s => [
-      persianToFinglish(s.from),
-      '-->',
-      persianToFinglish(s.to),
-      fmt(s.amount)
-    ]);
-    
-    doc.autoTable({
-      startY: y,
-      head: [['From', '', 'To', 'Amount']],
-      body: settleData,
-      theme: 'grid',
-      headStyles: { fillColor: [245, 158, 11], textColor: 0, fontStyle: 'bold' },
-      styles: { halign: 'center', fontSize: 10 }
-    });
-  }
-  
-  // Footer
-  const pageHeight = doc.internal.pageSize.height;
-  doc.setFontSize(8);
-  doc.setFont('helvetica', 'italic');
-  doc.text('Generated by Poker Manager Pro v1.2', 105, pageHeight - 10, { align: 'center' });
-  
+function generatePDF(gid){
+  const game=data.games.find(g=>g.id===gid);if(!game)return;
+  const{jsPDF}=window.jspdf;const doc=new jsPDF();const{results,settlements}=calculateSettlements(game);
+  let y=20;doc.setFontSize(20);doc.setFont('helvetica','bold');doc.text('Poker Game Report',105,y,{align:'center'});y+=15;
+  doc.setFontSize(11);doc.setFont('helvetica','normal');doc.text(`Date: ${getDateStrEn(game.startTime)}`,20,y);y+=7;doc.text(`Start: ${getTimeStr(game.startTime)}`,20,y);if(game.endTime)doc.text(`End: ${getTimeStr(game.endTime)}`,100,y);y+=7;
+  if(game.location){doc.text(`Location: ${persianToFinglish(game.location)}`,20,y);y+=7;}
+  doc.text(`Players: ${game.players.length}`,20,y);y+=7;
+  const tbi=game.players.reduce((s,p)=>s+p.buyIns.reduce((ss,b)=>ss+b.amount,0),0);doc.text(`Total Buy-ins: ${fmt(tbi)}`,20,y);y+=12;
+  doc.setFontSize(14);doc.setFont('helvetica','bold');doc.text('Player Results',20,y);y+=8;
+  const td=results.sort((a,b)=>b.profit-a.profit).map(r=>[persianToFinglish(r.name),fmt(r.buyIn),fmt(r.cashOut),(r.profit>=0?'+':'')+fmt(r.profit),r.profit>0?'WIN':r.profit<0?'LOSS':'EVEN']);
+  doc.autoTable({startY:y,head:[['Player','Buy-in','Cash-out','Profit/Loss','Result']],body:td,theme:'grid',headStyles:{fillColor:[30,92,58],textColor:255,fontStyle:'bold'},styles:{halign:'center',fontSize:10},columnStyles:{0:{halign:'left'}}});
+  y=doc.lastAutoTable.finalY+15;
+  if(settlements.length>0){doc.setFontSize(14);doc.setFont('helvetica','bold');doc.text('Settlements',20,y);y+=8;const sd=settlements.map(s=>[persianToFinglish(s.from),'-->',persianToFinglish(s.to),fmt(s.amount)]);doc.autoTable({startY:y,head:[['From','','To','Amount']],body:sd,theme:'grid',headStyles:{fillColor:[212,163,50],textColor:0,fontStyle:'bold'},styles:{halign:'center',fontSize:10}});}
+  doc.setFontSize(8);doc.setFont('helvetica','italic');doc.text('Generated by Poker Manager Pro v1.2',105,doc.internal.pageSize.height-10,{align:'center'});
   doc.save(`poker-game-${getDateStrEn(game.startTime).replace(/[^a-zA-Z0-9]/g,'-')}.pdf`);
 }
 
-// ======================= PLAYERS PAGE =======================
-function renderPlayersPage() {
-  const el = document.getElementById('players-list');
-  const search = (document.getElementById('player-search')?.value || '').trim().toLowerCase();
-  
-  let players = data.players.map(p => ({...p, stats: getPlayerStats(p.id)}));
-  if (search) players = players.filter(p => p.name.toLowerCase().includes(search));
-  players.sort((a,b) => b.stats.totalProfit - a.stats.totalProfit);
-  
-  if (players.length === 0) {
-    el.innerHTML = `<div class="empty-state">
-      <div style="font-size:48px;margin-bottom:12px">👥</div>
-      <p>${search ? 'بازیکنی یافت نشد' : 'هنوز بازیکنی ثبت نشده'}</p>
-    </div>`;
-    return;
-  }
-  
-  let html = '';
-  players.forEach(p => {
-    const s = p.stats;
-    const pClass = s.totalProfit > 0 ? 'green' : s.totalProfit < 0 ? 'red' : 'gray';
-    const winRate = s.totalGames > 0 ? Math.round(s.wins / s.totalGames * 100) : 0;
-    html += `<div class="player-card" onclick="openPlayerProfile('${p.id}')">
-      <div class="player-avatar">${p.name.charAt(0)}</div>
-      <div class="player-info">
-        <div class="player-name">${p.name}</div>
-        <div class="player-meta">${s.totalGames} بازی · ${winRate}% برد</div>
-      </div>
-      <div class="player-amount ${pClass}"><span class="num">${s.totalGames > 0 ? fmtSign(s.totalProfit) : '-'}</span></div>
-    </div>`;
-  });
-  
-  el.innerHTML = html;
+function renderPlayersPage(){
+  const el=document.getElementById('players-list');const search=(document.getElementById('player-search')?.value||'').trim().toLowerCase();
+  let players=data.players.map(p=>({...p,stats:getPlayerStats(p.id)}));
+  if(search)players=players.filter(p=>p.name.toLowerCase().includes(search));
+  players.sort((a,b)=>b.stats.totalProfit-a.stats.totalProfit);
+  if(!players.length){el.innerHTML=`<div class="empty-state"><div style="font-size:48px;margin-bottom:12px">👥</div><p>${search?'بازیکنی یافت نشد':'هنوز بازیکنی ثبت نشده'}</p></div>`;return;}
+  let html='';players.forEach(p=>{const s=p.stats;const pc=s.totalProfit>0?'green':s.totalProfit<0?'red':'gray';const wr=s.totalGames>0?Math.round(s.wins/s.totalGames*100):0;
+    html+=`<div class="player-card" onclick="openPlayerProfile('${p.id}')"><div class="player-avatar">${p.name.charAt(0)}</div><div class="player-info"><div class="player-name">${p.name}</div><div class="player-meta">${s.totalGames} بازی · ${wr}% برد</div></div><div class="player-amount ${pc}"><span class="num">${s.totalGames>0?fmtSign(s.totalProfit):'-'}</span></div></div>`;});
+  el.innerHTML=html;
+}
+function openAddPlayerModal(){showModal(`<h3>➕ افزودن بازیکن جدید</h3><div class="form-group"><label class="form-label">نام بازیکن</label><input class="form-input" id="new-player-name" placeholder="مثال: علی احمدی"></div><button class="btn btn-primary btn-block" onclick="addNewPlayer()">ذخیره</button>`);}
+function addNewPlayer(){const n=document.getElementById('new-player-name').value.trim();if(!n)return;if(data.players.find(p=>p.name.toLowerCase()===n.toLowerCase())){alert('قبلاً ثبت شده');return;}data.players.push({id:genId(),name:n});saveData();hideModal();renderPlayersPage();}
+
+function openPlayerProfile(pid){
+  if(!pid)return;const player=getPlayerById(pid);if(!player)return;const stats=getPlayerStats(pid);
+  const wr=stats.totalGames>0?Math.round(stats.wins/stats.totalGames*100):0;const avg=stats.totalGames>0?Math.round(stats.totalBuyIn/stats.totalGames):0;const pc=stats.totalProfit>0?'green':stats.totalProfit<0?'red':'';
+  document.getElementById('profile-title').textContent=player.name;
+  let html=`<div class="widget" style="text-align:center"><div class="player-avatar" style="width:64px;height:64px;font-size:28px;margin:0 auto 12px">${player.name.charAt(0)}</div><h2>${player.name}</h2><div style="margin-top:8px"><span class="chip ${stats.totalProfit>=0?'chip-green':'chip-red'}">${stats.totalProfit>=0?'سودده':'ضررده'}</span></div></div>
+    <div class="stat-row"><div class="stat-box"><div class="stat-value blue">${stats.totalGames}</div><div class="stat-label">کل بازی‌ها</div></div><div class="stat-box"><div class="stat-value green">${stats.wins}</div><div class="stat-label">برد</div></div><div class="stat-box"><div class="stat-value red">${stats.losses}</div><div class="stat-label">باخت</div></div></div>
+    <div class="stat-row"><div class="stat-box"><div class="stat-value ${pc}"><span class="num">${fmtSign(stats.totalProfit)}</span></div><div class="stat-label">سود/زیان کل</div></div><div class="stat-box"><div class="stat-value">${wr}%</div><div class="stat-label">نرخ برد</div></div><div class="stat-box"><div class="stat-value"><span class="num">${fmt(avg)}</span></div><div class="stat-label">میانگین خرید</div></div></div>`;
+  if(stats.history.length>0){html+=`<div class="section-title" style="margin-top:20px">📋 تاریخچه بازی‌ها</div>`;stats.history.sort((a,b)=>b.date-a.date).forEach(h=>{const hc=h.profit>0?'green':h.profit<0?'red':'gray';html+=`<div class="player-card" onclick="openGameDetail('${h.gameId}')"><div class="player-info"><div class="player-name">${getDateStr(h.date)}</div><div class="player-meta">خرید: <span class="num">${fmt(h.buyIn)}</span> · خروج: <span class="num">${fmt(h.cashOut)}</span></div></div><div class="player-amount ${hc}"><span class="num">${fmtSign(h.profit)}</span></div></div>`;});}
+  html+=`<div style="margin-top:20px"><button class="btn btn-danger btn-sm btn-block" onclick="deletePlayer('${pid}')">🗑 حذف بازیکن</button></div>`;
+  document.getElementById('profile-content').innerHTML=html;openSubPage('sub-player-profile');
+}
+function deletePlayer(pid){if(!confirm('آیا مطمئنید؟'))return;data.players=data.players.filter(p=>p.id!==pid);saveData();closeSubPage('sub-player-profile');renderPlayersPage();}
+
+function renderHistoryPage(){
+  const el=document.getElementById('history-content');const cg=data.games.filter(g=>g.status==='closed').sort((a,b)=>b.startTime-a.startTime);
+  let html=`<div class="widget"><div class="widget-header"><span class="widget-title">📈 آمار تحلیلی</span></div><div class="chart-container"><canvas id="history-chart"></canvas></div></div>`;
+  html+=`<div class="section-title">📋 تاریخچه بازی‌ها (${cg.length})</div>`;
+  if(!cg.length){html+=`<div class="empty-state"><p>هنوز بازی‌ای ثبت نشده</p></div>`;}
+  else{cg.forEach(g=>{const tb=g.players.reduce((s,p)=>s+p.buyIns.reduce((ss,b)=>ss+b.amount,0),0);html+=`<div class="card" onclick="openGameDetail('${g.id}')"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-weight:600">${getDateStr(g.startTime)}</span><span class="chip chip-gold">${g.players.length} بازیکن</span></div><div style="font-size:12px;color:var(--text3);display:flex;gap:12px"><span>⏱ ${durationStr(g.startTime,g.endTime)}</span><span>💰 <span class="num">${fmt(tb)}</span></span>${g.location?`<span>📍 ${g.location}</span>`:''}</div></div>`;});}
+  el.innerHTML=html;setTimeout(()=>renderHistoryChart(cg),100);
 }
 
-function openAddPlayerModal() {
-  showModal(`<h3>➕ افزودن بازیکن جدید</h3>
-    <div class="form-group">
-      <label class="form-label">نام بازیکن</label>
-      <input class="form-input" id="new-player-name" placeholder="مثال: علی احمدی">
-    </div>
-    <button class="btn btn-primary btn-block" onclick="addNewPlayer()">ذخیره</button>`);
+function renderHistoryChart(games){
+  const canvas=document.getElementById('history-chart');if(!canvas||!games.length)return;
+  const md={};games.forEach(g=>{const d=new Date(g.startTime);const k=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;if(!md[k])md[k]={totalMoney:0};md[k].totalMoney+=g.players.reduce((s,p)=>s+p.buyIns.reduce((ss,b)=>ss+b.amount,0),0);});
+  const labels=Object.keys(md).sort();const money=labels.map(k=>md[k].totalMoney);
+  if(window.historyChart)window.historyChart.destroy();
+  window.historyChart=new Chart(canvas,{type:'bar',data:{labels,datasets:[{label:'گردش مالی ('+getCurrency()+')',data:money,backgroundColor:'rgba(58,157,94,0.6)',borderColor:'#3a9d5e',borderWidth:1,borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#8a9bb5'}},tooltip:{callbacks:{label:function(ctx){return fmt(ctx.raw)+' '+getCurrency();}}}},scales:{x:{ticks:{color:'#5a6d85'},grid:{color:'rgba(37,48,66,0.5)'}},y:{ticks:{color:'#5a6d85',callback:function(v){return fmt(v);}},grid:{color:'rgba(37,48,66,0.5)'}}}}});
 }
 
-function addNewPlayer() {
-  const name = document.getElementById('new-player-name').value.trim();
-  if (!name) return;
-  if (data.players.find(p => p.name.toLowerCase() === name.toLowerCase())) {
-    alert('این بازیکن قبلاً ثبت شده');
-    return;
-  }
-  data.players.push({ id: genId(), name: name });
-  saveData();
-  hideModal();
-  renderPlayersPage();
+function openGameDetail(gid){
+  const game=data.games.find(g=>g.id===gid);if(!game)return;const{results,settlements}=calculateSettlements(game);
+  const tbi=game.players.reduce((s,p)=>s+p.buyIns.reduce((ss,b)=>ss+b.amount,0),0);const tco=game.players.reduce((s,p)=>s+(p.cashOutAmount||0),0);
+  document.getElementById('game-detail-title').textContent='بازی '+getDateStrShort(game.startTime);
+  let html=`<div class="widget"><div class="info-box"><div class="info-row"><span class="label">📅 تاریخ</span><span class="value">${getDateStr(game.startTime)}</span></div><div class="info-row"><span class="label">🕐 شروع</span><span class="value num">${getTimeStr(game.startTime)}</span></div>${game.endTime?`<div class="info-row"><span class="label">🕐 پایان</span><span class="value num">${getTimeStr(game.endTime)}</span></div>`:''}<div class="info-row"><span class="label">⏱ مدت</span><span class="value">${durationStr(game.startTime,game.endTime)}</span></div>${game.location?`<div class="info-row"><span class="label">📍 مکان</span><span class="value">${game.location}</span></div>`:''}</div>
+    <div class="stat-row" style="margin-top:10px"><div class="stat-box"><div class="stat-value blue">${game.players.length}</div><div class="stat-label">بازیکنان</div></div><div class="stat-box"><div class="stat-value"><span class="num">${fmt(tbi)}</span></div><div class="stat-label">کل خرید</div></div><div class="stat-box"><div class="stat-value"><span class="num">${fmt(tco)}</span></div><div class="stat-label">کل خروج</div></div></div></div>`;
+  html+=`<div class="section-title">عملکرد بازیکنان</div>`;
+  results.sort((a,b)=>b.profit-a.profit).forEach(r=>{const pc=r.profit>0?'green':r.profit<0?'red':'gray';html+=`<div class="player-card" onclick="openPlayerProfile('${(data.players.find(p=>p.name===r.name)||{}).id||''}')"><div class="player-avatar" style="color:var(--${r.profit>0?'green':r.profit<0?'red':'text3'})">${r.profit>0?'▲':r.profit<0?'▼':'●'}</div><div class="player-info"><div class="player-name">${r.name}</div><div class="player-meta">خرید: <span class="num">${fmt(r.buyIn)}</span> · خروج: <span class="num">${fmt(r.cashOut)}</span></div></div><div class="player-amount ${pc}"><span class="num">${fmtSign(r.profit)}</span></div></div>`;});
+  if(settlements.length>0){html+=`<div class="section-title" style="margin-top:16px">💸 تسویه حساب</div>`;settlements.forEach(s=>{html+=`<div class="settlement-item"><span style="font-weight:600;color:var(--red)">${s.from}</span><span class="settlement-arrow">→</span><span style="font-weight:600;color:var(--green)">${s.to}</span><span class="settlement-amount"><span class="num">${fmt(s.amount)}</span></span></div>`;});}
+  html+=`<div style="margin-top:20px"><button class="btn btn-secondary btn-block" onclick="generatePDF('${gid}')">📄 دانلود PDF</button></div>`;
+  document.getElementById('game-detail-content').innerHTML=html;openSubPage('sub-game-detail');
 }
 
-// ======================= PLAYER PROFILE =======================
-function openPlayerProfile(playerId) {
-  const player = getPlayerById(playerId);
-  if (!player) return;
-  
-  const stats = getPlayerStats(playerId);
-  const winRate = stats.totalGames > 0 ? Math.round(stats.wins / stats.totalGames * 100) : 0;
-  const avgBuyIn = stats.totalGames > 0 ? Math.round(stats.totalBuyIn / stats.totalGames) : 0;
-  const pClass = stats.totalProfit > 0 ? 'green' : stats.totalProfit < 0 ? 'red' : '';
-  
-  document.getElementById('profile-title').textContent = player.name;
-  
-  let html = `
-    <div class="widget" style="text-align:center">
-      <div class="player-avatar" style="width:64px;height:64px;font-size:28px;margin:0 auto 12px">${player.name.charAt(0)}</div>
-      <h2>${player.name}</h2>
-      <div style="margin-top:8px">
-        <span class="chip ${stats.totalProfit>=0?'chip-green':'chip-red'}">${stats.totalProfit>=0?'سودده':'ضررده'}</span>
-      </div>
-    </div>
-    
-    <div class="stat-row">
-      <div class="stat-box"><div class="stat-value blue">${stats.totalGames}</div><div class="stat-label">کل بازی‌ها</div></div>
-      <div class="stat-box"><div class="stat-value green">${stats.wins}</div><div class="stat-label">برد</div></div>
-      <div class="stat-box"><div class="stat-value red">${stats.losses}</div><div class="stat-label">باخت</div></div>
-    </div>
-    <div class="stat-row">
-      <div class="stat-box"><div class="stat-value ${pClass}"><span class="num">${fmtSign(stats.totalProfit)}</span></div><div class="stat-label">سود/زیان کل</div></div>
-      <div class="stat-box"><div class="stat-value">${winRate}%</div><div class="stat-label">نرخ برد</div></div>
-      <div class="stat-box"><div class="stat-value"><span class="num">${fmt(avgBuyIn)}</span></div><div class="stat-label">میانگین خرید</div></div>
-    </div>`;
-  
-  if (stats.history.length > 0) {
-    html += `<div class="section-title" style="margin-top:20px">📋 تاریخچه بازی‌ها</div>`;
-    stats.history.sort((a,b) => b.date - a.date).forEach(h => {
-      const pClass2 = h.profit > 0 ? 'green' : h.profit < 0 ? 'red' : 'gray';
-      html += `<div class="player-card" onclick="openGameDetail('${h.gameId}')">
-        <div class="player-info">
-          <div class="player-name">${getDateStr(h.date)}</div>
-          <div class="player-meta">خرید: <span class="num">${fmt(h.buyIn)}</span> · خروج: <span class="num">${fmt(h.cashOut)}</span></div>
-        </div>
-        <div class="player-amount ${pClass2}"><span class="num">${fmtSign(h.profit)}</span></div>
-      </div>`;
-    });
-  }
-  
-  html += `<div style="margin-top:20px">
-    <button class="btn btn-danger btn-sm btn-block" onclick="deletePlayer('${playerId}')">🗑 حذف بازیکن</button>
-  </div>`;
-  
-  document.getElementById('profile-content').innerHTML = html;
-  openSubPage('sub-player-profile');
-}
-
-function deletePlayer(playerId) {
-  if (!confirm('آیا مطمئنید؟ تمام سوابق بازی این بازیکن حفظ می‌شود.')) return;
-  data.players = data.players.filter(p => p.id !== playerId);
-  saveData();
-  closeSubPage('sub-player-profile');
-  renderPlayersPage();
-}
-
-// ======================= HISTORY PAGE =======================
-function renderHistoryPage() {
-  const el = document.getElementById('history-content');
-  const closedGames = data.games.filter(g => g.status === 'closed').sort((a,b) => b.startTime - a.startTime);
-  
-  // Analytics Section
-  let html = `<div class="widget">
-    <div class="widget-header"><span class="widget-title">📈 آمار تحلیلی</span></div>
-    <div class="chart-container"><canvas id="history-chart"></canvas></div>
-  </div>`;
-  
-  // Game History
-  html += `<div class="section-title">📋 تاریخچه بازی‌ها (${closedGames.length})</div>`;
-  
-  if (closedGames.length === 0) {
-    html += `<div class="empty-state"><p>هنوز بازی‌ای ثبت نشده</p></div>`;
-  } else {
-    closedGames.forEach(g => {
-      const totalBuy = g.players.reduce((s,p) => s + p.buyIns.reduce((ss,b) => ss + b.amount, 0), 0);
-      html += `<div class="card" onclick="openGameDetail('${g.id}')">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-          <span style="font-weight:600">${getDateStr(g.startTime)}</span>
-          <span class="chip chip-blue">${g.players.length} بازیکن</span>
-        </div>
-        <div style="font-size:12px;color:var(--text3);display:flex;gap:12px">
-          <span>⏱ ${durationStr(g.startTime, g.endTime)}</span>
-          <span>💰 <span class="num">${fmt(totalBuy)}</span></span>
-          ${g.location?`<span>📍 ${g.location}</span>`:''}
-        </div>
-      </div>`;
-    });
-  }
-  
-  el.innerHTML = html;
-  
-  // Render chart
-  setTimeout(() => renderHistoryChart(closedGames), 100);
-}
-
-function renderHistoryChart(games) {
-  const canvas = document.getElementById('history-chart');
-  if (!canvas || games.length === 0) return;
-  
-  // Group by month
-  const monthData = {};
-  games.forEach(g => {
-    const d = new Date(g.startTime);
-    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-    if (!monthData[key]) monthData[key] = { count: 0, totalMoney: 0 };
-    monthData[key].count++;
-    monthData[key].totalMoney += g.players.reduce((s,p) => s + p.buyIns.reduce((ss,b) => ss + b.amount, 0), 0);
-  });
-  
-  const labels = Object.keys(monthData).sort();
-  const counts = labels.map(k => monthData[k].count);
-  const money = labels.map(k => monthData[k].totalMoney);
-  
-  // If chart already exists, destroy it
-  if (window.historyChart) window.historyChart.destroy();
-  
-  window.historyChart = new Chart(canvas, {
-    type: 'bar',
-    data: {
-      labels: labels,
-      datasets: [{
-        label: 'تعداد بازی',
-        data: counts,
-        backgroundColor: 'rgba(34,197,94,0.6)',
-        borderColor: '#22c55e',
-        borderWidth: 1,
-        borderRadius: 6,
-        yAxisID: 'y'
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { labels: { color: '#94a3b8' } }
-      },
-      scales: {
-        x: { ticks: { color: '#64748b' }, grid: { color: 'rgba(45,55,72,0.5)' } },
-        y: { ticks: { color: '#64748b' }, grid: { color: 'rgba(45,55,72,0.5)' } }
-      }
-    }
-  });
-}
-
-// ======================= GAME DETAIL =======================
-function openGameDetail(gameId) {
-  const game = data.games.find(g => g.id === gameId);
-  if (!game) return;
-  
-  const { results, settlements } = calculateSettlements(game);
-  const totalBuyIns = game.players.reduce((s,p) => s + p.buyIns.reduce((ss,b) => ss + b.amount, 0), 0);
-  const totalCashOuts = game.players.reduce((s,p) => s + (p.cashOutAmount || 0), 0);
-  
-  document.getElementById('game-detail-title').textContent = 'بازی ' + getDateStrShort(game.startTime);
-  
-  let html = `<div class="widget">
-    <div class="info-box">
-      <div class="info-row"><span class="label">📅 تاریخ</span><span class="value">${getDateStr(game.startTime)}</span></div>
-      <div class="info-row"><span class="label">🕐 شروع</span><span class="value num">${getTimeStr(game.startTime)}</span></div>
-      ${game.endTime?`<div class="info-row"><span class="label">🕐 پایان</span><span class="value num">${getTimeStr(game.endTime)}</span></div>`:''}
-      <div class="info-row"><span class="label">⏱ مدت</span><span class="value">${durationStr(game.startTime, game.endTime)}</span></div>
-      ${game.location?`<div class="info-row"><span class="label">📍 مکان</span><span class="value">${game.location}</span></div>`:''}
-    </div>
-    <div class="stat-row" style="margin-top:10px">
-      <div class="stat-box"><div class="stat-value blue">${game.players.length}</div><div class="stat-label">بازیکنان</div></div>
-      <div class="stat-box"><div class="stat-value"><span class="num">${fmt(totalBuyIns)}</span></div><div class="stat-label">کل خرید</div></div>
-      <div class="stat-box"><div class="stat-value"><span class="num">${fmt(totalCashOuts)}</span></div><div class="stat-label">کل خروج</div></div>
-    </div>
-  </div>`;
-  
-  html += `<div class="section-title">عملکرد بازیکنان</div>`;
-  results.sort((a,b) => b.profit - a.profit).forEach(r => {
-    const pClass = r.profit > 0 ? 'green' : r.profit < 0 ? 'red' : 'gray';
-    html += `<div class="player-card" onclick="openPlayerProfile('${(data.players.find(p=>p.name===r.name)||{}).id||''}')">
-      <div class="player-avatar" style="color:var(--${r.profit>0?'green':r.profit<0?'red':'text3'})">${r.profit>0?'▲':r.profit<0?'▼':'●'}</div>
-      <div class="player-info"><div class="player-name">${r.name}</div><div class="player-meta">خرید: <span class="num">${fmt(r.buyIn)}</span> · خروج: <span class="num">${fmt(r.cashOut)}</span></div></div>
-      <div class="player-amount ${pClass}"><span class="num">${fmtSign(r.profit)}</span></div>
-    </div>`;
-  });
-  
-  if (settlements.length > 0) {
-    html += `<div class="section-title" style="margin-top:16px">💸 تسویه حساب</div>`;
-    settlements.forEach(s => {
-      html += `<div class="settlement-item">
-        <span style="font-weight:600;color:var(--red)">${s.from}</span>
-        <span class="settlement-arrow">→</span>
-        <span style="font-weight:600;color:var(--green)">${s.to}</span>
-        <span class="settlement-amount"><span class="num">${fmt(s.amount)}</span></span>
-      </div>`;
-    });
-  }
-  
-  html += `<div style="margin-top:20px">
-    <button class="btn btn-secondary btn-block" onclick="generatePDF('${gameId}')">📄 دانلود PDF</button>
-  </div>`;
-  
-  document.getElementById('game-detail-content').innerHTML = html;
-  openSubPage('sub-game-detail');
-}
-
-// ======================= SETTINGS PAGE =======================
-function renderSettingsPage() {
-  const s = data.settings;
-  const el = document.getElementById('settings-content');
-  
-  let html = `
-    <!-- Currency -->
-    <div class="setting-item">
-      <h4>💱 واحد پول</h4>
-      <p>واحد پول نمایش داده شده در برنامه</p>
+function renderSettingsPage(){
+  const s=data.settings;const el=document.getElementById('settings-content');
+  let html=`
+    <div class="setting-item"><h4>💱 واحد پول</h4><p>واحد پول نمایش داده شده</p>
       <select class="form-input" style="margin-top:8px" onchange="data.settings.currency=this.value;saveData()">
-        <option value="تومان" ${s.currency==='تومان'?'selected':''}>تومان</option>
-        <option value="ریال" ${s.currency==='ریال'?'selected':''}>ریال</option>
-        <option value="دلار" ${s.currency==='دلار'?'selected':''}>دلار</option>
-        <option value="یورو" ${s.currency==='یورو'?'selected':''}>یورو</option>
-        <option value="$" ${s.currency==='$'?'selected':''}>$</option>
-        <option value="€" ${s.currency==='€'?'selected':''}>€</option>
-      </select>
-    </div>
-    
-    <!-- Dashboard Widgets -->
-    <div class="setting-item">
-      <h4>🧩 ویجت‌های داشبورد</h4>
-      <p>فعال/غیرفعال کردن ویجت‌ها</p>
+        <option value="تومان" ${s.currency==='تومان'?'selected':''}>تومان</option><option value="ریال" ${s.currency==='ریال'?'selected':''}>ریال</option><option value="دلار" ${s.currency==='دلار'?'selected':''}>دلار</option><option value="یورو" ${s.currency==='یورو'?'selected':''}>یورو</option><option value="$" ${s.currency==='$'?'selected':''}>$</option><option value="€" ${s.currency==='€'?'selected':''}>€</option>
+      </select></div>
+    <div class="setting-item"><h4>🧩 ویجت‌های داشبورد</h4><p>فعال/غیرفعال کردن ویجت‌ها</p>
       <div style="margin-top:8px">
-        <div class="toggle-row">
-          <div><span class="toggle-label">🏆 برترین بازیکنان</span></div>
-          <div class="toggle ${s.widgets.topPlayers?'on':''}" onclick="toggleWidget('topPlayers',this)"></div>
-        </div>
-        <div class="toggle-row">
-          <div><span class="toggle-label">📈 خلاصه آمار</span></div>
-          <div class="toggle ${s.widgets.statsSummary?'on':''}" onclick="toggleWidget('statsSummary',this)"></div>
-        </div>
-        <div class="toggle-row">
-          <div><span class="toggle-label">📝 یادداشت‌ها</span></div>
-          <div class="toggle ${s.widgets.notes?'on':''}" onclick="toggleWidget('notes',this)"></div>
-        </div>
-        <div class="toggle-row">
-          <div><span class="toggle-label">📅 تاریخ و زمان</span></div>
-          <div class="toggle ${s.widgets.dateTime?'on':''}" onclick="toggleWidget('dateTime',this)"></div>
-        </div>
-      </div>
+        <div class="toggle-row"><div><span class="toggle-label">🏆 برترین بازیکنان</span></div><div class="toggle ${s.widgets.topPlayers?'on':''}" onclick="toggleWidget('topPlayers',this)"></div></div>
+        <div class="toggle-row"><div><span class="toggle-label">📈 خلاصه آمار</span></div><div class="toggle ${s.widgets.statsSummary?'on':''}" onclick="toggleWidget('statsSummary',this)"></div></div>
+        <div class="toggle-row"><div><span class="toggle-label">📝 یادداشت‌ها</span></div><div class="toggle ${s.widgets.notes?'on':''}" onclick="toggleWidget('notes',this)"></div></div>
+        <div class="toggle-row"><div><span class="toggle-label">📅 تاریخ و زمان</span></div><div class="toggle ${s.widgets.dateTime?'on':''}" onclick="toggleWidget('dateTime',this)"></div></div>
+      </div></div>
+    <div class="setting-item"><h4>💰 تنظیمات خرید</h4>
+      <div class="form-group" style="margin-top:8px"><label class="form-label">مبلغ پیش‌فرض ورودی</label><input class="form-input" type="number" value="${s.defaultBuyIn}" style="direction:ltr" onchange="data.settings.defaultBuyIn=parseInt(this.value)||0;saveData()"></div>
+      <div class="form-group"><label class="form-label">سقف اسلایدر</label><input class="form-input" type="number" value="${s.sliderMax}" style="direction:ltr" onchange="data.settings.sliderMax=parseInt(this.value)||20000000;saveData()"></div>
+      <div class="form-group"><label class="form-label">گام اسلایدر</label><input class="form-input" type="number" value="${s.sliderStep}" style="direction:ltr" onchange="data.settings.sliderStep=parseInt(this.value)||100000;saveData()"></div>
     </div>
-    
-    <!-- Buy-in Settings -->
-    <div class="setting-item">
-      <h4>💰 تنظیمات خرید</h4>
-      <div class="form-group" style="margin-top:8px">
-        <label class="form-label">مبلغ پیش‌فرض ورودی</label>
-        <input class="form-input" type="number" value="${s.defaultBuyIn}" style="direction:ltr" onchange="data.settings.defaultBuyIn=parseInt(this.value)||0;saveData()">
-      </div>
-      <div class="form-group">
-        <label class="form-label">سقف اسلایدر</label>
-        <input class="form-input" type="number" value="${s.sliderMax}" style="direction:ltr" onchange="data.settings.sliderMax=parseInt(this.value)||20000000;saveData()">
-      </div>
-      <div class="form-group">
-        <label class="form-label">گام اسلایدر</label>
-        <input class="form-input" type="number" value="${s.sliderStep}" style="direction:ltr" onchange="data.settings.sliderStep=parseInt(this.value)||100000;saveData()">
-      </div>
+    <div class="setting-item"><h4>⚡ دکمه‌های مبلغ سریع</h4><p>مبالغ با کاما جدا کنید</p>
+      <input class="form-input" style="margin-top:8px;direction:ltr" value="${s.quickAmounts.join(',')}" onchange="saveQuickAmounts(this.value)">
+      <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">${s.quickAmounts.map(a=>`<span class="chip chip-gold">${fmt(a)}</span>`).join('')}</div>
     </div>
-    
-    <!-- Quick Amounts -->
-    <div class="setting-item">
-      <h4>⚡ دکمه‌های مبلغ سریع</h4>
-      <p>مبالغ دکمه‌های میانبر (با کاما جدا کنید)</p>
-      <input class="form-input" id="quick-amounts-input" style="margin-top:8px;direction:ltr" value="${s.quickAmounts.join(',')}" onchange="saveQuickAmounts(this.value)">
-      <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
-        ${s.quickAmounts.map(a => `<span class="chip chip-blue">${fmt(a)}</span>`).join('')}
-      </div>
-    </div>
-    
-    <!-- Data Management -->
-    <div class="setting-item">
-      <h4>💾 مدیریت داده‌ها</h4>
-      <p>بکاپ و بازگردانی اطلاعات</p>
+    <div class="setting-item"><h4>💾 مدیریت داده‌ها</h4><p>بکاپ و بازگردانی</p>
       <div class="btn-group" style="margin-top:12px;flex-direction:column">
-        <button class="btn btn-secondary btn-block" onclick="exportData()">📤 خروجی بکاپ (Export)</button>
-        <button class="btn btn-secondary btn-block" onclick="document.getElementById('import-file').click()">📥 ورود بکاپ (Import)</button>
+        <button class="btn btn-secondary btn-block" onclick="exportData()">📤 خروجی بکاپ</button>
+        <button class="btn btn-secondary btn-block" onclick="document.getElementById('import-file').click()">📥 ورود بکاپ</button>
         <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
         <button class="btn btn-danger btn-block btn-sm" onclick="resetAllData()">🗑 حذف تمام داده‌ها</button>
-      </div>
-    </div>
-    
-    <!-- About -->
+      </div></div>
     <div class="setting-item" style="text-align:center">
-      <div style="font-size:48px;margin-bottom:8px">🎰</div>
-      <h4>Poker Manager Pro</h4>
-      <p style="margin-top:4px">Version 1.2</p>
-      <p style="margin-top:8px;font-size:11px;color:var(--text3)">مدیریت حرفه‌ای میز پوکر</p>
-    </div>
-    <div style="height:40px"></div>`;
-  
-  el.innerHTML = html;
+      <div style="font-size:48px;margin-bottom:8px">🎰</div><h4>Poker Manager Pro</h4><p style="margin-top:4px">Version 1.2</p><p style="margin-top:8px;font-size:11px;color:var(--text3)">مدیریت حرفه‌ای میز پوکر</p>
+    </div><div style="height:40px"></div>`;
+  el.innerHTML=html;
 }
+function toggleWidget(k,el){data.settings.widgets[k]=!data.settings.widgets[k];el.classList.toggle('on');saveData();}
+function saveQuickAmounts(v){const a=v.split(',').map(x=>parseInt(x.trim())).filter(x=>x>0);if(a.length>0){data.settings.quickAmounts=a;saveData();renderSettingsPage();}}
+function exportData(){const b=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=`poker-backup-${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(u);}
+function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=function(ev){try{const imp=JSON.parse(ev.target.result);if(imp.players&&imp.games){if(confirm('داده‌های فعلی جایگزین می‌شوند. ادامه؟')){data=imp;saveData();location.reload();}}else alert('فایل نامعتبر');}catch(er){alert('خطا');}};r.readAsText(f);e.target.value='';}
+function resetAllData(){if(!confirm('تمام داده‌ها حذف می‌شوند!'))return;if(!confirm('غیرقابل بازگشت! ادامه؟'))return;localStorage.removeItem('pokerManagerData');location.reload();}
 
-function toggleWidget(key, el) {
-  data.settings.widgets[key] = !data.settings.widgets[key];
-  el.classList.toggle('on');
-  saveData();
-}
-
-function saveQuickAmounts(val) {
-  const amounts = val.split(',').map(v => parseInt(v.trim())).filter(v => v > 0);
-  if (amounts.length > 0) {
-    data.settings.quickAmounts = amounts;
-    saveData();
-    renderSettingsPage();
-  }
-}
-
-function exportData() {
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `poker-backup-${new Date().toISOString().slice(0,10)}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-function importData(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      const imported = JSON.parse(e.target.result);
-      if (imported.players && imported.games) {
-        if (confirm('آیا مطمئنید؟ داده‌های فعلی جایگزین می‌شوند.')) {
-          data = imported;
-          saveData();
-          location.reload();
-        }
-      } else {
-        alert('فایل معتبر نیست');
-      }
-    } catch(err) {
-      alert('خطا در خواندن فایل');
-    }
-  };
-  reader.readAsText(file);
-  event.target.value = '';
-}
-
-function resetAllData() {
-  if (!confirm('آیا مطمئنید؟ تمام داده‌ها حذف خواهند شد!')) return;
-  if (!confirm('این عمل غیرقابل بازگشت است. ادامه می‌دهید؟')) return;
-  localStorage.removeItem('pokerManagerData');
-  location.reload();
-}
-
-// ======================= INITIALIZATION =======================
-function init() {
-  loadData();
-  renderDashboard();
-}
-
-init();
+loadData();renderDashboard();
 </script>
 </body>
 </html>
