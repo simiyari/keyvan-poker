@@ -1687,7 +1687,6 @@ input[type=number]:hover, input[type=number]:focus { -moz-appearance: number-inp
     transition-duration: 0.01ms !important;
   }
   .live-dot { animation: none; }
-  .app-ambient-bg { animation: none !important; }
 }
 
 @media (min-width: 500px) and (max-width: 899px) {
@@ -3595,8 +3594,6 @@ body::before {
   --reactive-glass-bg-strong: rgba(8, 12, 10, 0.38);
   --reactive-glass-border: rgba(255,255,255,0.095);
   --reactive-glass-border-hi: rgba(255,255,255,0.145);
-  --gyro-x: 0px;
-  --gyro-y: 0px;
 }
 
 html { background: #000 !important; }
@@ -3609,7 +3606,7 @@ body {
 
 .app-ambient-bg {
   position: fixed;
-  inset: -34px;
+  inset: 0;
   z-index: 0;
   pointer-events: none;
   background-color: #000;
@@ -3620,19 +3617,8 @@ body {
     radial-gradient(560px 520px at 12% 102%, var(--ambient-gold-2), transparent 84%),
     linear-gradient(180deg, #000 0%, #020403 100%);
   background-repeat: no-repeat;
-  transform: translate3d(var(--gyro-x), var(--gyro-y), 0) scale(1.035);
-  -webkit-transform: translate3d(var(--gyro-x), var(--gyro-y), 0) scale(1.035);
-  transform-origin: 58% 46%;
-  filter: saturate(1.06) brightness(1);
-  -webkit-filter: saturate(1.06) brightness(1);
-  will-change: transform;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .app-ambient-bg {
-    transform: translate3d(0,0,0) scale(1.035) !important;
-    -webkit-transform: translate3d(0,0,0) scale(1.035) !important;
-  }
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 
 .page { position: relative; z-index: 1; background: transparent !important; }
@@ -3759,6 +3745,67 @@ body {
   .selectable-player:not(.selected) {
     background-color: rgba(12, 16, 14, 0.72) !important;
   }
+}
+
+
+
+/* ---- Final polish: create-table title centering + lock-screen spacing ---- */
+#sub-create-table .center-modal-card .sub-header {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  position: relative !important;
+}
+
+#sub-create-table .center-modal-card .sub-header h2 {
+  width: 100% !important;
+  margin: 0 auto !important;
+  text-align: center !important;
+  padding-inline: 56px !important;
+}
+
+#sub-create-table .center-modal-card .sub-header .btn-back {
+  position: absolute !important;
+  right: 0 !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  margin: 0 !important;
+}
+
+.lock-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.lock-logo,
+.lock-title,
+.lock-subtitle,
+.lock-input-wrap,
+.lock-error {
+  margin-bottom: 0 !important;
+}
+
+.lock-subtitle {
+  margin-top: calc(var(--sp-1) * -1) !important;
+}
+
+.lock-input-wrap {
+  margin-top: var(--sp-1) !important;
+}
+
+.lock-error {
+  min-height: 0 !important;
+  margin-top: calc(var(--sp-2) * -1) !important;
+}
+
+.lock-error:empty {
+  min-height: 0 !important;
+  margin: 0 !important;
+}
+
+#lock-submit {
+  margin-top: var(--sp-1) !important;
 }
 
 </style>
@@ -4567,68 +4614,6 @@ if(isPasswordSet()){showLockScreen();}else{renderDashboard();}
   window.addEventListener('orientationchange', function () { setTimeout(setStablePwaHeight, 250); }, { passive: true });
   window.addEventListener('resize', function () { setTimeout(setStablePwaHeight, 80); }, { passive: true });
   document.addEventListener('DOMContentLoaded', setStablePwaHeight);
-})();
-</script>
-
-
-<script>
-(function enableAmbientGyroParallax() {
-  const root = document.documentElement;
-  const layer = document.querySelector('.app-ambient-bg');
-  if (!layer || !window.DeviceOrientationEvent) return;
-  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-  let active = false;
-  let raf = 0;
-  let currentX = 0;
-  let currentY = 0;
-  let targetX = 0;
-  let targetY = 0;
-  const maxX = 24;
-  const maxY = 20;
-
-  const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
-
-  function render() {
-    currentX += (targetX - currentX) * 0.10;
-    currentY += (targetY - currentY) * 0.10;
-    root.style.setProperty('--gyro-x', currentX.toFixed(2) + 'px');
-    root.style.setProperty('--gyro-y', currentY.toFixed(2) + 'px');
-    raf = requestAnimationFrame(render);
-  }
-
-  function onOrientation(event) {
-    const gamma = typeof event.gamma === 'number' ? event.gamma : 0;
-    const beta = typeof event.beta === 'number' ? event.beta : 0;
-    targetX = clamp(gamma / 28, -1, 1) * maxX;
-    targetY = clamp(beta / 36, -1, 1) * maxY;
-    if (!raf) render();
-  }
-
-  function startGyro() {
-    if (active) return;
-    active = true;
-    window.addEventListener('deviceorientation', onOrientation, { passive: true });
-  }
-
-  function requestIOSPermission() {
-    if (active) return;
-    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-      DeviceOrientationEvent.requestPermission()
-        .then((state) => { if (state === 'granted') startGyro(); })
-        .catch(() => {});
-    } else {
-      startGyro();
-    }
-  }
-
-  if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-    ['pointerdown', 'touchstart', 'click'].forEach((eventName) => {
-      window.addEventListener(eventName, requestIOSPermission, { once: true, passive: true });
-    });
-  } else {
-    startGyro();
-  }
 })();
 </script>
 
