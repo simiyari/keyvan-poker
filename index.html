@@ -3588,8 +3588,8 @@ body::before {
 :root {
   --ambient-green-1: rgba(34, 169, 74, 0.118);
   --ambient-green-2: rgba(34, 169, 74, 0.045);
-  --ambient-gold-1: rgba(216, 169, 58, 0.066);
-  --ambient-gold-2: rgba(216, 169, 58, 0.028);
+  --ambient-gold-1: rgba(216, 169, 58, 0.074);
+  --ambient-gold-2: rgba(216, 169, 58, 0.034);
   --reactive-glass-bg: rgba(8, 12, 10, 0.30);
   --reactive-glass-bg-strong: rgba(8, 12, 10, 0.38);
   --reactive-glass-border: rgba(255,255,255,0.095);
@@ -3611,10 +3611,10 @@ body {
   pointer-events: none;
   background-color: #000;
   background-image:
-    radial-gradient(860px 740px at 86% -4%, var(--ambient-green-1), transparent 68%),
-    radial-gradient(760px 700px at -4% 108%, var(--ambient-gold-1), transparent 76%),
+    radial-gradient(860px 760px at 86% 2%, var(--ambient-green-1), transparent 68%),
+    radial-gradient(780px 720px at -4% 100%, var(--ambient-gold-1), transparent 76%),
     radial-gradient(720px 600px at 96% 100%, var(--ambient-green-2), transparent 79%),
-    radial-gradient(520px 500px at 12% 110%, var(--ambient-gold-2), transparent 84%),
+    radial-gradient(560px 520px at 12% 102%, var(--ambient-gold-2), transparent 84%),
     linear-gradient(180deg, #000 0%, #020403 100%);
   background-repeat: no-repeat;
   transform: translateZ(0);
@@ -3704,10 +3704,10 @@ body {
 @media (max-width: 699px) {
   .app-ambient-bg {
     background-image:
-      radial-gradient(520px 430px at 88% 2%, rgba(34,169,74,0.132), transparent 70%),
-      radial-gradient(470px 440px at -4% 108%, rgba(216,169,58,0.072), transparent 78%),
+      radial-gradient(520px 450px at 88% 6%, rgba(34,169,74,0.132), transparent 70%),
+      radial-gradient(490px 460px at -4% 102%, rgba(216,169,58,0.082), transparent 78%),
       radial-gradient(420px 340px at 96% 98%, rgba(34,169,74,0.042), transparent 79%),
-      radial-gradient(340px 320px at 10% 110%, rgba(216,169,58,0.028), transparent 86%),
+      radial-gradient(360px 340px at 10% 104%, rgba(216,169,58,0.034), transparent 86%),
       linear-gradient(180deg, #000 0%, #020403 100%);
   }
 
