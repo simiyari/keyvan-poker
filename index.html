@@ -1687,6 +1687,7 @@ input[type=number]:hover, input[type=number]:focus { -moz-appearance: number-inp
     transition-duration: 0.01ms !important;
   }
   .live-dot { animation: none; }
+  .app-ambient-bg { animation: none !important; }
 }
 
 @media (min-width: 500px) and (max-width: 899px) {
@@ -3617,8 +3618,24 @@ body {
     radial-gradient(560px 520px at 12% 102%, var(--ambient-gold-2), transparent 84%),
     linear-gradient(180deg, #000 0%, #020403 100%);
   background-repeat: no-repeat;
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
+  transform: translate3d(0,0,0) scale(1);
+  -webkit-transform: translate3d(0,0,0) scale(1);
+  transform-origin: 50% 50%;
+  animation: ambientBreath 26s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes ambientBreath {
+  0%, 100% {
+    transform: translate3d(0,0,0) scale(1);
+    -webkit-transform: translate3d(0,0,0) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translate3d(0,0,0) scale(1.045);
+    -webkit-transform: translate3d(0,0,0) scale(1.045);
+    opacity: 0.96;
+  }
 }
 
 .page { position: relative; z-index: 1; background: transparent !important; }
