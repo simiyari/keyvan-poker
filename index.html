@@ -3810,142 +3810,105 @@ body {
 
 
 
-/* ---- Subtle iOS-like reactive glass: cards pick up nearby control colors ---- */
-:where(
-  .widget:not(.game-live-banner):not(.felt-banner),
-  .idle-banner,
-  .card,
-  .player-card,
-  .settlement-item,
-  .info-box,
-  .tx-list,
-  .qa-item,
-  .setting-item,
-  .modal,
-  .confirm-modal,
-  .selectable-player:not(.selected)
-) {
-  --glass-cast-gold: rgba(216,169,58,0);
-  --glass-cast-gold-strong: rgba(216,169,58,0);
-  --glass-cast-green: rgba(34,169,74,0);
-  --glass-cast-green-strong: rgba(34,169,74,0);
-  isolation: isolate;
+/* ---- Glass clarity tweak: stronger blur + slight material shift from ambient background ---- */
+:root {
+  --reactive-glass-bg: rgba(10, 14, 12, 0.22);
+  --reactive-glass-bg-strong: rgba(10, 14, 12, 0.28);
+  --reactive-glass-border: rgba(255,255,255,0.13);
+  --reactive-glass-border-hi: rgba(255,255,255,0.18);
 }
 
-:where(
-  .widget:not(.game-live-banner):not(.felt-banner),
-  .idle-banner,
-  .card,
-  .player-card,
-  .settlement-item,
-  .info-box,
-  .tx-list,
-  .qa-item,
-  .setting-item,
-  .modal,
-  .confirm-modal,
-  .selectable-player:not(.selected)
-):has(.btn-gold, .quick-amt.selected) {
-  --glass-cast-gold: rgba(216,169,58,0.070);
-  --glass-cast-gold-strong: rgba(216,169,58,0.048);
+.widget:not(.game-live-banner):not(.felt-banner),
+.idle-banner,
+.card,
+.player-card,
+.settlement-item,
+.info-box,
+.tx-list,
+.qa-item,
+.setting-item,
+.modal,
+.confirm-modal,
+.selectable-player:not(.selected) {
+  background-color: var(--reactive-glass-bg) !important;
+  background-image:
+    linear-gradient(180deg, rgba(255,255,255,0.050), rgba(255,255,255,0.016) 22%, rgba(255,255,255,0.010) 68%, rgba(255,255,255,0.020) 100%) !important;
+  border-color: var(--reactive-glass-border) !important;
+  backdrop-filter: blur(34px) saturate(165%) contrast(1.11) brightness(1.06) !important;
+  -webkit-backdrop-filter: blur(34px) saturate(165%) contrast(1.11) brightness(1.06) !important;
+  box-shadow:
+    0 10px 28px rgba(0,0,0,0.28),
+    inset 0 1px 0 rgba(255,255,255,0.10),
+    inset 0 -1px 0 rgba(255,255,255,0.020),
+    inset 0 0 0 1px rgba(255,255,255,0.024) !important;
 }
 
-:where(
-  .widget:not(.game-live-banner):not(.felt-banner),
-  .idle-banner,
-  .card,
-  .player-card,
-  .settlement-item,
-  .info-box,
-  .tx-list,
-  .qa-item,
-  .setting-item,
-  .modal,
-  .confirm-modal,
-  .selectable-player:not(.selected)
-):has(.btn-primary, .filter-chip.active, .toggle.on, .btn-primary-outline) {
-  --glass-cast-green: rgba(34,169,74,0.072);
-  --glass-cast-green-strong: rgba(34,169,74,0.050);
-}
-
-:where(
-  .widget:not(.game-live-banner):not(.felt-banner),
-  .idle-banner,
-  .card,
-  .player-card,
-  .settlement-item,
-  .info-box,
-  .tx-list,
-  .qa-item,
-  .setting-item,
-  .modal,
-  .confirm-modal,
-  .selectable-player:not(.selected)
-)::before {
+.widget:not(.game-live-banner):not(.felt-banner)::before,
+.idle-banner::before,
+.card::before,
+.player-card::before,
+.settlement-item::before,
+.info-box::before,
+.tx-list::before,
+.qa-item::before,
+.setting-item::before,
+.modal::before,
+.confirm-modal::before,
+.selectable-player:not(.selected)::before {
   background:
-    linear-gradient(136deg, rgba(255,255,255,0.062), transparent 24%, transparent 72%, rgba(255,255,255,0.018)),
-    radial-gradient(64% 22% at 50% 100%, var(--glass-cast-gold), transparent 72%),
-    radial-gradient(42% 16% at 50% 100%, var(--glass-cast-gold-strong), transparent 74%),
-    radial-gradient(34% 22% at 14% 18%, var(--glass-cast-green), transparent 72%),
-    radial-gradient(22% 14% at 14% 18%, var(--glass-cast-green-strong), transparent 76%),
-    radial-gradient(90% 70% at 82% 0%, rgba(34,169,74,0.050), transparent 60%),
-    radial-gradient(80% 70% at 0% 100%, rgba(216,169,58,0.036), transparent 62%) !important;
-  opacity: 0.34 !important;
+    linear-gradient(180deg, rgba(255,255,255,0.100), rgba(255,255,255,0.030) 14%, transparent 36%, transparent 76%, rgba(255,255,255,0.022) 100%),
+    radial-gradient(86% 60% at 50% 0%, rgba(255,255,255,0.055), transparent 64%) !important;
+  opacity: 0.40 !important;
 }
 
-/* Slightly more visible on mobile, but still subtle */
+.widget:not(.game-live-banner):not(.felt-banner)::after,
+.idle-banner::after,
+.card::after,
+.player-card::after,
+.settlement-item::after,
+.info-box::after,
+.tx-list::after,
+.qa-item::after,
+.setting-item::after,
+.modal::after,
+.confirm-modal::after,
+.selectable-player:not(.selected)::after {
+  inset: 0 !important;
+  border-radius: inherit !important;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.030), transparent 28%, transparent 78%, rgba(255,255,255,0.012)) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.022),
+    inset 0 1px 0 rgba(255,255,255,0.055),
+    inset 0 -1px 0 rgba(255,255,255,0.020) !important;
+  opacity: 0.92 !important;
+}
+
+.widget:not(.game-live-banner):not(.felt-banner):hover,
+.card:hover,
+.player-card:hover,
+.setting-item:hover,
+.selectable-player:not(.selected):hover {
+  border-color: var(--reactive-glass-border-hi) !important;
+}
+
 @media (max-width: 699px) {
-  :where(
-    .widget:not(.game-live-banner):not(.felt-banner),
-    .idle-banner,
-    .card,
-    .player-card,
-    .settlement-item,
-    .info-box,
-    .tx-list,
-    .qa-item,
-    .setting-item,
-    .modal,
-    .confirm-modal,
-    .selectable-player:not(.selected)
-  ):has(.btn-gold, .quick-amt.selected) {
-    --glass-cast-gold: rgba(216,169,58,0.082);
-    --glass-cast-gold-strong: rgba(216,169,58,0.055);
+  .widget:not(.game-live-banner):not(.felt-banner),
+  .idle-banner,
+  .card,
+  .player-card,
+  .settlement-item,
+  .info-box,
+  .tx-list,
+  .qa-item,
+  .setting-item,
+  .modal,
+  .confirm-modal,
+  .selectable-player:not(.selected) {
+    background-color: var(--reactive-glass-bg-strong) !important;
+    backdrop-filter: blur(30px) saturate(160%) contrast(1.10) brightness(1.05) !important;
+    -webkit-backdrop-filter: blur(30px) saturate(160%) contrast(1.10) brightness(1.05) !important;
   }
-
-  :where(
-    .widget:not(.game-live-banner):not(.felt-banner),
-    .idle-banner,
-    .card,
-    .player-card,
-    .settlement-item,
-    .info-box,
-    .tx-list,
-    .qa-item,
-    .setting-item,
-    .modal,
-    .confirm-modal,
-    .selectable-player:not(.selected)
-  ):has(.btn-primary, .filter-chip.active, .toggle.on, .btn-primary-outline) {
-    --glass-cast-green: rgba(34,169,74,0.084);
-    --glass-cast-green-strong: rgba(34,169,74,0.058);
-  }
-}
-
-/* Tiny glow on the colored controls themselves so the cast feels connected */
-.btn-gold,
-.quick-amt.selected {
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,0.045),
-    0 8px 18px rgba(216,169,58,0.10) !important;
-}
-
-.btn-primary,
-.filter-chip.active,
-.toggle.on {
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,0.04),
-    0 8px 18px rgba(34,169,74,0.11) !important;
 }
 
 </style>
