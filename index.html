@@ -2989,6 +2989,106 @@ body::before {
   }
 }
 
+
+/* ==========================================================
+   NAVBAR STATIC POSITION FIX — added by ChatGPT
+   هدف: ظاهر مدرن navbar حفظ شود، اما در موبایل به visualViewport / scroll / safe-zone متغیر وصل نباشد.
+   ========================================================== */
+:root {
+  --nav-fixed-height: 64px;
+  --nav-fixed-bottom-extra: 0px !important;
+  --nav-static-bottom: max(6px, calc(env(safe-area-inset-bottom, 0px) - 12px));
+}
+
+.bottom-nav {
+  position: fixed !important;
+  top: auto !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: var(--nav-static-bottom) !important;
+  transform: translateX(-50%) !important;
+  -webkit-transform: translateX(-50%) !important;
+  width: min(calc(100vw - 32px), 390px) !important;
+  max-width: none !important;
+  height: var(--nav-fixed-height) !important;
+  min-height: var(--nav-fixed-height) !important;
+  margin: 0 !important;
+  padding: 0 8px !important;
+  gap: 4px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 999px !important;
+  background: rgba(22, 24, 28, 0.32) !important;
+  backdrop-filter: blur(60px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(60px) saturate(200%) !important;
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.06) !important;
+  z-index: 1500 !important;
+  will-change: auto !important;
+  contain: none !important;
+}
+
+.nav-item {
+  height: calc(var(--nav-fixed-height) - 14px) !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 999px !important;
+}
+
+.nav-item.active {
+  color: #fff !important;
+  background: rgba(255,255,255,0.08) !important;
+}
+
+.nav-item svg {
+  width: 22px !important;
+  height: 22px !important;
+}
+
+.page {
+  padding-bottom: calc(var(--nav-fixed-height) + var(--nav-static-bottom) + 22px) !important;
+}
+
+.sub-page:not(.center-modal-page) {
+  padding-bottom: calc(var(--nav-fixed-height) + var(--nav-static-bottom) + 28px) !important;
+}
+
+@media (min-width: 700px) {
+  .bottom-nav {
+    width: min(calc(100vw - 48px), 430px) !important;
+  }
+}
+
+@media (min-width: 900px) {
+  :root { --nav-fixed-height: 66px; }
+  .bottom-nav {
+    width: min(520px, calc(100vw - 64px)) !important;
+    bottom: 18px !important;
+  }
+  .page,
+  .sub-page:not(.center-modal-page) {
+    padding-bottom: 108px !important;
+  }
+}
+
+@media (max-width: 360px) {
+  :root { --nav-fixed-height: 60px; }
+  .bottom-nav {
+    width: min(calc(100vw - 20px), 390px) !important;
+    padding-inline: 6px !important;
+  }
+  .nav-item svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -3759,50 +3859,19 @@ if(isPasswordSet()){showLockScreen();}else{renderDashboard();}
 
 
 <script>
-/* ثابت نگه داشتن navbar نسبت به فضای قابل‌دیدن صفحه در iOS Safari/PWA */
+/* NAVBAR STATIC LOCK — deliberately NOT tied to visualViewport.
+   iOS Safari changes visualViewport while scrolling; linking navbar to it makes the bar jump. */
 (function () {
-  function syncBottomNavOffset() {
-    var vv = window.visualViewport;
-    var offset = 0;
-    if (vv) {
-      offset = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
-      if (offset < 2) offset = 0;
-    }
-    document.documentElement.style.setProperty('--nav-fixed-bottom-extra', Math.round(offset) + 'px');
+  function lockNavStatic() {
+    document.documentElement.style.setProperty('--nav-fixed-bottom-extra', '0px');
   }
-
-  function syncSoon() {
-    syncBottomNavOffset();
-    requestAnimationFrame(syncBottomNavOffset);
-    setTimeout(syncBottomNavOffset, 80);
-  }
-
-  window.addEventListener('resize', syncSoon, { passive: true });
-  window.addEventListener('orientationchange', function () { setTimeout(syncSoon, 160); }, { passive: true });
-  if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', syncSoon, { passive: true });
-    window.visualViewport.addEventListener('scroll', syncSoon, { passive: true });
-  }
-  document.addEventListener('DOMContentLoaded', syncSoon);
-  document.addEventListener('click', function (e) {
-    if (e.target.closest && e.target.closest('.nav-item')) {
-      setTimeout(syncSoon, 40);
-      setTimeout(syncSoon, 220);
-    }
-  }, true);
-
-  if (typeof window.switchPage === 'function') {
-    var originalSwitchPage = window.switchPage;
-    window.switchPage = function () {
-      var result = originalSwitchPage.apply(this, arguments);
-      syncSoon();
-      return result;
-    };
-  }
-
-  syncSoon();
+  window.addEventListener('resize', lockNavStatic, { passive: true });
+  window.addEventListener('orientationchange', function () { setTimeout(lockNavStatic, 120); }, { passive: true });
+  document.addEventListener('DOMContentLoaded', lockNavStatic);
+  lockNavStatic();
 })();
 </script>
+
 
 </body>
 </html>
