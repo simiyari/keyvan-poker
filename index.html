@@ -3089,6 +3089,148 @@ body::before {
   }
 }
 
+
+/* ==========================================================
+   DEEP PWA NAVBAR FIX — stable in Add to Home Screen on iPhone
+   ریشه مشکل: body-scroll در iOS PWA باعث تغییر visual viewport و جابه‌جایی fixed bottom می‌شود.
+   راه‌حل: خود body دیگر اسکرول نمی‌شود؛ فقط صفحه فعال اسکرول داخلی دارد و navbar بیرون از اسکرول ثابت می‌ماند.
+   ========================================================== */
+:root {
+  --nav-fixed-height: 64px;
+  --nav-frozen-bottom: max(6px, calc(env(safe-area-inset-bottom, 0px) - 12px));
+  --app-mobile-max: var(--app-content-max, 720px);
+}
+
+.bottom-nav {
+  position: fixed !important;
+  top: auto !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: var(--nav-frozen-bottom) !important;
+  transform: none !important;
+  -webkit-transform: none !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  width: min(calc(100vw - 32px), 390px) !important;
+  max-width: none !important;
+  height: var(--nav-fixed-height) !important;
+  min-height: var(--nav-fixed-height) !important;
+  padding: 0 8px !important;
+  gap: 4px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 999px !important;
+  z-index: 1500 !important;
+  will-change: auto !important;
+}
+
+.nav-item {
+  height: calc(var(--nav-fixed-height) - 14px) !important;
+}
+
+/* فقط روی موبایل/تاچ، ساختار اسکرول را پایدار می‌کنیم تا PWA آیفون نپرد. */
+@media (max-width: 699px) and (hover: none) and (pointer: coarse) {
+  html {
+    height: 100% !important;
+    min-height: 100% !important;
+    overflow: hidden !important;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 100% !important;
+    overflow: hidden !important;
+    overscroll-behavior: none !important;
+    touch-action: pan-y !important;
+  }
+
+  .page {
+    position: fixed !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: min(100%, var(--app-mobile-max)) !important;
+    max-width: var(--app-mobile-max) !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-y: contain !important;
+    transform: none;
+    padding-top: calc(var(--sp-4) + env(safe-area-inset-top, 0px)) !important;
+    padding-left: max(var(--sp-4), env(safe-area-inset-left, 0px)) !important;
+    padding-right: max(var(--sp-4), env(safe-area-inset-right, 0px)) !important;
+    padding-bottom: calc(var(--nav-fixed-height) + var(--nav-frozen-bottom) + 24px) !important;
+    scroll-padding-bottom: calc(var(--nav-fixed-height) + var(--nav-frozen-bottom) + 24px) !important;
+  }
+
+  .page:not(.active) {
+    display: none !important;
+    pointer-events: none !important;
+  }
+
+  .page.active {
+    display: block !important;
+    pointer-events: auto !important;
+  }
+
+  .sub-page:not(.center-modal-page) {
+    position: fixed !important;
+    inset: 0 !important;
+    width: min(100%, var(--app-mobile-max)) !important;
+    max-width: var(--app-mobile-max) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-y: contain !important;
+    padding-bottom: calc(var(--nav-fixed-height) + var(--nav-frozen-bottom) + 28px) !important;
+  }
+
+  .bottom-nav {
+    bottom: var(--nav-frozen-bottom) !important;
+    width: min(calc(100vw - 32px), 390px) !important;
+  }
+}
+
+@media (min-width: 700px) {
+  .bottom-nav {
+    width: min(calc(100vw - 48px), 430px) !important;
+  }
+}
+
+@media (min-width: 900px) {
+  :root {
+    --nav-fixed-height: 66px;
+    --nav-frozen-bottom: 18px;
+  }
+  .bottom-nav {
+    width: min(520px, calc(100vw - 64px)) !important;
+    bottom: var(--nav-frozen-bottom) !important;
+  }
+}
+
+@media (max-width: 360px) {
+  :root { --nav-fixed-height: 60px; }
+  .bottom-nav {
+    width: min(calc(100vw - 20px), 390px) !important;
+    padding-inline: 6px !important;
+  }
+  .nav-item svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -3872,6 +4014,35 @@ if(isPasswordSet()){showLockScreen();}else{renderDashboard();}
 })();
 </script>
 
+
+
+<script>
+/* Deep iOS PWA nav lock: freeze the computed safe-area bottom value.
+   It is recalculated only on load/orientation, never during scroll. */
+(function () {
+  var root = document.documentElement;
+  function isTouchPhone() {
+    return window.matchMedia && window.matchMedia('(max-width: 699px) and (hover: none) and (pointer: coarse)').matches;
+  }
+  function freezeBottom() {
+    if (!isTouchPhone() || !document.body) return;
+    var probe = document.createElement('div');
+    probe.style.cssText = 'position:fixed;left:-9999px;bottom:max(6px,calc(env(safe-area-inset-bottom,0px) - 12px));width:1px;height:1px;visibility:hidden;pointer-events:none;';
+    document.body.appendChild(probe);
+    var bottom = getComputedStyle(probe).bottom || '6px';
+    probe.remove();
+    root.style.setProperty('--nav-frozen-bottom', bottom);
+  }
+  function afterOrientation() {
+    setTimeout(freezeBottom, 160);
+    setTimeout(freezeBottom, 420);
+  }
+  document.addEventListener('DOMContentLoaded', freezeBottom, { passive: true });
+  window.addEventListener('load', freezeBottom, { passive: true });
+  window.addEventListener('orientationchange', afterOrientation, { passive: true });
+  freezeBottom();
+})();
+</script>
 
 </body>
 </html>
