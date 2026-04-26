@@ -3421,6 +3421,63 @@ body::before {
   :root { --nav-real-bottom: 15px; }
 }
 
+
+
+/* ==========================================================
+   SUB-PAGE BACKDROP FIX — added by ChatGPT
+   هدف: وقتی صفحه‌های فرعی مثل پروفایل بازیکن باز می‌شوند، صفحه‌ی پشت سر به‌هم‌ریخته و روهم دیده نشود.
+   فقط پس‌زمینه‌ی sub-pageهای معمولی اصلاح شده؛ navbar، safe-area، اسکرول و ظاهر دکمه‌ها دست نخورده‌اند.
+   ========================================================== */
+.sub-page:not(.center-modal-page) {
+  background:
+    radial-gradient(900px 640px at 50% 0%, rgba(34,169,74,0.08), transparent 68%),
+    radial-gradient(760px 560px at 50% 100%, rgba(216,169,58,0.045), transparent 68%),
+    rgba(0, 0, 0, 0.84) !important;
+  backdrop-filter: blur(26px) saturate(155%) !important;
+  -webkit-backdrop-filter: blur(26px) saturate(155%) !important;
+  isolation: isolate;
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .sub-page:not(.center-modal-page) {
+    background: #000 !important;
+  }
+}
+
+
+
+/* ==========================================================
+   CENTER OPEN ANIMATION FOR ALL SUB-PAGES — added by ChatGPT
+   هدف: هیچ صفحه فرعی هنگام باز شدن از کنار وارد نشود؛ همه مثل macOS/iOS از مرکز باز شوند.
+   فقط انیمیشن باز شدن عوض شده؛ swipe-back، navbar، safe-area و layout دست نخورده‌اند.
+   ========================================================== */
+@keyframes iosMacCenterPageIn {
+  from {
+    opacity: 0;
+    transform: scale(0.965) translateY(10px);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+}
+
+.sub-page:not(.center-modal-page) {
+  animation: iosMacCenterPageIn 0.28s cubic-bezier(0.32, 0.72, 0, 1) !important;
+  transform-origin: center center !important;
+}
+
+.center-modal-page {
+  animation: overlayFadeIn 0.22s ease-out !important;
+}
+
+.center-modal-page .center-modal-card {
+  animation: iosMacCenterPageIn 0.28s cubic-bezier(0.32, 0.72, 0, 1) !important;
+  transform-origin: center center !important;
+}
+
 </style>
 </head>
 <body>
