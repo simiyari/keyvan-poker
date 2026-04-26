@@ -3620,21 +3620,42 @@ body {
   background-repeat: no-repeat;
   transform: translate3d(0,0,0) scale(1);
   -webkit-transform: translate3d(0,0,0) scale(1);
-  transform-origin: 50% 50%;
-  animation: ambientBreath 26s ease-in-out infinite;
-  will-change: transform, opacity;
+  transform-origin: 58% 46%;
+  filter: saturate(1.04) brightness(1);
+  -webkit-filter: saturate(1.04) brightness(1);
+  animation: ambientBreath 18s ease-in-out infinite;
+  will-change: transform, opacity, filter;
 }
 
 @keyframes ambientBreath {
   0%, 100% {
     transform: translate3d(0,0,0) scale(1);
     -webkit-transform: translate3d(0,0,0) scale(1);
+    filter: saturate(1.04) brightness(1);
+    -webkit-filter: saturate(1.04) brightness(1);
+    opacity: 0.95;
+  }
+  35% {
+    transform: translate3d(0,0,0) scale(1.075);
+    -webkit-transform: translate3d(0,0,0) scale(1.075);
+    filter: saturate(1.24) brightness(1.13);
+    -webkit-filter: saturate(1.24) brightness(1.13);
     opacity: 1;
   }
-  50% {
-    transform: translate3d(0,0,0) scale(1.045);
-    -webkit-transform: translate3d(0,0,0) scale(1.045);
-    opacity: 0.96;
+  70% {
+    transform: translate3d(0,0,0) scale(1.035);
+    -webkit-transform: translate3d(0,0,0) scale(1.035);
+    filter: saturate(0.96) brightness(0.94);
+    -webkit-filter: saturate(0.96) brightness(0.94);
+    opacity: 0.92;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-ambient-bg {
+    animation: none !important;
+    transform: translate3d(0,0,0) scale(1) !important;
+    -webkit-transform: translate3d(0,0,0) scale(1) !important;
   }
 }
 
