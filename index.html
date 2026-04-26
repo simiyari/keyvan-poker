@@ -3809,106 +3809,1117 @@ body {
 }
 
 
+/* ---- Settlement/history spacing polish ---- */
+#game-detail-content,
+#settlement-content {
+  gap: var(--app-block-gap) !important;
+}
 
-/* ---- Glass clarity tweak: stronger blur + slight material shift from ambient background ---- */
+#game-detail-content .widget,
+#settlement-content .widget {
+  padding: var(--app-card-padding) !important;
+}
+
+#game-detail-content .widget > .info-box,
+#settlement-content .widget > .info-box {
+  margin: 0 !important;
+  padding: var(--app-card-padding-sm) var(--app-card-padding) !important;
+}
+
+#game-detail-content .widget > .info-box + .stat-row,
+#settlement-content .widget > .info-box + .stat-row {
+  margin-top: var(--app-inner-gap) !important;
+}
+
+#game-detail-content .widget > .balance-box,
+#settlement-content .widget > .balance-box,
+#game-detail-content .widget > .commission-box,
+#settlement-content .widget > .commission-box {
+  margin: var(--app-inner-gap) 0 0 !important;
+}
+
+#game-detail-content > .section-title,
+#settlement-content > .section-title {
+  margin: var(--sp-1) var(--sp-1) 0 !important;
+  padding: 0 !important;
+  line-height: 1.4;
+}
+
+#game-detail-content .player-card,
+#settlement-content .player-card {
+  min-height: 68px;
+  padding: 12px 14px !important;
+  gap: 12px !important;
+}
+
+#game-detail-content .player-card .player-avatar,
+#settlement-content .player-card .player-avatar {
+  width: 48px;
+  height: 48px;
+  font-size: 16px;
+}
+
+#game-detail-content .player-meta,
+#settlement-content .player-meta {
+  margin-top: 3px;
+  line-height: 1.45;
+}
+
+.settlement-hint {
+  margin: calc(var(--sp-1) * -1) var(--sp-1) 0 !important;
+  padding: 0 !important;
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.5;
+}
+
+#game-detail-content .settlement-item,
+#settlement-content .settlement-item {
+  min-height: 58px;
+  padding: 12px 14px !important;
+  gap: 10px !important;
+  direction: rtl;
+}
+
+.settlement-route {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.settlement-from,
+.settlement-to {
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.settlement-from { color: var(--red); }
+.settlement-to { color: var(--green); }
+
+.settlement-arrow {
+  color: var(--gold);
+  font-size: 19px;
+  font-weight: 800;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+#game-detail-content .settlement-amount,
+#settlement-content .settlement-amount {
+  margin: 0 !important;
+  flex: 0 0 auto;
+  font-size: 15px;
+  text-align: left;
+  direction: ltr;
+  color: var(--gold);
+}
+
+#game-detail-content > div:last-child,
+#settlement-content > div:last-child {
+  margin-top: var(--sp-1) !important;
+}
+
+
+
+/* ---- Action button colors: PDF / Close ---- */
+.btn-pdf {
+  background:
+    linear-gradient(180deg, rgba(94,174,255,0.22), rgba(94,174,255,0.105)) !important;
+  color: #d8ebff !important;
+  border: 1px solid rgba(94,174,255,0.34) !important;
+  box-shadow:
+    0 8px 22px rgba(94,174,255,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.10) !important;
+  backdrop-filter: blur(18px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
+}
+
+.btn-pdf:hover {
+  background:
+    linear-gradient(180deg, rgba(94,174,255,0.28), rgba(94,174,255,0.14)) !important;
+  border-color: rgba(94,174,255,0.46) !important;
+}
+
+.btn-close-soft {
+  background:
+    linear-gradient(180deg, rgba(216,169,58,0.22), rgba(216,169,58,0.105)) !important;
+  color: #ffe8a8 !important;
+  border: 1px solid rgba(216,169,58,0.34) !important;
+  box-shadow:
+    0 8px 22px rgba(216,169,58,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.10) !important;
+  backdrop-filter: blur(18px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
+}
+
+.btn-close-soft:hover {
+  background:
+    linear-gradient(180deg, rgba(216,169,58,0.28), rgba(216,169,58,0.14)) !important;
+  border-color: rgba(216,169,58,0.46) !important;
+}
+
+
+
+/* ---- Unified color system pass: poker felt / money gold / risk red / info blue / neutral glass ---- */
 :root {
-  --reactive-glass-bg: rgba(10, 14, 12, 0.22);
-  --reactive-glass-bg-strong: rgba(10, 14, 12, 0.28);
-  --reactive-glass-border: rgba(255,255,255,0.13);
-  --reactive-glass-border-hi: rgba(255,255,255,0.18);
+  --pm-felt: #22a94a;
+  --pm-felt-deep: #156b28;
+  --pm-felt-soft: rgba(34,169,74,0.14);
+  --pm-felt-line: rgba(34,169,74,0.34);
+
+  --pm-money: #d8a93a;
+  --pm-money-hi: #f0c857;
+  --pm-money-deep: #9f7412;
+  --pm-money-soft: rgba(216,169,58,0.14);
+  --pm-money-line: rgba(216,169,58,0.34);
+
+  --pm-risk: #f05e5e;
+  --pm-risk-deep: #d93a3a;
+  --pm-risk-soft: rgba(240,94,94,0.14);
+  --pm-risk-line: rgba(240,94,94,0.34);
+
+  --pm-info: #5eaeff;
+  --pm-info-soft: rgba(94,174,255,0.12);
+  --pm-info-line: rgba(94,174,255,0.28);
+
+  --pm-neutral-soft: rgba(255,255,255,0.055);
+  --pm-neutral-soft-hi: rgba(255,255,255,0.085);
+  --pm-neutral-line: rgba(255,255,255,0.12);
+  --pm-neutral-line-hi: rgba(255,255,255,0.17);
 }
 
-.widget:not(.game-live-banner):not(.felt-banner),
-.idle-banner,
-.card,
-.player-card,
-.settlement-item,
-.info-box,
-.tx-list,
-.qa-item,
-.setting-item,
-.modal,
-.confirm-modal,
-.selectable-player:not(.selected) {
-  background-color: var(--reactive-glass-bg) !important;
-  background-image:
-    linear-gradient(180deg, rgba(255,255,255,0.050), rgba(255,255,255,0.016) 22%, rgba(255,255,255,0.010) 68%, rgba(255,255,255,0.020) 100%) !important;
-  border-color: var(--reactive-glass-border) !important;
-  backdrop-filter: blur(34px) saturate(165%) contrast(1.11) brightness(1.06) !important;
-  -webkit-backdrop-filter: blur(34px) saturate(165%) contrast(1.11) brightness(1.06) !important;
+/* Primary app actions: create/add/start/active/success = felt green */
+.btn-primary,
+.toggle.on {
+  background: linear-gradient(180deg, #2dc14e, var(--pm-felt)) !important;
+  color: #fff !important;
+  border-color: rgba(255,255,255,0.10) !important;
   box-shadow:
-    0 10px 28px rgba(0,0,0,0.28),
-    inset 0 1px 0 rgba(255,255,255,0.10),
-    inset 0 -1px 0 rgba(255,255,255,0.020),
-    inset 0 0 0 1px rgba(255,255,255,0.024) !important;
+    0 8px 22px rgba(34,169,74,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.18) !important;
 }
 
-.widget:not(.game-live-banner):not(.felt-banner)::before,
-.idle-banner::before,
-.card::before,
-.player-card::before,
-.settlement-item::before,
-.info-box::before,
-.tx-list::before,
-.qa-item::before,
-.setting-item::before,
-.modal::before,
-.confirm-modal::before,
-.selectable-player:not(.selected)::before {
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0.100), rgba(255,255,255,0.030) 14%, transparent 36%, transparent 76%, rgba(255,255,255,0.022) 100%),
-    radial-gradient(86% 60% at 50% 0%, rgba(255,255,255,0.055), transparent 64%) !important;
-  opacity: 0.40 !important;
+.filter-chip.active,
+.dp-day.selected,
+.selectable-player.selected .sp-check {
+  background: var(--pm-felt-soft) !important;
+  border-color: var(--pm-felt-line) !important;
+  color: #4ad668 !important;
 }
 
-.widget:not(.game-live-banner):not(.felt-banner)::after,
-.idle-banner::after,
-.card::after,
-.player-card::after,
-.settlement-item::after,
-.info-box::after,
-.tx-list::after,
-.qa-item::after,
-.setting-item::after,
-.modal::after,
-.confirm-modal::after,
-.selectable-player:not(.selected)::after {
-  inset: 0 !important;
-  border-radius: inherit !important;
-  background:
-    linear-gradient(135deg, rgba(255,255,255,0.030), transparent 28%, transparent 78%, rgba(255,255,255,0.012)) !important;
+.balance-ok,
+.tp-badge.active-badge,
+.chip-green,
+.chip-felt {
+  background: var(--pm-felt-soft) !important;
+  color: #4ad668 !important;
+  border-color: var(--pm-felt-line) !important;
+}
+
+/* Money / reports / safe financial actions = gold */
+.btn-gold,
+.btn-pdf,
+.quick-amt.selected {
+  background: linear-gradient(180deg, rgba(240,200,87,0.96), rgba(216,169,58,0.88)) !important;
+  color: #17110a !important;
+  border-color: rgba(255,255,255,0.12) !important;
   box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,0.022),
+    0 8px 22px rgba(216,169,58,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.22) !important;
+}
+
+.btn-gold:hover,
+.btn-pdf:hover,
+.quick-amt.selected:hover {
+  filter: brightness(1.04) !important;
+  border-color: rgba(240,200,87,0.46) !important;
+}
+
+.slider-value,
+.widget-action,
+.commission-box .comm-value,
+.settlement-arrow,
+.settlement-amount,
+.sp-buyin,
+.stat-value.gold,
+.player-avatar {
+  color: var(--pm-money-hi) !important;
+}
+
+.widget-action,
+.commission-box,
+.chip-gold {
+  background: var(--pm-money-soft) !important;
+  border-color: var(--pm-money-line) !important;
+  color: var(--pm-money-hi) !important;
+}
+
+/* Destructive / loss / warning = red */
+.btn-danger {
+  background: linear-gradient(180deg, #ff6666, var(--pm-risk-deep)) !important;
+  color: #fff !important;
+  border-color: rgba(255,255,255,0.10) !important;
+  box-shadow:
+    0 8px 22px rgba(240,94,94,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.14) !important;
+}
+
+.balance-warn,
+.chip-red {
+  background: var(--pm-risk-soft) !important;
+  color: var(--pm-risk) !important;
+  border-color: var(--pm-risk-line) !important;
+}
+
+.stat-value.red,
+.player-amount.red {
+  color: var(--pm-risk) !important;
+}
+
+/* Info stays blue only for informational numbers/badges, not random action buttons */
+.stat-value.blue,
+.chip-blue {
+  color: var(--pm-info) !important;
+}
+
+.chip-blue {
+  background: var(--pm-info-soft) !important;
+  border-color: var(--pm-info-line) !important;
+}
+
+/* Neutral / cancel / close / secondary = glass neutral, consistent with app chrome */
+.btn-secondary,
+.btn-outline,
+.btn-close-soft {
+  background: linear-gradient(180deg, var(--pm-neutral-soft-hi), var(--pm-neutral-soft)) !important;
+  color: var(--text) !important;
+  border-color: var(--pm-neutral-line) !important;
+  box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.055),
-    inset 0 -1px 0 rgba(255,255,255,0.020) !important;
-  opacity: 0.92 !important;
+    0 6px 16px rgba(0,0,0,0.18) !important;
 }
 
-.widget:not(.game-live-banner):not(.felt-banner):hover,
-.card:hover,
-.player-card:hover,
-.setting-item:hover,
-.selectable-player:not(.selected):hover {
-  border-color: var(--reactive-glass-border-hi) !important;
+.btn-secondary:hover,
+.btn-outline:hover,
+.btn-close-soft:hover {
+  background: linear-gradient(180deg, rgba(255,255,255,0.105), rgba(255,255,255,0.065)) !important;
+  border-color: var(--pm-neutral-line-hi) !important;
+}
+
+/* Inputs and search: neutral glass, not a separate radius/color language */
+.form-input,
+.search-box input,
+.ct-selected-buyin-input {
+  background: rgba(255,255,255,0.040) !important;
+  border-color: rgba(255,255,255,0.095) !important;
+}
+
+.form-input:focus,
+.search-box input:focus,
+.ct-selected-buyin-input:focus {
+  border-color: var(--pm-felt) !important;
+  box-shadow: 0 0 0 3px rgba(34,169,74,0.24) !important;
+}
+
+/* Table/player/status cards: keep semantic colors readable and aligned */
+.player-amount.green,
+.stat-value.green,
+.tp-profit.green {
+  color: #3fd35c !important;
+}
+
+.player-amount.gray,
+.stat-value.gray {
+  color: var(--text3) !important;
+}
+
+.game-live-banner,
+.felt-banner {
+  border-color: rgba(34,169,74,0.36) !important;
+}
+
+/* Selected player blocks use felt green; their nested selected amount remains gold */
+.selectable-player.selected {
+  border-color: rgba(34,169,74,0.48) !important;
+  background:
+    linear-gradient(180deg, rgba(34,169,74,0.16), rgba(34,169,74,0.055)) !important;
+  box-shadow:
+    0 8px 20px rgba(34,169,74,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.06) !important;
+}
+
+.ct-selected-buyin-panel {
+  border-color: rgba(34,169,74,0.38) !important;
+  background: rgba(8, 16, 12, 0.48) !important;
+}
+
+/* Keep PDF/report button in the money/report family rather than isolated blue. */
+.btn-pdf::first-letter {
+  color: inherit;
+}
+
+
+
+/* ---- Final fix: PDF hover must stay in gold/report family, never blue ---- */
+.btn-pdf,
+.btn-pdf:focus,
+.btn-pdf:active {
+  background: linear-gradient(180deg, rgba(240,200,87,0.96), rgba(216,169,58,0.88)) !important;
+  color: #17110a !important;
+  border-color: rgba(240,200,87,0.34) !important;
+  box-shadow:
+    0 8px 22px rgba(216,169,58,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.22) !important;
+}
+
+.btn-pdf:hover {
+  background: linear-gradient(180deg, rgba(246,211,102,0.98), rgba(216,169,58,0.92)) !important;
+  color: #17110a !important;
+  border-color: rgba(240,200,87,0.48) !important;
+  filter: brightness(1.035) !important;
+  box-shadow:
+    0 10px 24px rgba(216,169,58,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.24) !important;
+}
+
+
+
+/* ---- Settlement page final layout polish ---- */
+#sub-settlement > .sub-header,
+#settlement-content {
+  width: min(100%, 680px) !important;
+  max-width: 680px !important;
+  margin-inline: auto !important;
+}
+
+#settlement-content {
+  gap: 12px !important;
+  padding-bottom: calc(var(--nav-fixed-height, 64px) + var(--nav-fixed-bottom-extra, 0px) + 36px) !important;
+}
+
+#settlement-content .widget {
+  padding: 14px !important;
+  border-radius: var(--radius) !important;
+}
+
+#settlement-content .widget-header {
+  min-height: 28px !important;
+  margin-bottom: 10px !important;
+  align-items: center !important;
+}
+
+#settlement-content .widget-title {
+  font-size: 15px !important;
+  line-height: 1.4 !important;
+}
+
+#settlement-content .info-box {
+  margin: 0 !important;
+  padding: 12px 14px !important;
+  border-radius: var(--radius2) !important;
+}
+
+#settlement-content .info-row {
+  min-height: 34px !important;
+  padding: 8px 0 !important;
+  align-items: center !important;
+}
+
+#settlement-content .info-row .label,
+#settlement-content .info-row .value {
+  font-size: 13px !important;
+  line-height: 1.45 !important;
+}
+
+#settlement-content .balance-box,
+#settlement-content .commission-box {
+  min-height: 50px !important;
+  margin: 10px 0 0 !important;
+  padding: 12px 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: var(--radius2) !important;
+}
+
+#settlement-content > .section-title {
+  height: 24px !important;
+  margin: 4px 4px 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  font-size: 12px !important;
+  line-height: 1.4 !important;
+}
+
+#settlement-content .player-card {
+  min-height: 66px !important;
+  padding: 12px 14px !important;
+  gap: 12px !important;
+  border-radius: var(--radius2) !important;
+}
+
+#settlement-content .player-card .player-avatar {
+  width: 44px !important;
+  height: 44px !important;
+  font-size: 15px !important;
+}
+
+#settlement-content .player-name {
+  font-size: 15px !important;
+  line-height: 1.35 !important;
+}
+
+#settlement-content .player-meta {
+  margin-top: 3px !important;
+  font-size: 12px !important;
+  line-height: 1.45 !important;
+}
+
+#settlement-content .player-amount {
+  font-size: 15px !important;
+  min-width: 92px !important;
+}
+
+#settlement-content .settlement-hint {
+  margin: -4px 4px 0 !important;
+  padding: 0 !important;
+  font-size: 12px !important;
+  line-height: 1.5 !important;
+}
+
+#settlement-content .settlement-item {
+  min-height: 58px !important;
+  padding: 12px 14px !important;
+  gap: 12px !important;
+  border-radius: var(--radius2) !important;
+  align-items: center !important;
+}
+
+#settlement-content .settlement-route {
+  gap: 8px !important;
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+}
+
+#settlement-content .settlement-from,
+#settlement-content .settlement-to {
+  font-size: 15px !important;
+  line-height: 1.35 !important;
+}
+
+#settlement-content .settlement-arrow {
+  font-size: 18px !important;
+  line-height: 1 !important;
+  margin-inline: 2px !important;
+}
+
+#settlement-content .settlement-amount {
+  font-size: 15px !important;
+  min-width: 110px !important;
+  text-align: left !important;
+}
+
+#settlement-content > div:last-child {
+  margin-top: 4px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+#settlement-content > div:last-child .btn {
+  min-height: 48px !important;
+  margin: 0 !important;
+  border-radius: var(--app-button-radius, 999px) !important;
+  font-size: 14px !important;
 }
 
 @media (max-width: 699px) {
-  .widget:not(.game-live-banner):not(.felt-banner),
-  .idle-banner,
-  .card,
-  .player-card,
-  .settlement-item,
-  .info-box,
-  .tx-list,
-  .qa-item,
-  .setting-item,
-  .modal,
-  .confirm-modal,
-  .selectable-player:not(.selected) {
-    background-color: var(--reactive-glass-bg-strong) !important;
-    backdrop-filter: blur(30px) saturate(160%) contrast(1.10) brightness(1.05) !important;
-    -webkit-backdrop-filter: blur(30px) saturate(160%) contrast(1.10) brightness(1.05) !important;
+  #sub-settlement > .sub-header,
+  #settlement-content {
+    width: 100% !important;
+    max-width: 100% !important;
   }
+
+  #settlement-content .widget {
+    padding: 12px !important;
+  }
+
+  #settlement-content .player-card,
+  #settlement-content .settlement-item {
+    padding: 12px !important;
+  }
+
+  #settlement-content .player-amount {
+    min-width: 88px !important;
+  }
+
+  #settlement-content .settlement-amount {
+    min-width: 100px !important;
+  }
+}
+
+
+
+/* ---- End-game confirmation modal polish ---- */
+.modal:has(.end-game-modal) {
+  width: min(100%, 460px) !important;
+  max-width: 460px !important;
+  padding: var(--sp-5) !important;
+  border-radius: 28px !important;
+}
+
+.end-game-modal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.end-game-title {
+  margin: 0 0 var(--sp-1) !important;
+  font-size: 17px !important;
+  font-weight: 800 !important;
+  color: #fff !important;
+  text-align: right !important;
+}
+
+.end-game-summary-card {
+  background: rgba(255,255,255,0.035);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: var(--radius2);
+  padding: var(--sp-3);
+  box-shadow: var(--glass-shadow);
+}
+
+.end-game-card-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text2);
+  margin-bottom: var(--sp-2);
+}
+
+.end-game-info {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.end-game-info .info-row {
+  padding: 10px 0 !important;
+}
+
+.end-game-info .info-row:first-child {
+  padding-top: 0 !important;
+}
+
+.end-game-info .info-row:last-child {
+  padding-bottom: 0 !important;
+}
+
+.end-game-info .value.green { color: var(--green); }
+.end-game-info .value.red { color: var(--red); }
+
+.end-game-commission,
+.end-game-balance {
+  margin: 0 !important;
+  border-radius: var(--radius2) !important;
+  padding: var(--sp-3) var(--sp-4) !important;
+}
+
+.end-game-commission .comm-value {
+  font-size: 18px !important;
+}
+
+.end-game-question {
+  margin: 0 !important;
+  color: var(--text2);
+  font-size: 13px;
+  text-align: center;
+}
+
+.end-game-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.end-game-actions .btn {
+  min-height: 46px;
+}
+
+.end-game-player-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.end-game-player-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.035);
+  border: 1px solid rgba(255,255,255,0.065);
+  font-size: 13px;
+}
+
+.end-game-player-row .num {
+  color: var(--gold);
+  font-weight: 700;
+}
+
+@media (max-width: 480px) {
+  .modal:has(.end-game-modal) {
+    padding: var(--sp-4) !important;
+    border-radius: 24px !important;
+  }
+}
+
+
+
+/* ---- Final width system + end-game modal repair ---- */
+:root {
+  --app-content-max: 720px;
+}
+
+/* Keep main page-like content on one visual width across desktop/tablet/mobile */
+.app-header,
+.sub-page:not(.center-modal-page) > .sub-header,
+#dashboard-content,
+#table-content,
+#page-players > .search-box,
+#players-list,
+#history-content,
+#settings-content,
+#profile-content,
+#game-detail-content,
+#settlement-content,
+#sub-create-table .center-modal-card .sub-header,
+#sub-create-table #create-table-content {
+  width: min(100%, var(--app-content-max)) !important;
+  max-width: var(--app-content-max) !important;
+  margin-inline: auto !important;
+}
+
+/* End-game confirmation is a main workflow panel, so it follows the same width rule. */
+.modal:has(.end-game-modal) {
+  width: min(calc(100vw - 32px), var(--app-content-max)) !important;
+  max-width: var(--app-content-max) !important;
+  min-width: 0 !important;
+  padding: var(--app-card-padding) !important;
+  border-radius: var(--radius) !important;
+  max-height: calc(100dvh - 32px) !important;
+}
+
+.end-game-modal {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: var(--app-block-gap) !important;
+}
+
+.end-game-title {
+  margin: 0 !important;
+  padding: 0 var(--sp-1) !important;
+  font-size: 17px !important;
+  line-height: 1.45 !important;
+  text-align: right !important;
+}
+
+.end-game-summary-card {
+  width: 100% !important;
+  padding: var(--app-card-padding) !important;
+  border-radius: var(--radius2) !important;
+  background: var(--reactive-glass-bg, rgba(255,255,255,0.035)) !important;
+  border: 1px solid var(--reactive-glass-border, rgba(255,255,255,0.095)) !important;
+  overflow: visible !important;
+}
+
+.end-game-card-title {
+  margin: 0 0 var(--sp-3) !important;
+  font-size: 13px !important;
+  line-height: 1.45 !important;
+  color: var(--text) !important;
+  text-align: right !important;
+}
+
+.end-game-info {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.end-game-info .info-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: var(--sp-4) !important;
+  min-height: 38px !important;
+  padding: 9px 0 !important;
+  line-height: 1.55 !important;
+}
+
+.end-game-info .info-row:first-child { padding-top: 0 !important; }
+.end-game-info .info-row:last-child { padding-bottom: 0 !important; }
+
+.end-game-info .label {
+  flex: 0 0 auto !important;
+  max-width: 45% !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-align: right !important;
+  line-height: 1.55 !important;
+}
+
+.end-game-info .value {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  max-width: 55% !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  text-align: left !important;
+  line-height: 1.55 !important;
+  font-weight: 700 !important;
+}
+
+.end-game-balance,
+.end-game-commission {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: var(--sp-3) var(--sp-4) !important;
+  border-radius: var(--radius2) !important;
+  min-height: 44px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1.5 !important;
+}
+
+.end-game-question {
+  margin: 0 !important;
+  padding: 0 var(--sp-1) !important;
+  font-size: 13px !important;
+  line-height: 1.55 !important;
+  color: var(--text2) !important;
+  text-align: center !important;
+}
+
+.end-game-actions {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: var(--sp-2) !important;
+  margin: 0 !important;
+}
+
+.end-game-actions .btn {
+  min-height: 48px !important;
+  height: 48px !important;
+  padding-block: 0 !important;
+}
+
+.end-game-player-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: var(--sp-2) !important;
+}
+
+.end-game-player-row {
+  min-height: 44px !important;
+  padding: 10px 12px !important;
+  border-radius: var(--radius2) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: var(--sp-3) !important;
+  line-height: 1.5 !important;
+}
+
+@media (max-width: 480px) {
+  .modal:has(.end-game-modal) {
+    width: calc(100vw - 32px) !important;
+    padding: var(--sp-4) !important;
+    border-radius: 24px !important;
+  }
+
+  .end-game-summary-card {
+    padding: var(--sp-3) !important;
+  }
+
+  .end-game-info .info-row {
+    gap: var(--sp-3) !important;
+  }
+
+  .end-game-info .label {
+    max-width: 48% !important;
+  }
+
+  .end-game-info .value {
+    max-width: 52% !important;
+  }
+}
+
+
+
+/* ---- End-game modal padding correction: unified width, proper breathing room ---- */
+.modal:has(.end-game-modal) {
+  width: min(calc(100vw - 32px), var(--app-content-max)) !important;
+  max-width: var(--app-content-max) !important;
+  padding: 24px !important;
+}
+
+.end-game-modal {
+  gap: 14px !important;
+}
+
+.end-game-title {
+  padding-inline: 4px !important;
+  margin-bottom: 2px !important;
+}
+
+.end-game-summary-card {
+  padding: 20px !important;
+}
+
+.end-game-card-title {
+  padding-inline: 4px !important;
+  margin-bottom: 12px !important;
+}
+
+.end-game-info {
+  padding-inline: 4px !important;
+}
+
+.end-game-info .info-row {
+  padding: 10px 4px !important;
+  gap: 18px !important;
+}
+
+.end-game-balance,
+.end-game-commission {
+  padding: 13px 18px !important;
+}
+
+.end-game-actions .btn {
+  padding-inline: 20px !important;
+}
+
+@media (min-width: 700px) {
+  .modal:has(.end-game-modal) {
+    padding: 28px !important;
+  }
+  .end-game-summary-card {
+    padding: 22px 24px !important;
+  }
+  .end-game-info {
+    padding-inline: 6px !important;
+  }
+  .end-game-info .info-row {
+    padding: 11px 6px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal:has(.end-game-modal) {
+    width: calc(100vw - 32px) !important;
+    padding: 18px !important;
+  }
+  .end-game-summary-card {
+    padding: 16px !important;
+  }
+  .end-game-info {
+    padding-inline: 2px !important;
+  }
+  .end-game-info .info-row {
+    padding-inline: 2px !important;
+    gap: 12px !important;
+  }
+}
+
+
+
+/* ---- FINAL FIX: End-game modal text layout and padding ---- */
+.modal:has(.end-game-modal) {
+  width: min(calc(100vw - 48px), 720px) !important;
+  max-width: 720px !important;
+  min-width: 0 !important;
+  padding: 28px !important;
+  border-radius: 24px !important;
+}
+
+.end-game-modal {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+}
+
+.end-game-title {
+  margin: 0 !important;
+  padding: 0 4px 8px !important;
+  font-size: 18px !important;
+  line-height: 1.45 !important;
+  font-weight: 800 !important;
+  text-align: right !important;
+}
+
+.end-game-summary-card {
+  width: 100% !important;
+  padding: 20px !important;
+  border-radius: 20px !important;
+  overflow: hidden !important;
+}
+
+.end-game-card-title {
+  margin: 0 0 14px !important;
+  padding: 0 !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+  font-weight: 800 !important;
+  color: var(--text) !important;
+  text-align: right !important;
+}
+
+.end-game-info {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 12px 18px !important;
+  border-radius: 16px !important;
+  background: rgba(255,255,255,0.025) !important;
+  border: 1px solid rgba(255,255,255,0.075) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.045) !important;
+  overflow: hidden !important;
+}
+
+.end-game-info .info-row {
+  direction: rtl !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 24px !important;
+  min-height: 42px !important;
+  padding: 10px 0 !important;
+  margin: 0 !important;
+  line-height: 1.55 !important;
+  border-bottom: 1px solid rgba(255,255,255,0.055) !important;
+}
+
+.end-game-info .info-row:first-child { padding-top: 0 !important; }
+.end-game-info .info-row:last-child {
+  padding-bottom: 0 !important;
+  border-bottom: 0 !important;
+}
+
+.end-game-info .label {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  text-align: right !important;
+  color: var(--text2) !important;
+  font-weight: 600 !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  line-height: 1.55 !important;
+}
+
+.end-game-info .value {
+  flex: 0 0 auto !important;
+  min-width: 140px !important;
+  max-width: 50% !important;
+  text-align: left !important;
+  color: var(--text) !important;
+  font-weight: 800 !important;
+  direction: rtl !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  line-height: 1.55 !important;
+}
+
+.end-game-info .value.green { color: var(--green) !important; }
+.end-game-info .value.red { color: var(--red) !important; }
+
+.end-game-balance,
+.end-game-commission {
+  width: 100% !important;
+  min-height: 48px !important;
+  margin: 0 !important;
+  padding: 13px 18px !important;
+  border-radius: 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  line-height: 1.55 !important;
+}
+
+.end-game-question {
+  margin: 0 !important;
+  padding: 0 4px !important;
+  text-align: center !important;
+  color: var(--text2) !important;
+  font-size: 13px !important;
+  line-height: 1.55 !important;
+}
+
+.end-game-actions {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  margin: 0 !important;
+}
+
+.end-game-actions .btn {
+  width: 100% !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  padding: 0 20px !important;
+  border-radius: 999px !important;
+}
+
+.end-game-player-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+.end-game-player-row {
+  min-height: 44px !important;
+  padding: 10px 14px !important;
+  border-radius: 14px !important;
+}
+
+@media (max-width: 520px) {
+  .modal:has(.end-game-modal) {
+    width: calc(100vw - 32px) !important;
+    padding: 18px !important;
+    border-radius: 22px !important;
+  }
+
+  .end-game-modal { gap: 14px !important; }
+  .end-game-summary-card { padding: 16px !important; border-radius: 18px !important; }
+  .end-game-info { padding: 10px 14px !important; border-radius: 15px !important; }
+  .end-game-info .info-row { min-height: 40px !important; gap: 14px !important; padding: 9px 0 !important; }
+  .end-game-info .label { font-size: 13px !important; }
+  .end-game-info .value { min-width: 116px !important; max-width: 56% !important; font-size: 13px !important; }
+  .end-game-balance,
+  .end-game-commission { min-height: 46px !important; padding: 12px 14px !important; }
 }
 
 </style>
@@ -4477,11 +5488,89 @@ function syncCashOutSlider(tb){const v=parseInt(document.getElementById('cashout
 function confirmCashOut(odId){const c=document.getElementById('cashout-custom').value;const sl=document.getElementById('cashout-slider').value;const amt=parseInt(c)||parseInt(sl)||0;const g=getActiveGame();const gp=g.players.find(p=>p.odId===odId);if(!gp)return;gp.cashedOut=true;gp.cashOutAmount=amt;gp.cashOutTime=Date.now();saveData();hideModal();renderTablePage()}
 function undoCashOut(odId){const g=getActiveGame();const gp=g.players.find(p=>p.odId===odId);if(gp){gp.cashedOut=false;gp.cashOutAmount=null;gp.cashOutTime=null;saveData();renderTablePage()}}
 function removePlayerFromTable(odId){const g=getActiveGame();if(!g)return;const gp=g.players.find(p=>p.odId===odId);if(!gp)return;confirmDialog({title:'حذف از میز؟',message:`<strong>${gp.name}</strong> از این بازی حذف می‌شود و تمام خریدهای ثبت‌شده‌اش پاک خواهند شد.`,confirmText:'حذف از میز',cancelText:'انصراف',danger:true,icon:'🚫',onConfirm:()=>{g.players=g.players.filter(p=>p.odId!==odId);saveData();renderTablePage();toast('بازیکن از میز حذف شد','info')}})}
-function confirmEndGame(){const g=getActiveGame();if(!g)return;const uc=g.players.filter(p=>!p.cashedOut);if(uc.length>0){showModal(`<h3>⚠️ بازیکنان فعال</h3><div class="balance-box balance-warn" style="text-align:right"><p style="margin-bottom:var(--sp-2)"><strong>${uc.length} بازیکن</strong> هنوز خروج ثبت نکرده:</p><p style="font-size:13px">${uc.map(p=>'• '+p.name+' (خرید: '+fmt(p.buyIns.reduce((s,b)=>s+b.amount,0))+')').join('<br>')}</p></div><p style="font-size:13px;color:var(--text2);margin:12px 0">اگر بازی را ببندید، خروجی بازیکنان فعال <strong style="color:var(--red)">صفر</strong> ثبت می‌شود و کل خریدشان ضرر محسوب خواهد شد.</p><div class="btn-group" style="flex-direction:column"><button class="btn btn-danger btn-block" onclick="forceEndGame()">⚠️ بستن اجباری بازی</button><button class="btn btn-secondary btn-block" onclick="hideModal()">بازگشت و ادامه بازی</button></div>`);return}const totalBI=g.players.reduce((s,p)=>s+p.buyIns.reduce((ss,b)=>ss+b.amount,0),0);const totalCO=g.players.reduce((s,p)=>s+(p.cashOutAmount||0),0);const commAmt=getCommissionAmount(g);const diff=totalBI-totalCO-commAmt;let balHtml='';if(diff===0)balHtml=`<div class="balance-box balance-ok">✅ حساب‌ها دقیقاً منطبق است</div>`;else if(diff>0)balHtml=`<div class="balance-box balance-warn">⚠️ <span class="num">${fmt(diff)}</span> ${getCurrency()} پول کم آمده!</div>`;else balHtml=`<div class="balance-box balance-warn">⚠️ <span class="num">${fmt(Math.abs(diff))}</span> ${getCurrency()} پول اضافه خارج شده!</div>`;let commHtml='';if(g.commission&&g.commission.enabled)commHtml=`<div class="commission-box" style="text-align:right"><div class="comm-label">💰 کانیات: ${getCommissionLabel(g)}</div><div class="comm-value"><span class="num">${fmt(commAmt)}</span> ${getCurrency()}</div></div>`;let infoHtml=`<div class="info-box"><div class="info-row"><span class="label">کل ورودی</span><span class="value num">${fmt(totalBI)} ${getCurrency()}</span></div><div class="info-row"><span class="label">کل خروجی بازیکنان</span><span class="value num">${fmt(totalCO)} ${getCurrency()}</span></div>${g.commission&&g.commission.enabled?`<div class="info-row"><span class="label">کانیات</span><span class="value num">${fmt(commAmt)} ${getCurrency()}</span></div>`:''}<div class="info-row"><span class="label">تفاوت</span><span class="value num" style="color:var(--${diff===0?'green':'red'})">${diff===0?'0':fmtSign(-diff)} ${getCurrency()}</span></div></div>`;showModal(`<h3>⏹ پایان بازی</h3>${infoHtml}${commHtml}${balHtml}<p style="margin:16px 0;text-align:center;color:var(--text2)">آیا بازی را پایان می‌دهید؟</p><div class="btn-group" style="flex-direction:column"><button class="btn btn-danger btn-block" onclick="endGame()">بله، پایان بازی</button><button class="btn btn-secondary btn-block" onclick="hideModal()">انصراف</button></div>`)}
-function forceEndGame(){const g=getActiveGame();if(!g)return;g.players.forEach(p=>{if(!p.cashedOut){p.cashedOut=true;p.cashOutAmount=0;p.cashOutTime=Date.now()}});g.status='closed';g.endTime=Date.now();data.activeGameId=null;saveData();hideModal();showSettlement(g.id)}
-function endGame(){const g=getActiveGame();if(!g)return;g.status='closed';g.endTime=Date.now();data.activeGameId=null;saveData();hideModal();showSettlement(g.id)}
+function confirmEndGame(){
+  const g=getActiveGame();
+  if(!g)return;
+  const uc=g.players.filter(p=>!p.cashedOut);
+  if(uc.length>0){
+    const activeList=uc.map(p=>`<div class="end-game-player-row"><span>${p.name}</span><span class="num">${fmt(p.buyIns.reduce((s,b)=>s+b.amount,0))}</span></div>`).join('');
+    showModal(`<div class="end-game-modal end-game-warning-modal">
+      <h3 class="end-game-title">⚠️ بازیکنان فعال</h3>
+      <div class="end-game-summary-card">
+        <div class="end-game-card-title">${uc.length} بازیکن هنوز خروج ثبت نکرده‌اند</div>
+        <div class="end-game-player-list">${activeList}</div>
+      </div>
+      <div class="balance-box balance-warn end-game-balance">اگر بازی را ببندید، خروجی بازیکنان فعال <strong>صفر</strong> ثبت می‌شود و کل خریدشان ضرر محسوب خواهد شد.</div>
+      <div class="end-game-actions">
+        <button class="btn btn-danger btn-block" onclick="forceEndGame()">بستن اجباری بازی</button>
+        <button class="btn btn-secondary btn-block" onclick="hideModal()">بازگشت و ادامه بازی</button>
+      </div>
+    </div>`);
+    return;
+  }
+  const totalBI=g.players.reduce((s,p)=>s+p.buyIns.reduce((ss,b)=>ss+b.amount,0),0);
+  const totalCO=g.players.reduce((s,p)=>s+(p.cashOutAmount||0),0);
+  const commAmt=getCommissionAmount(g);
+  const diff=totalBI-totalCO-commAmt;
+  const balanceClass=diff===0?'balance-ok':'balance-warn';
+  const balanceText=diff===0?'✅ حساب‌ها دقیقاً منطقی است':(diff>0?`⚠️ <span class="num">${fmt(diff)}</span> ${getCurrency()} پول کم آمده`:`⚠️ <span class="num">${fmt(Math.abs(diff))}</span> ${getCurrency()} پول اضافه خارج شده`);
+  const commRow=(g.commission&&g.commission.enabled)?`<div class="info-row"><span class="label">کانیات</span><span class="value num">${fmt(commAmt)} ${getCurrency()}</span></div>`:'';
+  const commBox=(g.commission&&g.commission.enabled)?`<div class="commission-box end-game-commission"><div class="comm-label">💰 کانیات: ${getCommissionLabel(g)}</div><div class="comm-value"><span class="num">${fmt(commAmt)}</span> ${getCurrency()}</div></div>`:'';
+  showModal(`<div class="end-game-modal">
+    <h3 class="end-game-title">🏁 پایان بازی</h3>
+    <div class="end-game-summary-card">
+      <div class="end-game-card-title">خلاصه مالی</div>
+      <div class="info-box end-game-info">
+        <div class="info-row"><span class="label">کل ورودی</span><span class="value num">${fmt(totalBI)} ${getCurrency()}</span></div>
+        <div class="info-row"><span class="label">کل خروجی بازیکنان</span><span class="value num">${fmt(totalCO)} ${getCurrency()}</span></div>
+        ${commRow}
+        <div class="info-row"><span class="label">تفاوت</span><span class="value num ${diff===0?'green':'red'}">${diff===0?'0':fmtSign(-diff)} ${getCurrency()}</span></div>
+      </div>
+    </div>
+    ${commBox}
+    <div class="balance-box ${balanceClass} end-game-balance">${balanceText}</div>
+    <p class="end-game-question">آیا بازی را پایان می‌دهید؟</p>
+    <div class="end-game-actions">
+      <button class="btn btn-danger btn-block" onclick="endGame()">بله، پایان بازی</button>
+      <button class="btn btn-secondary btn-block" onclick="hideModal()">انصراف</button>
+    </div>
+  </div>`);
+}
+function refreshGameViewsAfterClose(){
+  renderDashboard();
+  renderTablePage();
+  renderPlayersPage();
+  renderHistoryPage();
+}
+function closeGameAndShowSettlement(g){
+  if(!g)return;
+  g.status='closed';
+  g.endTime=Date.now();
+  data.activeGameId=null;
+  saveData();
+  refreshGameViewsAfterClose();
+  hideModal();
+  showSettlement(g.id);
+}
+function forceEndGame(){
+  const g=getActiveGame();
+  if(!g)return;
+  g.players.forEach(p=>{
+    if(!p.cashedOut){
+      p.cashedOut=true;
+      p.cashOutAmount=0;
+      p.cashOutTime=Date.now();
+    }
+  });
+  closeGameAndShowSettlement(g);
+}
+function endGame(){
+  const g=getActiveGame();
+  if(!g)return;
+  closeGameAndShowSettlement(g);
+}
 function calculateSettlements(game){const results=[];game.players.forEach(p=>{const tb=p.buyIns.reduce((s,b)=>s+b.amount,0);results.push({name:p.name,playerId:p.playerId,buyIn:tb,cashOut:p.cashOutAmount||0,profit:(p.cashOutAmount||0)-tb})});const debtors=[],creditors=[];results.forEach(r=>{if(r.profit<0)debtors.push({name:r.name,amount:Math.abs(r.profit)});else if(r.profit>0)creditors.push({name:r.name,amount:r.profit})});debtors.sort((a,b)=>b.amount-a.amount);creditors.sort((a,b)=>b.amount-a.amount);const settlements=[];let i=0,j=0;while(i<debtors.length&&j<creditors.length){const amt=Math.min(debtors[i].amount,creditors[j].amount);if(amt>0)settlements.push({from:debtors[i].name,to:creditors[j].name,amount:amt});debtors[i].amount-=amt;creditors[j].amount-=amt;if(debtors[i].amount<=0)i++;if(creditors[j].amount<=0)j++}return{results,settlements}}
-function showSettlement(gid){const game=data.games.find(g=>g.id===gid);if(!game)return;const{results,settlements}=calculateSettlements(game);const totalBI=game.players.reduce((s,p)=>s+p.buyIns.reduce((ss,b)=>ss+b.amount,0),0);const totalCO=game.players.reduce((s,p)=>s+(p.cashOutAmount||0),0);const commAmt=getCommissionAmount(game);const diff=totalBI-totalCO-commAmt;let html=`<div class="widget"><div class="widget-header"><span class="widget-title">📊 نتایج</span></div><div class="info-box"><div class="info-row"><span class="label">تاریخ</span><span class="value">${getDateStr(game.startTime)}</span></div><div class="info-row"><span class="label">مدت</span><span class="value">${durationStr(game.startTime,game.endTime)}</span></div>${game.location?`<div class="info-row"><span class="label">مکان</span><span class="value">${game.location}</span></div>`:''}<div class="info-row"><span class="label">کل ورودی</span><span class="value num">${fmt(totalBI)} ${getCurrency()}</span></div><div class="info-row"><span class="label">کل خروجی</span><span class="value num">${fmt(totalCO)} ${getCurrency()}</span></div>`;if(game.commission&&game.commission.enabled)html+=`<div class="info-row"><span class="label">💰 کانیات (${getCommissionLabel(game)})</span><span class="value num" style="color:var(--gold)">${fmt(commAmt)} ${getCurrency()}</span></div>`;html+=`</div>`;if(diff===0)html+=`<div class="balance-box balance-ok">✅ حساب‌ها منطبق</div>`;else if(diff>0)html+=`<div class="balance-box balance-warn">⚠️ <span class="num">${fmt(diff)}</span> ${getCurrency()} کم آمده</div>`;else html+=`<div class="balance-box balance-warn">⚠️ <span class="num">${fmt(Math.abs(diff))}</span> ${getCurrency()} اضافه خارج شده</div>`;html+=`</div>`;if(game.commission&&game.commission.enabled){html+=`<div class="commission-box"><div class="comm-label">💰 کانیات صاحب میز</div><div class="comm-value"><span class="num">${fmt(commAmt)}</span> ${getCurrency()}</div><div style="font-size:11px;color:var(--text3);margin-top:4px">${getCommissionLabel(game)} · از کل گردش <span class="num">${fmt(totalBI)}</span></div></div>`}html+=`<div class="section-title">📊 عملکرد</div>`;results.sort((a,b)=>b.profit-a.profit).forEach(r=>{const pc=r.profit>0?'green':r.profit<0?'red':'gray';html+=`<div class="player-card"><div class="player-avatar" style="color:var(--${r.profit>0?'green':r.profit<0?'red':'text2'})">${r.profit>0?'▲':r.profit<0?'▼':'●'}</div><div class="player-info"><div class="player-name">${r.name}</div><div class="player-meta">خرید: <span class="num">${fmt(r.buyIn)}</span> · خروج: <span class="num">${fmt(r.cashOut)}</span></div></div><div class="player-amount ${pc}"><span class="num">${fmtSign(r.profit)}</span></div></div>`});if(settlements.length>0){html+=`<div class="section-title" style="margin-top:20px">💸 تسویه</div><p style="font-size:12px;color:var(--text2);margin-bottom:10px">چه کسی به چه کسی:</p>`;settlements.forEach(s=>{html+=`<div class="settlement-item"><span style="font-weight:600;color:var(--red)">${s.from}</span><span class="settlement-arrow">→</span><span style="font-weight:600;color:var(--green)">${s.to}</span><span class="settlement-amount"><span class="num">${fmt(s.amount)}</span> ${getCurrency()}</span></div>`})}html+=`<div style="margin-top:20px"><button class="btn btn-secondary btn-block" onclick="generatePDF('${gid}')" style="margin-bottom:var(--sp-2)">📄 PDF</button><button class="btn btn-outline btn-block" onclick="closeSubPage('sub-settlement')">بستن</button></div>`;document.getElementById('settlement-content').innerHTML=html;openSubPage('sub-settlement')}
+function showSettlement(gid){const game=data.games.find(g=>g.id===gid);if(!game)return;const{results,settlements}=calculateSettlements(game);const totalBI=game.players.reduce((s,p)=>s+p.buyIns.reduce((ss,b)=>ss+b.amount,0),0);const totalCO=game.players.reduce((s,p)=>s+(p.cashOutAmount||0),0);const commAmt=getCommissionAmount(game);const diff=totalBI-totalCO-commAmt;let html=`<div class="widget"><div class="widget-header"><span class="widget-title">📊 نتایج</span></div><div class="info-box"><div class="info-row"><span class="label">تاریخ</span><span class="value">${getDateStr(game.startTime)}</span></div><div class="info-row"><span class="label">مدت</span><span class="value">${durationStr(game.startTime,game.endTime)}</span></div>${game.location?`<div class="info-row"><span class="label">مکان</span><span class="value">${game.location}</span></div>`:''}<div class="info-row"><span class="label">کل ورودی</span><span class="value num">${fmt(totalBI)} ${getCurrency()}</span></div><div class="info-row"><span class="label">کل خروجی</span><span class="value num">${fmt(totalCO)} ${getCurrency()}</span></div>`;if(game.commission&&game.commission.enabled)html+=`<div class="info-row"><span class="label">💰 کانیات (${getCommissionLabel(game)})</span><span class="value num" style="color:var(--gold)">${fmt(commAmt)} ${getCurrency()}</span></div>`;html+=`</div>`;if(diff===0)html+=`<div class="balance-box balance-ok">✅ حساب‌ها منطبق</div>`;else if(diff>0)html+=`<div class="balance-box balance-warn">⚠️ <span class="num">${fmt(diff)}</span> ${getCurrency()} کم آمده</div>`;else html+=`<div class="balance-box balance-warn">⚠️ <span class="num">${fmt(Math.abs(diff))}</span> ${getCurrency()} اضافه خارج شده</div>`;html+=`</div>`;if(game.commission&&game.commission.enabled){html+=`<div class="commission-box"><div class="comm-label">💰 کانیات صاحب میز</div><div class="comm-value"><span class="num">${fmt(commAmt)}</span> ${getCurrency()}</div><div style="font-size:11px;color:var(--text3);margin-top:4px">${getCommissionLabel(game)} · از کل گردش <span class="num">${fmt(totalBI)}</span></div></div>`}html+=`<div class="section-title">📊 عملکرد</div>`;results.sort((a,b)=>b.profit-a.profit).forEach(r=>{const pc=r.profit>0?'green':r.profit<0?'red':'gray';html+=`<div class="player-card"><div class="player-avatar" style="color:var(--${r.profit>0?'green':r.profit<0?'red':'text2'})">${r.profit>0?'▲':r.profit<0?'▼':'●'}</div><div class="player-info"><div class="player-name">${r.name}</div><div class="player-meta">خرید: <span class="num">${fmt(r.buyIn)}</span> · خروج: <span class="num">${fmt(r.cashOut)}</span></div></div><div class="player-amount ${pc}"><span class="num">${fmtSign(r.profit)}</span></div></div>`});if(settlements.length>0){html+=`<div class="section-title settlement-title">💸 تسویه</div><p class="settlement-hint">چه کسی به چه کسی:</p>`;settlements.forEach(s=>{html+=`<div class="settlement-item"><div class="settlement-route"><span class="settlement-from">${s.from}</span><span class="settlement-arrow">←</span><span class="settlement-to">${s.to}</span></div><span class="settlement-amount"><span class="num">${fmt(s.amount)}</span> ${getCurrency()}</span></div>`})}html+=`<div style="margin-top:20px"><button class="btn btn-pdf btn-block" onclick="generatePDF('${gid}')" style="margin-bottom:var(--sp-2)">📄 مشاهده PDF</button><button class="btn btn-close-soft btn-block" onclick="closeSubPage('sub-settlement')">بستن</button></div>`;document.getElementById('settlement-content').innerHTML=html;openSubPage('sub-settlement')}
 function generatePDF(gid){const game=data.games.find(g=>g.id===gid);if(!game)return;const{jsPDF}=window.jspdf;const doc=new jsPDF();const{results,settlements}=calculateSettlements(game);const commAmt=getCommissionAmount(game);const totalBI=game.players.reduce((s,p)=>s+p.buyIns.reduce((ss,b)=>ss+b.amount,0),0);const totalCO=game.players.reduce((s,p)=>s+(p.cashOutAmount||0),0);const diff=totalBI-totalCO-commAmt;let y=20;doc.setFontSize(20);doc.setFont('helvetica','bold');doc.text('Poker Game Report',105,y,{align:'center'});y+=15;doc.setFontSize(11);doc.setFont('helvetica','normal');doc.text(`Date: ${getDateStrEn(game.startTime)}`,20,y);y+=7;doc.text(`Start: ${getTimeStr(game.startTime)}`,20,y);if(game.endTime)doc.text(`End: ${getTimeStr(game.endTime)}`,100,y);y+=7;if(game.location){doc.text(`Location: ${persianToFinglish(game.location)}`,20,y);y+=7}doc.text(`Players: ${game.players.length}`,20,y);y+=7;doc.text(`Total Buy-ins: ${fmt(totalBI)}`,20,y);y+=7;doc.text(`Total Cash-outs: ${fmt(totalCO)}`,20,y);y+=7;if(game.commission&&game.commission.enabled){doc.text(`Commission: ${fmt(commAmt)}`,20,y);y+=7}if(diff!==0){doc.setTextColor(255,0,0);doc.text(`Balance Discrepancy: ${diff>0?'-':'+'} ${fmt(Math.abs(diff))}`,20,y);doc.setTextColor(0,0,0);y+=7}else{doc.setTextColor(0,128,0);doc.text('Balance: OK',20,y);doc.setTextColor(0,0,0);y+=7}y+=5;doc.setFontSize(14);doc.setFont('helvetica','bold');doc.text('Player Results',20,y);y+=8;const td=results.sort((a,b)=>b.profit-a.profit).map(r=>[persianToFinglish(r.name),fmt(r.buyIn),fmt(r.cashOut),(r.profit>=0?'+':'')+fmt(r.profit),r.profit>0?'WIN':r.profit<0?'LOSS':'EVEN']);doc.autoTable({startY:y,head:[['Player','Buy-in','Cash-out','P/L','Result']],body:td,theme:'grid',headStyles:{fillColor:[27,122,48],textColor:255,fontStyle:'bold'},styles:{halign:'center',fontSize:10},columnStyles:{0:{halign:'left'}}});y=doc.lastAutoTable.finalY+15;if(settlements.length>0){doc.setFontSize(14);doc.setFont('helvetica','bold');doc.text('Settlements',20,y);y+=8;const sd=settlements.map(s=>[persianToFinglish(s.from),'-->',persianToFinglish(s.to),fmt(s.amount)]);doc.autoTable({startY:y,head:[['From','','To','Amount']],body:sd,theme:'grid',headStyles:{fillColor:[210,153,34],textColor:0,fontStyle:'bold'},styles:{halign:'center',fontSize:10}})}doc.setFontSize(8);doc.setFont('helvetica','italic');doc.text('Poker Manager Pro v2.0',105,doc.internal.pageSize.height-10,{align:'center'});doc.save(`poker-${getDateStrEn(game.startTime).replace(/[^a-zA-Z0-9]/g,'-')}.pdf`)}
 function renderPlayersPage(){const el=document.getElementById('players-list');const search=(document.getElementById('player-search')?.value||'').trim().toLowerCase();let players=data.players.map(p=>({...p,stats:getPlayerStats(p.id)}));if(search)players=players.filter(p=>p.name.toLowerCase().includes(search));players.sort((a,b)=>b.stats.totalProfit-a.stats.totalProfit);if(!players.length){el.innerHTML=`<div class="empty-state"><div style="font-size:48px;margin-bottom:var(--sp-3)">👥</div><p>${search?'یافت نشد':'بازیکنی ثبت نشده'}</p></div>`;return}let html='';players.forEach(p=>{const s=p.stats;const pc=s.totalProfit>0?'green':s.totalProfit<0?'red':'gray';const wr=s.totalGames>0?Math.round(s.wins/s.totalGames*100):0;html+=`<div class="player-card" onclick="openPlayerProfile('${p.id}')">${playerAvatarHtml(p)}<div class="player-info"><div class="player-name">${p.name}</div><div class="player-meta">${s.totalGames} بازی · ${wr}% برد</div></div><div class="player-amount ${pc}"><span class="num">${s.totalGames>0?fmtSign(s.totalProfit):'-'}</span></div></div>`});el.innerHTML=html}
 function openAddPlayerModal(){showModal(`<h3>➕ بازیکن جدید</h3><div class="form-group"><label class="form-label">نام</label><input class="form-input" id="new-player-name" placeholder="مثال: علی"></div><button class="btn btn-primary btn-block" onclick="addNewPlayer()">ذخیره</button>`)}
@@ -4497,7 +5586,7 @@ function getFilteredGames(){let cg=data.games.filter(g=>g.status==='closed');if(
 function renderHistoryPage(){const el=document.getElementById('history-content');const fL={all:'همه',tonight:'امشب',week:'این هفته',month:'این ماه',year:'امسال',custom:'دلخواه'};let html=`<div class="widget"><div class="widget-header"><span class="widget-title">📈 آمار تحلیلی</span></div><div class="chart-container"><canvas id="history-chart"></canvas></div></div>`;html+=`<div class="section-title">🔍 جستجو و فیلتر</div><div class="search-box"><input type="text" id="history-search" placeholder="جستجو: مکان، بازیکن، تاریخ..." value="${historySearch}" oninput="historySearch=this.value;renderHistoryPage()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div><div class="filter-chips">`;['all','tonight','week','month','year','custom'].forEach(f=>{html+=`<button class="filter-chip ${historyFilter===f?'active':''}" onclick="setHistoryFilter('${f}')">${fL[f]}</button>`});html+=`</div>`;if(historyFilter==='custom'){const sV=historyCustomStart?tsToJalaliStr(historyCustomStart):'تاریخ شروع';const eV=historyCustomEnd?tsToJalaliStr(historyCustomEnd):'تاریخ پایان';html+=`<div style="display:flex;gap:var(--sp-2);margin-bottom:var(--sp-4)"><div style="flex:1"><label class="form-label">از تاریخ</label><button class="form-input" style="text-align:right;cursor:pointer" onclick="openDatePicker('histStart',historyCustomStart,function(s){historyCustomStart=jalaliStrToTs(s,false);renderHistoryPage()})">${sV}</button></div><div style="flex:1"><label class="form-label">تا تاریخ</label><button class="form-input" style="text-align:right;cursor:pointer" onclick="openDatePicker('histEnd',historyCustomEnd,function(s){historyCustomEnd=jalaliStrToTs(s,true);renderHistoryPage()})">${eV}</button></div></div>`}const cg=getFilteredGames();const allGames=data.games.filter(g=>g.status==='closed');html+=`<div class="section-title">📋 تاریخچه (${cg.length}${cg.length!==allGames.length?' از '+allGames.length:''})</div>`;if(!cg.length)html+=`<div class="empty-state"><p>${historySearch||historyFilter!=='all'?'نتیجه‌ای یافت نشد':'بازی‌ای ثبت نشده'}</p></div>`;else cg.forEach(g=>{const tb=g.players.reduce((s,p)=>s+p.buyIns.reduce((ss,b)=>ss+b.amount,0),0);const commAmt=getCommissionAmount(g);html+=`<div class="card" onclick="openGameDetail('${g.id}')"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-weight:700;color:#fff">${getDateStr(g.startTime)}</span><span class="chip chip-gold">${g.players.length} بازیکن</span></div><div style="font-size:12px;color:var(--text2);display:flex;gap:var(--sp-3);flex-wrap:wrap"><span>⏱ ${durationStr(g.startTime,g.endTime)}</span><span>💰 <span class="num">${fmt(tb)}</span></span>${g.location?`<span>📍 ${g.location}</span>`:''}${g.commission&&g.commission.enabled?`<span style="color:var(--gold)">🏦 ${fmt(commAmt)}</span>`:''}</div></div>`});el.innerHTML=html;setTimeout(()=>renderHistoryChart(allGames),100)}
 function setHistoryFilter(f){historyFilter=f;if(f!=='custom'){historyCustomStart=null;historyCustomEnd=null}renderHistoryPage()}
 function renderHistoryChart(games){const canvas=document.getElementById('history-chart');if(!canvas||!games.length)return;const md={};games.forEach(g=>{const d=new Date(g.startTime);const k=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;if(!md[k])md[k]={totalMoney:0};md[k].totalMoney+=g.players.reduce((s,p)=>s+p.buyIns.reduce((ss,b)=>ss+b.amount,0),0)});const labels=Object.keys(md).sort();const money=labels.map(k=>md[k].totalMoney);if(window.historyChart)window.historyChart.destroy();window.historyChart=new Chart(canvas,{type:'bar',data:{labels,datasets:[{label:'گردش مالی ('+getCurrency()+')',data:money,backgroundColor:'rgba(63,185,80,0.5)',borderColor:'#3fb950',borderWidth:1,borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#8b949e'}},tooltip:{callbacks:{label:function(ctx){return fmt(ctx.raw)+' '+getCurrency()}}}},scales:{x:{ticks:{color:'#6e7681'},grid:{color:'rgba(48,54,61,0.5)'}},y:{ticks:{color:'#6e7681',callback:function(v){return fmt(v)}},grid:{color:'rgba(48,54,61,0.5)'}}}}})}
-function openGameDetail(gid){const game=data.games.find(g=>g.id===gid);if(!game)return;const{results,settlements}=calculateSettlements(game);const tbi=game.players.reduce((s,p)=>s+p.buyIns.reduce((ss,b)=>ss+b.amount,0),0);const tco=game.players.reduce((s,p)=>s+(p.cashOutAmount||0),0);const commAmt=getCommissionAmount(game);const diff=tbi-tco-commAmt;document.getElementById('game-detail-title').textContent='بازی '+getDateStrShort(game.startTime);let html=`<div class="widget"><div class="info-box"><div class="info-row"><span class="label">📅 تاریخ</span><span class="value">${getDateStr(game.startTime)}</span></div><div class="info-row"><span class="label">🕐 شروع</span><span class="value num">${getTimeStr(game.startTime)}</span></div>${game.endTime?`<div class="info-row"><span class="label">🕐 پایان</span><span class="value num">${getTimeStr(game.endTime)}</span></div>`:''}<div class="info-row"><span class="label">⏱ مدت</span><span class="value">${durationStr(game.startTime,game.endTime)}</span></div>${game.location?`<div class="info-row"><span class="label">📍 مکان</span><span class="value">${game.location}</span></div>`:''}</div><div class="stat-row" style="margin-top:var(--sp-3)"><div class="stat-box"><div class="stat-value blue">${game.players.length}</div><div class="stat-label">بازیکنان</div></div><div class="stat-box"><div class="stat-value"><span class="num">${fmt(tbi)}</span></div><div class="stat-label">خرید</div></div><div class="stat-box"><div class="stat-value"><span class="num">${fmt(tco)}</span></div><div class="stat-label">خروج</div></div></div>`;if(game.commission&&game.commission.enabled){html+=`<div class="commission-box"><div class="comm-label">💰 کانیات (${getCommissionLabel(game)})</div><div class="comm-value"><span class="num">${fmt(commAmt)}</span> ${getCurrency()}</div></div>`}if(game.status==='closed'){if(diff===0)html+=`<div class="balance-box balance-ok">✅ حساب‌ها منطبق</div>`;else if(diff>0)html+=`<div class="balance-box balance-warn">⚠️ <span class="num">${fmt(diff)}</span> ${getCurrency()} کم آمده</div>`;else html+=`<div class="balance-box balance-warn">⚠️ <span class="num">${fmt(Math.abs(diff))}</span> ${getCurrency()} اضافه خارج شده</div>`}html+=`</div>`;html+=`<div class="section-title">📊 عملکرد</div>`;results.sort((a,b)=>b.profit-a.profit).forEach(r=>{const pc=r.profit>0?'green':r.profit<0?'red':'gray';html+=`<div class="player-card" onclick="openPlayerProfile('${r.playerId||''}')"><div class="player-avatar" style="color:var(--${r.profit>0?'green':r.profit<0?'red':'text2'})">${r.profit>0?'▲':r.profit<0?'▼':'●'}</div><div class="player-info"><div class="player-name">${r.name}</div><div class="player-meta">خرید: <span class="num">${fmt(r.buyIn)}</span> · خروج: <span class="num">${fmt(r.cashOut)}</span></div></div><div class="player-amount ${pc}"><span class="num">${fmtSign(r.profit)}</span></div></div>`});if(settlements.length>0){html+=`<div class="section-title" style="margin-top:var(--sp-4)">💸 تسویه</div>`;settlements.forEach(s=>{html+=`<div class="settlement-item"><span style="font-weight:600;color:var(--red)">${s.from}</span><span class="settlement-arrow">→</span><span style="font-weight:600;color:var(--green)">${s.to}</span><span class="settlement-amount"><span class="num">${fmt(s.amount)}</span></span></div>`})}html+=`<div style="margin-top:20px"><button class="btn btn-secondary btn-block" onclick="generatePDF('${gid}')" style="margin-bottom:var(--sp-2)">📄 خروجی PDF</button><button class="btn btn-danger btn-block" onclick="deleteGame('${gid}')" style="margin-bottom:var(--sp-2)">🗑 حذف این تاریخچه</button></div>`;document.getElementById('game-detail-content').innerHTML=html;openSubPage('sub-game-detail')}
+function openGameDetail(gid){const game=data.games.find(g=>g.id===gid);if(!game)return;const{results,settlements}=calculateSettlements(game);const tbi=game.players.reduce((s,p)=>s+p.buyIns.reduce((ss,b)=>ss+b.amount,0),0);const tco=game.players.reduce((s,p)=>s+(p.cashOutAmount||0),0);const commAmt=getCommissionAmount(game);const diff=tbi-tco-commAmt;document.getElementById('game-detail-title').textContent='بازی '+getDateStrShort(game.startTime);let html=`<div class="widget"><div class="info-box"><div class="info-row"><span class="label">📅 تاریخ</span><span class="value">${getDateStr(game.startTime)}</span></div><div class="info-row"><span class="label">🕐 شروع</span><span class="value num">${getTimeStr(game.startTime)}</span></div>${game.endTime?`<div class="info-row"><span class="label">🕐 پایان</span><span class="value num">${getTimeStr(game.endTime)}</span></div>`:''}<div class="info-row"><span class="label">⏱ مدت</span><span class="value">${durationStr(game.startTime,game.endTime)}</span></div>${game.location?`<div class="info-row"><span class="label">📍 مکان</span><span class="value">${game.location}</span></div>`:''}</div><div class="stat-row" style="margin-top:var(--sp-3)"><div class="stat-box"><div class="stat-value blue">${game.players.length}</div><div class="stat-label">بازیکنان</div></div><div class="stat-box"><div class="stat-value"><span class="num">${fmt(tbi)}</span></div><div class="stat-label">خرید</div></div><div class="stat-box"><div class="stat-value"><span class="num">${fmt(tco)}</span></div><div class="stat-label">خروج</div></div></div>`;if(game.commission&&game.commission.enabled){html+=`<div class="commission-box"><div class="comm-label">💰 کانیات (${getCommissionLabel(game)})</div><div class="comm-value"><span class="num">${fmt(commAmt)}</span> ${getCurrency()}</div></div>`}if(game.status==='closed'){if(diff===0)html+=`<div class="balance-box balance-ok">✅ حساب‌ها منطبق</div>`;else if(diff>0)html+=`<div class="balance-box balance-warn">⚠️ <span class="num">${fmt(diff)}</span> ${getCurrency()} کم آمده</div>`;else html+=`<div class="balance-box balance-warn">⚠️ <span class="num">${fmt(Math.abs(diff))}</span> ${getCurrency()} اضافه خارج شده</div>`}html+=`</div>`;html+=`<div class="section-title">📊 عملکرد</div>`;results.sort((a,b)=>b.profit-a.profit).forEach(r=>{const pc=r.profit>0?'green':r.profit<0?'red':'gray';html+=`<div class="player-card" onclick="openPlayerProfile('${r.playerId||''}')"><div class="player-avatar" style="color:var(--${r.profit>0?'green':r.profit<0?'red':'text2'})">${r.profit>0?'▲':r.profit<0?'▼':'●'}</div><div class="player-info"><div class="player-name">${r.name}</div><div class="player-meta">خرید: <span class="num">${fmt(r.buyIn)}</span> · خروج: <span class="num">${fmt(r.cashOut)}</span></div></div><div class="player-amount ${pc}"><span class="num">${fmtSign(r.profit)}</span></div></div>`});if(settlements.length>0){html+=`<div class="section-title settlement-title">💸 تسویه</div>`;settlements.forEach(s=>{html+=`<div class="settlement-item"><div class="settlement-route"><span class="settlement-from">${s.from}</span><span class="settlement-arrow">←</span><span class="settlement-to">${s.to}</span></div><span class="settlement-amount"><span class="num">${fmt(s.amount)}</span></span></div>`})}html+=`<div style="margin-top:20px"><button class="btn btn-pdf btn-block" onclick="generatePDF('${gid}')" style="margin-bottom:var(--sp-2)">📄 خروجی PDF</button><button class="btn btn-danger btn-block" onclick="deleteGame('${gid}')" style="margin-bottom:var(--sp-2)">🗑 حذف این تاریخچه</button></div>`;document.getElementById('game-detail-content').innerHTML=html;openSubPage('sub-game-detail')}
 function renderSettingsPage(){
   const s=data.settings;
   const el=document.getElementById('settings-content');
