@@ -3648,8 +3648,8 @@ function closeSubPage(id){document.getElementById(id).classList.remove('active')
   document.addEventListener('touchstart',function(e){
     const sub=document.querySelector('.sub-page.active');
     if(!sub)return;
-    if(sub.classList.contains('center-modal-page'))return;
     if(document.querySelector('.modal-overlay.active'))return;
+    if(e.touches.length!==1)return;
     const t=e.touches[0];
     if(t.clientX<=EDGE){
       st={sub,sx:t.clientX,sy:t.clientY,cx:t.clientX,locked:false,abort:false};
