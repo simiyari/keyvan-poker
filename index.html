@@ -3587,9 +3587,9 @@ body::before {
    this fixed layer, so glass surfaces subtly change based on the background underneath. */
 :root {
   --ambient-green-1: rgba(34, 169, 74, 0.105);
-  --ambient-green-2: rgba(34, 169, 74, 0.060);
-  --ambient-gold-1: rgba(216, 169, 58, 0.060);
-  --ambient-gold-2: rgba(216, 169, 58, 0.038);
+  --ambient-green-2: rgba(34, 169, 74, 0.045);
+  --ambient-gold-1: rgba(216, 169, 58, 0.056);
+  --ambient-gold-2: rgba(216, 169, 58, 0.028);
   --reactive-glass-bg: rgba(8, 12, 10, 0.30);
   --reactive-glass-bg-strong: rgba(8, 12, 10, 0.38);
   --reactive-glass-border: rgba(255,255,255,0.095);
@@ -3611,10 +3611,10 @@ body {
   pointer-events: none;
   background-color: #000;
   background-image:
-    radial-gradient(780px 620px at 84% 4%, var(--ambient-green-1), transparent 67%),
-    radial-gradient(620px 520px at 8% 42%, var(--ambient-gold-1), transparent 72%),
-    radial-gradient(760px 620px at 92% 98%, var(--ambient-green-2), transparent 76%),
-    radial-gradient(560px 480px at 20% 104%, var(--ambient-gold-2), transparent 78%),
+    radial-gradient(860px 740px at 86% -4%, var(--ambient-green-1), transparent 68%),
+    radial-gradient(680px 560px at -2% 104%, var(--ambient-gold-1), transparent 74%),
+    radial-gradient(720px 600px at 96% 100%, var(--ambient-green-2), transparent 79%),
+    radial-gradient(460px 380px at 14% 108%, var(--ambient-gold-2), transparent 82%),
     linear-gradient(180deg, #000 0%, #020403 100%);
   background-repeat: no-repeat;
   transform: translateZ(0);
@@ -3704,10 +3704,10 @@ body {
 @media (max-width: 699px) {
   .app-ambient-bg {
     background-image:
-      radial-gradient(440px 360px at 86% 5%, rgba(34,169,74,0.115), transparent 68%),
-      radial-gradient(390px 330px at 6% 45%, rgba(216,169,58,0.065), transparent 74%),
-      radial-gradient(480px 380px at 94% 97%, rgba(34,169,74,0.068), transparent 76%),
-      radial-gradient(360px 300px at 22% 105%, rgba(216,169,58,0.042), transparent 80%),
+      radial-gradient(520px 430px at 88% 2%, rgba(34,169,74,0.118), transparent 70%),
+      radial-gradient(410px 350px at -2% 104%, rgba(216,169,58,0.062), transparent 76%),
+      radial-gradient(420px 340px at 96% 98%, rgba(34,169,74,0.042), transparent 79%),
+      radial-gradient(300px 260px at 12% 108%, rgba(216,169,58,0.028), transparent 84%),
       linear-gradient(180deg, #000 0%, #020403 100%);
   }
 
