@@ -19,26 +19,18 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.1/jspdf.plugin.autotable.min.js"></script>
-<style>
-/* ============================================
-   POKER MANAGER PRO — DESIGN SYSTEM
-   ============================================ */
+<style>:root {
 
-/* ---- Design Tokens ---- */
-:root {
-  /* Surfaces — pure black w/ glassmorphic layers */
   --bg:         #000000;
   --bg2:        #0e0f12;
   --bg3:        #16181d;
   --bg4:        #1f232a;
 
-  /* Brand — felt green */
   --felt:       #1b7a30;
   --felt2:      #156b28;
   --felt3:      #22a94a;
   --felt-light: rgba(34, 169, 74, 0.14);
 
-  /* Semantic colors */
   --green:      #3fb950;
   --green2:     #1b7a30;
   --green-bg:   rgba(63, 185, 80, 0.14);
@@ -57,16 +49,13 @@
   --purple:     #a371f7;
   --purple-bg:  rgba(163, 113, 247, 0.14);
 
-  /* Text */
   --text:  #e6ecf2;
   --text2: #9aa5b1;
   --text3: #6b7785;
 
-  /* Borders */
   --border:        rgba(255,255,255,0.06);
   --border-strong: rgba(255,255,255,0.12);
 
-  /* Unified glass surfaces — ONE palette across the app */
   --glass-bg:        rgba(255,255,255,0.035);
   --glass-bg-hi:     rgba(255,255,255,0.07);
   --glass-border:    rgba(255,255,255,0.08);
@@ -74,13 +63,11 @@
   --glass-shadow:    0 4px 16px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.04);
   --glass-shadow-hi: 0 6px 22px rgba(0,0,0,0.32), inset 0 1px 0 rgba(255,255,255,0.08);
 
-  /* Radii */
   --radius:  22px;
   --radius2: 16px;
   --radius-sm: 10px;
   --radius-full: 999px;
 
-  /* Spacing scale (4px base) */
   --sp-1: 4px;
   --sp-2: 8px;
   --sp-3: 12px;
@@ -89,21 +76,17 @@
   --sp-6: 24px;
   --sp-7: 32px;
 
-  /* Shadows */
   --shadow-sm:   0 1px 2px rgba(0,0,0,0.25);
   --shadow-md:   0 4px 14px rgba(0,0,0,0.32);
   --shadow-lg:   0 16px 40px rgba(0,0,0,0.5);
   --shadow-felt: 0 8px 28px rgba(27,122,48,0.28);
   --shadow-gold: 0 4px 16px rgba(216,169,58,0.22);
 
-  /* Focus ring */
   --focus-ring: 0 0 0 3px rgba(34, 169, 74, 0.28);
 
-  /* Typography */
   --font-body: 'Vazirmatn', 'Segoe UI', Tahoma, system-ui, sans-serif;
 }
 
-/* ---- Base reset ---- */
 * {
   margin: 0;
   padding: 0;
@@ -140,13 +123,11 @@ input, button, select, textarea {
 
 button { cursor: pointer; }
 
-/* Scrollbar */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
 
-/* ---- Layout ---- */
 .page {
   display: none;
   padding: var(--sp-4);
@@ -195,7 +176,6 @@ button { cursor: pointer; }
   to   { transform: translateX(0); }
 }
 
-/* ---- App Header ---- */
 .app-header {
   display: flex;
   align-items: center;
@@ -215,7 +195,6 @@ button { cursor: pointer; }
 }
 .app-header h1 span { font-size: 22px; line-height: 1; }
 
-/* ---- Sub-page Header ---- */
 .sub-header {
   display: flex;
   align-items: center;
@@ -247,7 +226,6 @@ button { cursor: pointer; }
 .btn-back:hover { background: rgba(255,255,255,0.1); }
 .btn-back:active { transform: scale(0.92); }
 
-/* ---- Bottom Navigation — floating pill ---- */
 .bottom-nav {
   position: fixed;
   bottom: max(4px, calc(env(safe-area-inset-bottom) - 12px));
@@ -296,7 +274,6 @@ button { cursor: pointer; }
 .nav-item.active svg { transform: scale(1.04); }
 .nav-item:active { transform: scale(0.92); }
 
-/* ---- Widgets / Cards — unified glass ---- */
 .widget {
   background: var(--glass-bg);
   backdrop-filter: blur(20px) saturate(140%);
@@ -338,7 +315,6 @@ button { cursor: pointer; }
 .widget-action:hover { background: rgba(216,169,58,0.18); border-color: rgba(216,169,58,0.35); }
 .widget-action:active { transform: scale(0.96); }
 
-/* ---- Game Live Banner ---- */
 .game-live-banner {
   background:
     radial-gradient(120% 100% at 0% 0%, rgba(34,169,74,0.45), transparent 60%),
@@ -376,7 +352,6 @@ button { cursor: pointer; }
 .game-live-banner .comm-line { color: rgba(255,255,255,0.88); font-size: 12px; }
 .game-live-banner .comm-line .num { color: #fff; font-weight: 700; }
 
-/* ---- Idle Banner ---- */
 .idle-banner {
   background: var(--glass-bg);
   backdrop-filter: blur(20px);
@@ -401,7 +376,6 @@ button { cursor: pointer; }
   color: var(--text2);
 }
 
-/* ---- Felt Banner ---- */
 .felt-banner {
   background:
     radial-gradient(120% 100% at 0% 0%, rgba(34,169,74,0.45), transparent 60%),
@@ -424,7 +398,6 @@ button { cursor: pointer; }
   opacity: 0.9;
 }
 
-/* ---- Cards ---- */
 .card {
   background: var(--glass-bg);
   backdrop-filter: blur(16px);
@@ -440,7 +413,6 @@ button { cursor: pointer; }
 .card:hover { border-color: var(--glass-border-hi); transform: translateY(-1px); }
 .card:active { transform: scale(0.99); }
 
-/* ---- Buttons ---- */
 .btn {
   padding: 14px 22px;
   border-radius: var(--radius2);
@@ -522,7 +494,6 @@ button { cursor: pointer; }
   flex-wrap: wrap;
 }
 
-/* ---- Forms ---- */
 .form-group { margin-bottom: var(--sp-4); }
 .form-label {
   display: block;
@@ -563,7 +534,6 @@ select.form-input {
   padding-left: 38px;
 }
 
-/* ---- Modal ---- */
 .modal-overlay {
   display: none;
   position: fixed;
@@ -603,7 +573,6 @@ select.form-input {
   text-align: right;
 }
 
-/* ---- Stat Boxes ---- */
 .stat-row {
   display: flex;
   gap: var(--sp-2);
@@ -641,7 +610,6 @@ select.form-input {
 .stat-value.gold  { color: var(--gold); }
 .stat-value.gray  { color: var(--text3); }
 
-/* ---- Player List Card ---- */
 .player-card {
   display: flex;
   align-items: center;
@@ -699,7 +667,6 @@ select.form-input {
 .player-amount.red   { color: var(--red); }
 .player-amount.gray  { color: var(--text3); }
 
-/* ---- Table Player ---- */
 .table-player {
   border-radius: var(--radius2);
   padding: var(--sp-4);
@@ -777,7 +744,6 @@ select.form-input {
   text-align: left;
 }
 
-/* ---- Settlement ---- */
 .settlement-item {
   display: flex;
   align-items: center;
@@ -800,7 +766,6 @@ select.form-input {
   direction: ltr;
 }
 
-/* ---- Slider ---- */
 .slider-container { margin: var(--sp-4) 0; }
 .amount-slider {
   width: 100%;
@@ -841,7 +806,6 @@ select.form-input {
   letter-spacing: -0.02em;
 }
 
-/* ---- Quick Amounts ---- */
 .quick-amounts {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -869,7 +833,6 @@ select.form-input {
   color: var(--gold);
 }
 
-/* ---- Search Box ---- */
 .search-box {
   position: relative;
   margin-bottom: var(--sp-4);
@@ -900,7 +863,6 @@ select.form-input {
   height: 18px;
 }
 
-/* ---- Toggle ---- */
 .toggle-row {
   display: flex;
   justify-content: space-between;
@@ -948,7 +910,6 @@ select.form-input {
 }
 .toggle.on::after { right: 22px; }
 
-/* ---- Chips ---- */
 .chip {
   display: inline-flex;
   align-items: center;
@@ -965,7 +926,6 @@ select.form-input {
 .chip-gold  { background: var(--gold-bg);  color: var(--gold); }
 .chip-felt  { background: var(--felt-light); color: var(--green); }
 
-/* ---- Timer ---- */
 .timer {
   font-size: 36px;
   font-weight: 700;
@@ -976,7 +936,6 @@ select.form-input {
   color: var(--gold);
 }
 
-/* ---- Empty State ---- */
 .empty-state {
   text-align: center;
   padding: var(--sp-7) var(--sp-5);
@@ -993,14 +952,12 @@ select.form-input {
 }
 .empty-state p:last-child { margin-bottom: 0; }
 
-/* ---- Divider ---- */
 .divider {
   height: 1px;
   background: var(--border);
   margin: var(--sp-4) 0;
 }
 
-/* ---- Section Title ---- */
 .section-title {
   font-size: 12px;
   font-weight: 700;
@@ -1013,9 +970,23 @@ select.form-input {
   text-transform: uppercase;
 }
 
-/* ---- Datetime Widget ---- */
-.datetime-widget { text-align: center; padding: var(--sp-5) var(--sp-4); }
+.datetime-widget {
+  text-align: center;
+  padding: var(--sp-5) var(--sp-4);
+}
+.datetime-widget .widget-title,
+.datetime-title {
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+}
 .datetime-time {
+  width: 100%;
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   font-size: 52px;
   font-weight: 700;
   direction: ltr;
@@ -1023,21 +994,25 @@ select.form-input {
   color: #fff;
   letter-spacing: -0.02em;
   line-height: 1;
+  margin: var(--sp-3) auto var(--sp-2);
 }
 .datetime-date {
+  width: 100%;
+  display: block;
+  align-self: stretch;
+  text-align: center;
+  direction: rtl;
   font-size: 14px;
   color: var(--text2);
-  margin-top: 6px;
+  margin-top: 8px;
 }
 
-/* ---- Chart ---- */
 .chart-container {
   position: relative;
   height: 260px;
   margin: var(--sp-4) 0 var(--sp-2);
 }
 
-/* ---- Settings Items & Groups ---- */
 .settings-group {
   margin-bottom: var(--sp-5);
 }
@@ -1093,7 +1068,6 @@ select.form-input {
 }
 .setting-item + .setting-item { margin-top: 0; }
 
-/* ---- Info Box ---- */
 .info-box {
   background: var(--glass-bg);
   backdrop-filter: blur(16px);
@@ -1122,7 +1096,6 @@ select.form-input {
   text-align: left;
 }
 
-/* ---- Live Dot ---- */
 .live-dot {
   width: 8px;
   height: 8px;
@@ -1141,7 +1114,6 @@ select.form-input {
   font-variant-numeric: tabular-nums;
 }
 
-/* ---- Selectable Player (Create Table) ---- */
 .selectable-player {
   display: flex;
   align-items: center;
@@ -1189,7 +1161,6 @@ select.form-input {
   font-weight: 600;
 }
 
-/* ---- Analog Clock — refined, dark face, metallic ring ---- */
 .analog-clock {
   width: 168px;
   height: 168px;
@@ -1287,7 +1258,6 @@ select.form-input {
   box-shadow: 0 0 6px rgba(216,169,58,0.6), inset 0 0 1px rgba(0,0,0,0.4);
 }
 
-/* ---- Quick Amount Editor (Settings) ---- */
 .qa-item {
   display: flex;
   align-items: center;
@@ -1315,7 +1285,7 @@ select.form-input {
   transition: all 0.18s;
 }
 .qa-item input:focus { border-color: var(--felt3); box-shadow: var(--focus-ring); }
-/* Hide number spinner by default, show on hover/focus */
+
 input[type=number]::-webkit-outer-spin-button,
 input[type=number]::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -1348,7 +1318,6 @@ input[type=number]:hover, input[type=number]:focus { -moz-appearance: number-inp
 .qa-remove:hover { background: rgba(240,94,94,0.22); }
 .qa-remove:active { transform: scale(0.88); }
 
-/* ---- Filter Chips ---- */
 .filter-chips {
   display: flex;
   gap: 6px;
@@ -1380,7 +1349,6 @@ input[type=number]:hover, input[type=number]:focus { -moz-appearance: number-inp
 }
 .filter-chip:active { transform: scale(0.96); }
 
-/* ---- Balance Box ---- */
 .balance-box {
   padding: var(--sp-3) var(--sp-4);
   border-radius: var(--radius2);
@@ -1401,7 +1369,6 @@ input[type=number]:hover, input[type=number]:focus { -moz-appearance: number-inp
   border: 1px solid rgba(240,94,94,0.3);
 }
 
-/* ---- Commission Box ---- */
 .commission-box {
   background: var(--gold-bg);
   border: 2px solid rgba(216,169,58,0.3);
@@ -1424,7 +1391,6 @@ input[type=number]:hover, input[type=number]:focus { -moz-appearance: number-inp
   letter-spacing: -0.01em;
 }
 
-/* ---- Transactions ---- */
 .tx-list {
   background: var(--glass-bg);
   backdrop-filter: blur(16px);
@@ -1490,7 +1456,6 @@ input[type=number]:hover, input[type=number]:focus { -moz-appearance: number-inp
 }
 .tx-edit:active { transform: scale(0.9); }
 
-/* ---- Toast Notifications ---- */
 .toast-container {
   position: fixed;
   top: calc(env(safe-area-inset-top, 0px) + 16px);
@@ -1535,7 +1500,6 @@ input[type=number]:hover, input[type=number]:focus { -moz-appearance: number-inp
   to { opacity: 0; transform: translateY(-10px); }
 }
 
-/* ---- Confirm Modal ---- */
 .confirm-modal {
   background: rgba(10, 11, 13, 0.6);
   backdrop-filter: blur(60px) saturate(200%);
@@ -1586,7 +1550,6 @@ input[type=number]:hover, input[type=number]:focus { -moz-appearance: number-inp
   flex-direction: column;
 }
 
-/* ---- Date Picker ---- */
 .dp-nav { display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-3);gap:var(--sp-2) }
 .dp-nav-btn { width:36px;height:36px;border-radius:50%;background:var(--glass-bg);border:1px solid var(--glass-border);color:var(--text);font-size:20px;font-weight:700;line-height:1;display:flex;align-items:center;justify-content:center;transition:all 0.15s }
 .dp-nav-btn:hover { border-color: var(--glass-border-hi) }
@@ -1600,7 +1563,6 @@ input[type=number]:hover, input[type=number]:focus { -moz-appearance: number-inp
 .dp-day.selected { background:var(--felt);color:#fff;border-color:var(--felt3);font-weight:700 }
 .dp-day:active { transform:scale(0.92) }
 
-/* ---- Lock Screen ---- */
 .lock-screen {
   display: none;
   position: fixed;
@@ -1718,7 +1680,6 @@ input[type=number]:hover, input[type=number]:focus { -moz-appearance: number-inp
   border-color: var(--red);
 }
 
-/* ---- Accessibility helpers ---- */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;
@@ -1728,7 +1689,6 @@ input[type=number]:hover, input[type=number]:focus { -moz-appearance: number-inp
   .live-dot { animation: none; }
 }
 
-/* ---- Tablet & Desktop: wider content, two-column dashboard ---- */
 @media (min-width: 500px) and (max-width: 899px) {
   .page, .sub-page { max-width: 600px; margin: 0 auto; }
   .modal { max-width: 540px; }
@@ -1740,7 +1700,7 @@ input[type=number]:hover, input[type=number]:focus { -moz-appearance: number-inp
     margin: 0 auto;
     padding: 28px 32px;
   }
-  /* Dashboard in two equal columns, equal-height rows */
+
   #dashboard-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1748,14 +1708,14 @@ input[type=number]:hover, input[type=number]:focus { -moz-appearance: number-inp
     gap: 16px;
   }
   #dashboard-content > * { margin-bottom: 0 !important; }
-  /* Banners (active game / idle) always span full width */
+
   #dashboard-content > .game-live-banner,
   #dashboard-content > .idle-banner,
   #dashboard-content > .felt-banner {
     grid-column: 1 / -1;
     grid-row: auto;
   }
-  /* Live banner on dashboard — match table-page banner */
+
   #dashboard-content > .game-live-banner {
     padding: 20px !important;
   }
@@ -1764,26 +1724,26 @@ input[type=number]:hover, input[type=number]:focus { -moz-appearance: number-inp
     text-align: center;
     margin: 16px 0 !important;
   }
-  /* Widgets fill their cell (but not the live banner) */
+
   #dashboard-content > .widget:not(.game-live-banner) {
     display: flex;
     flex-direction: column;
     height: 100%;
   }
-  /* Live banner: natural compact height */
+
   #dashboard-content > .game-live-banner {
     height: auto !important;
     align-self: start;
   }
-  /* Notes textarea expands to fill the widget */
+
   #dashboard-content .widget textarea.form-input {
     flex: 1;
     min-height: 0;
   }
-  /* Stats: distribute evenly so it matches clock height */
+
   #dashboard-content .stat-row { flex: 1; }
   #dashboard-content .stat-row .stat-box { display: flex; flex-direction: column; justify-content: center; }
-  /* Top players list: don't stretch, stay compact */
+
   #dashboard-content > .widget:has(.player-card) > .player-card:last-child { margin-bottom: 0; }
   .modal { max-width: 560px; }
 }
@@ -1792,7 +1752,6 @@ input[type=number]:hover, input[type=number]:focus { -moz-appearance: number-inp
   .page, .sub-page { max-width: 1000px; }
 }
 
-/* ---- Utilities ---- */
 .text-center { text-align: center; }
 .mt-2 { margin-top: var(--sp-2); }
 .mt-3 { margin-top: var(--sp-3); }
@@ -1803,11 +1762,6 @@ input[type=number]:hover, input[type=number]:focus { -moz-appearance: number-inp
 .gap-2 { gap: var(--sp-2); }
 .flex-col { display: flex; flex-direction: column; }
 
-
-/* ==========================================================
-   RESPONSIVE + iOS SAFE-AREA FIX — added by ChatGPT
-   هدف: نوار پایین استانداردتر روی آیفون + جلوگیری از کش‌آمدن UI روی iPad/Desktop
-   ========================================================== */
 :root {
   --nav-height: 64px;
   --nav-side-gap: 16px;
@@ -1961,12 +1915,6 @@ body {
   }
 }
 
-
-
-/* ==========================================================
-   CREATE TABLE AS FULL-SCREEN iOS/macOS SHEET — updated by ChatGPT
-   هدف: ایجاد میز از وسط با حس پاپ‌آپ باز شود، اما صفحه کامل باشد
-   ========================================================== */
 @keyframes macSheetIn {
   from {
     opacity: 0;
@@ -2070,10 +2018,6 @@ body {
   }
 }
 
-
-/* ==========================================================
-   CREATE TABLE FULLSCREEN CLEAN FIX — remove black box under title
-   ========================================================== */
 #sub-create-table.center-modal-page {
   background: rgba(0, 0, 0, 0.46) !important;
   background-image:
@@ -2129,18 +2073,11 @@ body {
   margin-top: 0 !important;
 }
 
-
-
-/* ==========================================================
-   UNIFIED CONTENT WIDTH FIX — added by ChatGPT
-   هدف: همه صفحه‌ها، هدرها، سرچ‌بارها و کارت‌های اصلی از یک قانون عرض پیروی کنند
-   ========================================================== */
 :root {
   --app-content-max: 720px;
   --app-page-gutter: var(--sp-4);
 }
 
-/* صفحه اصلی هنوز تمام عرض viewport را می‌گیرد؛ خود محتوا با قانون واحد وسط‌چین می‌شود */
 .page,
 .sub-page:not(.center-modal-page) {
   width: 100% !important;
@@ -2151,7 +2088,6 @@ body {
     max(var(--app-page-gutter), env(safe-area-inset-right, 0px)) !important;
 }
 
-/* قانون واحد برای همه هدرها و کانتینرهای اصلی */
 .app-header,
 .sub-page:not(.center-modal-page) > .sub-header,
 #dashboard-content,
@@ -2170,7 +2106,6 @@ body {
   margin-inline: auto !important;
 }
 
-/* صفحه هوم هم مثل بقیه صفحه‌ها یک ستون منظم با همان عرض استاندارد دارد */
 #dashboard-content {
   display: grid !important;
   grid-template-columns: 1fr !important;
@@ -2185,7 +2120,6 @@ body {
   grid-column: auto !important;
 }
 
-/* کارت‌ها و باکس‌های اصلی داخل صفحات همیشه عرض کامل کانتینر استاندارد را بگیرند */
 .widget,
 .felt-banner,
 .idle-banner,
@@ -2203,7 +2137,6 @@ body {
   max-width: 100%;
 }
 
-/* در تبلت و دسکتاپ فقط فاصله‌های کناری بیشتر می‌شود، نه قانون عرض محتوا */
 @media (min-width: 700px) {
   :root {
     --app-page-gutter: 24px;
@@ -2247,27 +2180,20 @@ body {
   }
 }
 
-
-/* ==========================================================
-   UNIFIED SPACING SYSTEM — added by ChatGPT
-   هدف: فاصله‌ی بین باکس‌ها، کارت‌ها، سرچ‌بارها و بخش‌های مشابه در کل اپ یکدست شود
-   ========================================================== */
 :root {
-  --app-block-gap: 12px;      /* فاصله استاندارد بین باکس‌های اصلی */
-  --app-section-gap: 16px;    /* فاصله بین گروه‌های بزرگ‌تر */
-  --app-control-gap: 8px;     /* فاصله بین دکمه‌ها و کنترل‌های کوچک */
-  --app-card-padding: 16px;   /* پدینگ داخلی استاندارد کارت‌ها */
+  --app-block-gap: 12px;
+  --app-section-gap: 16px;
+  --app-control-gap: 8px;
+  --app-card-padding: 16px;
   --app-card-padding-sm: 12px;
 }
 
-/* هدرها همیشه با فاصله‌ی واحد از محتوای زیرشان جدا شوند */
 .app-header,
 .sub-header,
 #sub-create-table .center-modal-card .sub-header {
   margin-bottom: var(--app-block-gap) !important;
 }
 
-/* کانتینرهای محتوایی کل اپ با یک سیستم فاصله چیده شوند */
 #dashboard-content,
 #table-content,
 #players-list,
@@ -2282,7 +2208,6 @@ body {
   gap: var(--app-block-gap) !important;
 }
 
-/* همه فرزندان مستقیم کانتینرها margin پراکنده نداشته باشند؛ gap بالا کنترل می‌کند */
 #dashboard-content > *,
 #table-content > *,
 #players-list > *,
@@ -2296,12 +2221,10 @@ body {
   margin-bottom: 0 !important;
 }
 
-/* سرچ‌بار صفحه بازیکنان چون بیرون از players-list است، فاصله‌اش جداگانه استاندارد شد */
 #page-players > .search-box {
   margin-bottom: var(--app-block-gap) !important;
 }
 
-/* کارت‌ها و باکس‌های هم‌جنس در تمام صفحات، پدینگ و margin یکسان داشته باشند */
 .widget,
 .felt-banner,
 .idle-banner,
@@ -2339,7 +2262,6 @@ body {
   padding: var(--app-card-padding-sm) !important;
 }
 
-/* گروه‌های تنظیمات: فاصله‌ی کارت‌ها مثل بقیه اپ، نه فشرده‌تر */
 .settings-group {
   display: flex !important;
   flex-direction: column !important;
@@ -2357,7 +2279,6 @@ body {
   margin-top: 0 !important;
 }
 
-/* لیست‌ها و آیتم‌های تکراری با gap کنترل شوند، نه marginهای متفاوت */
 .tx-list {
   overflow: hidden;
 }
@@ -2373,7 +2294,6 @@ body {
   gap: var(--app-control-gap) !important;
 }
 
-/* فرم‌ها، دکمه‌های سریع، فیلترها و ردیف‌های آماری با فاصله واحد */
 .form-group {
   margin-bottom: var(--app-section-gap) !important;
 }
@@ -2394,7 +2314,6 @@ body {
   margin-bottom: var(--app-block-gap) !important;
 }
 
-/* عنوان بخش‌ها با قانون ثابت نمایش داده شوند */
 .section-title {
   margin-top: var(--app-section-gap) !important;
   margin-bottom: 0 !important;
@@ -2410,12 +2329,10 @@ body {
   margin-top: 0 !important;
 }
 
-/* جداکننده‌ها هم فاصله ثابت داشته باشند */
 .divider {
   margin: var(--app-section-gap) 0 !important;
 }
 
-/* محتوای داخل پاپ‌آپ‌ها هم با فاصله‌ی واحدتر نمایش داده شود */
 .modal h3,
 .confirm-title {
   margin-bottom: var(--app-block-gap) !important;
@@ -2429,7 +2346,6 @@ body {
   margin-bottom: var(--app-block-gap) !important;
 }
 
-/* در دسکتاپ هم فاصله‌ها بزرگ‌تر از موبایل نشوند تا حس یکپارچگی حفظ شود */
 @media (min-width: 700px) {
   #dashboard-content,
   #table-content,
@@ -2444,11 +2360,6 @@ body {
   }
 }
 
-
-/* ==========================================================
-   BALANCED INTERNAL SPACING FIX — added by ChatGPT
-   هدف: فاصله‌های داخل باکس‌ها هم مثل فاصله چپ/راست و گپ افقی، منظم و یکدست باشد
-   ========================================================== */
 :root {
   --app-inner-gap: 8px;
   --app-content-gap: 12px;
@@ -2529,12 +2440,6 @@ body {
   padding: 32px 20px !important;
 }
 
-
-/* ==========================================================
-   CAREFUL BUTTON RADIUS UNIFICATION — added by ChatGPT
-   هدف: دکمه‌های متنی در همه بخش‌ها از یک گردی و حس بصری واحد پیروی کنند
-   نکته: دکمه‌های آیکونی/دایره‌ای مثل بستن، برگشت، حذف و ویرایش عمداً دست‌نخورده می‌مانند
-   ========================================================== */
 :root {
   --app-button-radius: 999px;
   --app-button-border: rgba(255,255,255,0.10);
@@ -2542,7 +2447,6 @@ body {
   --app-button-bg-hover: rgba(255,255,255,0.075);
 }
 
-/* فقط دکمه‌های متنی و انتخابی؛ نه دکمه‌های گرد آیکونی */
 .btn,
 .filter-chip,
 .quick-amt,
@@ -2556,13 +2460,11 @@ body {
     opacity 0.16s ease !important;
 }
 
-/* دکمه‌های کوچک هم همان زبان طراحی را داشته باشند */
 .btn-sm,
 .widget-action {
   border-radius: var(--app-button-radius) !important;
 }
 
-/* دکمه‌های خنثی، فیلترها و مبالغ سریع از یک سطح شیشه‌ای مشترک استفاده کنند */
 .btn-secondary,
 .btn-outline,
 .filter-chip,
@@ -2580,7 +2482,6 @@ body {
   border-color: rgba(255,255,255,0.16) !important;
 }
 
-/* حالت انتخاب‌شده فیلترها و مبالغ سریع شبیه هم باشد، فقط رنگ معنایی فرق کند */
 .filter-chip.active {
   background: var(--felt-light) !important;
   border-color: rgba(34,169,74,0.58) !important;
@@ -2595,7 +2496,6 @@ body {
   box-shadow: 0 4px 14px rgba(216,169,58,0.14), inset 0 1px 0 rgba(255,255,255,0.05) !important;
 }
 
-/* اندازه‌ها را دستکاری شدید نمی‌کنیم؛ فقط حداقل ارتفاع کنترل‌های مشابه هماهنگ می‌شود */
 .filter-chip {
   min-height: 40px;
 }
@@ -2606,19 +2506,16 @@ body {
   min-height: 36px;
 }
 
-/* دکمه‌های اصلی فقط گردی مشترک می‌گیرند و رنگ/حس اصلی خودشان حفظ می‌شود */
 .btn-primary,
 .btn-gold,
 .btn-danger {
   border-radius: var(--app-button-radius) !important;
 }
 
-/* دکمه‌های تمام‌عرض مثل شروع بازی و ذخیره، منظم‌تر اما نه خیلی بزرگ */
 .btn-block {
   min-height: 46px;
 }
 
-/* دکمه افزودن در تنظیمات یا هدرها با بقیه کنترل‌ها هماهنگ بماند */
 .settings-group .btn:not(.btn-block),
 .app-header .btn,
 .sub-header .btn,
@@ -2626,7 +2523,6 @@ body {
   min-height: 38px;
 }
 
-/* استثناهای آیکونی: باید دایره‌ای بمانند و شبیه دکمه‌های متنی نشوند */
 .btn-back,
 .lock-toggle,
 .dp-nav-btn,
@@ -2635,20 +2531,14 @@ body {
   border-radius: 50% !important;
 }
 
-
-/* ==========================================================
-   CONSERVATIVE CONTROL HEIGHT NORMALIZATION — added by ChatGPT
-   هدف: ارتفاع کنترل‌های هم‌خانواده یکی باشد، بدون تغییر چیدمان و عرض‌ها
-   ========================================================== */
 :root {
-  --app-control-h: 44px;       /* input، search، فیلتر، مبلغ سریع، دکمه معمولی */
-  --app-control-h-sm: 38px;    /* دکمه‌های کوچک مثل + جدید */
-  --app-control-h-lg: 48px;    /* CTAهای اصلی تمام‌عرض */
+  --app-control-h: 44px;
+  --app-control-h-sm: 38px;
+  --app-control-h-lg: 48px;
   --app-control-pad-x: 18px;
   --app-control-pad-x-sm: 14px;
 }
 
-/* دکمه‌های متنی معمولی: ارتفاع مشترک، عرض آزاد */
 .btn:not(.btn-sm):not(.btn-back),
 .filter-chip,
 .quick-amt {
@@ -2671,7 +2561,6 @@ body {
   padding-inline: var(--app-control-pad-x-sm) !important;
 }
 
-/* ورودی‌ها و سرچ‌باکس‌ها هم‌ارتفاع با دکمه‌های معمولی */
 input.form-input,
 select.form-input,
 button.form-input,
@@ -2704,7 +2593,6 @@ select.form-input {
   background-position: left 14px center !important;
 }
 
-/* textarea، اسلایدر، toggle، دکمه‌های آیکونی و ناوبری پایین عمداً استثنا هستند */
 textarea.form-input {
   height: auto !important;
   min-height: 88px !important;
@@ -2726,12 +2614,10 @@ textarea.form-input {
   line-height: 1.2 !important;
 }
 
-/* CTAهای تمام‌عرض کمی بلندتر می‌مانند چون کارکرد اصلی/تأکیدی دارند */
 .btn-block:not(.btn-sm) {
   height: var(--app-control-h-lg) !important;
 }
 
-/* دکمه‌های آیکونی شکل و اندازه مخصوص خودشان را حفظ کنند */
 .qa-remove {
   width: 32px !important;
   height: 32px !important;
@@ -2752,11 +2638,6 @@ textarea.form-input {
   height: 36px !important;
 }
 
-/* ==========================================================
-   iOS STATUS BAR TOP SCRIM — added by ChatGPT
-   هدف: هنگام اسکرول، محتوا زیر نوار وضعیت آیفون با آیکن‌های وای‌فای/باتری قاطی نشود
-   روش: یک گرادینت بسیار کم‌ارتفاع و ثابت، شبیه scrim اپ‌های iOS
-   ========================================================== */
 :root {
   --ios-top-scrim-height: max(30px, calc(env(safe-area-inset-top, 0px) + 26px));
 }
@@ -2781,7 +2662,6 @@ body::before {
   will-change: transform;
 }
 
-/* وقتی صفحه ایجاد میز به‌صورت فول‌اسکرین باز است، چون خودش z-index بالاتری دارد، scrim مخصوص خودش را می‌گیرد */
 .center-modal-page.active::before {
   content: '';
   position: fixed;
@@ -2800,23 +2680,16 @@ body::before {
   );
 }
 
-/* دکمه‌ها و هدر صفحه فول‌اسکرین ایجاد میز بالاتر از scrim بمانند و تیره نشوند */
 .center-modal-page.active .sub-header {
   position: relative;
   z-index: 7;
 }
 
-/* روی مودال‌ها و لاک‌اسکرین، خود overlay ها کنترل بصری دارند؛ scrim اصلی زیر آن‌ها می‌ماند */
 .modal-overlay,
 .lock-screen {
   isolation: isolate;
 }
 
-
-/* ==========================================================
-   FINAL SAFE TOP SCRIM + ORIGINAL-STABLE BOTTOM NAV RESTORE
-   هدف: گرادینت بالای آیفون کمی تیره‌تر شود و navbar مثل نسخه اول، ثابت و پایین‌تر بماند
-   ========================================================== */
 :root {
   --ios-top-scrim-height: max(30px, calc(env(safe-area-inset-top, 0px) + 26px));
 }
@@ -2843,7 +2716,6 @@ body::before {
   ) !important;
 }
 
-/* navbar دقیقاً به مدل پایدار نسخه اول برگشت داده شد؛ media queryها دیگر جایش را عوض نمی‌کنند */
 .bottom-nav {
   position: fixed !important;
   left: 16px !important;
@@ -2872,7 +2744,6 @@ body::before {
   height: 22px !important;
 }
 
-/* فقط روی گوشی‌های خیلی باریک، مثل نسخه اول کمی جمع‌وجورتر می‌شود ولی جای navbar ثابت می‌ماند */
 @media (max-width: 360px) {
   .bottom-nav {
     left: 10px !important;
@@ -2887,12 +2758,6 @@ body::before {
   }
 }
 
-
-
-/* ==========================================================
-   FINAL NAVBAR STABILITY PATCH — modern look, fixed position
-   هدف: ظاهر مدرن navbar حفظ شود، اما در همه صفحه‌ها دقیقاً یک جای ثابت بماند
-   ========================================================== */
 :root {
   --nav-fixed-height: 64px;
   --nav-fixed-bottom-extra: 0px;
@@ -2989,11 +2854,6 @@ body::before {
   }
 }
 
-
-/* ==========================================================
-   NAVBAR STATIC POSITION FIX — added by ChatGPT
-   هدف: ظاهر مدرن navbar حفظ شود، اما در موبایل به visualViewport / scroll / safe-zone متغیر وصل نباشد.
-   ========================================================== */
 :root {
   --nav-fixed-height: 64px;
   --nav-fixed-bottom-extra: 0px !important;
@@ -3089,12 +2949,6 @@ body::before {
   }
 }
 
-
-/* ==========================================================
-   DEEP PWA NAVBAR FIX — stable in Add to Home Screen on iPhone
-   ریشه مشکل: body-scroll در iOS PWA باعث تغییر visual viewport و جابه‌جایی fixed bottom می‌شود.
-   راه‌حل: خود body دیگر اسکرول نمی‌شود؛ فقط صفحه فعال اسکرول داخلی دارد و navbar بیرون از اسکرول ثابت می‌ماند.
-   ========================================================== */
 :root {
   --nav-fixed-height: 64px;
   --nav-frozen-bottom: max(6px, calc(env(safe-area-inset-bottom, 0px) - 12px));
@@ -3129,7 +2983,6 @@ body::before {
   height: calc(var(--nav-fixed-height) - 14px) !important;
 }
 
-/* فقط روی موبایل/تاچ، ساختار اسکرول را پایدار می‌کنیم تا PWA آیفون نپرد. */
 @media (max-width: 699px) and (hover: none) and (pointer: coarse) {
   html {
     height: 100% !important;
@@ -3231,13 +3084,6 @@ body::before {
   }
 }
 
-
-
-/* ==========================================================
-   FINAL iOS PWA BOTTOM GAP FIX
-   مشکل: در حالت Add to Home Screen، مقدار safe-area پایین در بعضی صفحه‌ها/اسکرول‌ها بزرگ‌تر از حد لازم تفسیر می‌شد و navbar بالاتر می‌رفت؛ نتیجه یک نوار/کادر مشکی خالی زیر navbar بود.
-   راه‌حل: ظاهر navbar حفظ می‌شود، اما فاصله پایین روی یک مقدار کوچک و ثابت قفل می‌شود؛ safe-area دیگر ارتفاع navbar را بالا نمی‌کشد.
-   ========================================================== */
 @media (max-width: 699px) and (hover: none) and (pointer: coarse) {
   :root {
     --nav-fixed-height: 64px;
@@ -3326,16 +3172,6 @@ body::before {
   }
 }
 
-
-
-/* ==========================================================
-   REAL iOS STANDALONE PWA VIEWPORT FIX — final safe patch
-   ریشه مشکل کادر مشکی پایین: در حالت Add to Home Screen، 100dvh/100svh در آیفون
-   گاهی ارتفاع کوتاه‌تر از کل صفحه می‌دهد. در نتیجه navbar نسبت به viewport کوتاه
-   فیکس می‌شود و پایین صفحه یک ناحیه سیاه باقی می‌ماند.
-   این patch فقط برای موبایل/تاچ اعمال می‌شود و ارتفاع را با یک متغیر JS پایدار
-   از screen.height پر می‌کند، نه visualViewport و نه مقدار متغیر هنگام اسکرول.
-   ========================================================== */
 :root {
   --pwa-real-height: 100vh;
   --nav-real-bottom: 18px;
@@ -3421,13 +3257,6 @@ body::before {
   :root { --nav-real-bottom: 15px; }
 }
 
-
-
-/* ==========================================================
-   SUB-PAGE BACKDROP FIX — added by ChatGPT
-   هدف: وقتی صفحه‌های فرعی مثل پروفایل بازیکن باز می‌شوند، صفحه‌ی پشت سر به‌هم‌ریخته و روهم دیده نشود.
-   فقط پس‌زمینه‌ی sub-pageهای معمولی اصلاح شده؛ navbar، safe-area، اسکرول و ظاهر دکمه‌ها دست نخورده‌اند.
-   ========================================================== */
 .sub-page:not(.center-modal-page) {
   background:
     radial-gradient(900px 640px at 50% 0%, rgba(34,169,74,0.08), transparent 68%),
@@ -3444,13 +3273,6 @@ body::before {
   }
 }
 
-
-
-/* ==========================================================
-   CENTER OPEN ANIMATION FOR ALL SUB-PAGES — added by ChatGPT
-   هدف: هیچ صفحه فرعی هنگام باز شدن از کنار وارد نشود؛ همه مثل macOS/iOS از مرکز باز شوند.
-   فقط انیمیشن باز شدن عوض شده؛ swipe-back، navbar، safe-area و layout دست نخورده‌اند.
-   ========================================================== */
 @keyframes iosMacCenterPageIn {
   from {
     opacity: 0;
@@ -3478,11 +3300,6 @@ body::before {
   transform-origin: center center !important;
 }
 
-
-/* ==========================================================
-   PLAYER AVATAR + CREATE TABLE SELECTED PLAYER FIX
-   هدف: هماهنگی کادر مبالغ بازیکن انتخاب‌شده و وسط‌چین شدن حرف/عکس پروفایل
-   ========================================================== */
 .player-avatar {
   position: relative !important;
   overflow: hidden !important;
@@ -3590,11 +3407,6 @@ body::before {
   .ct-selected-buyin-grid .quick-amt { font-size: 11px !important; }
 }
 
-
-/* ==========================================================
-   ATTACH SELECTED PLAYER BUY-IN PANEL — added by ChatGPT
-   هدف: پنل مبالغ بازیکن انتخاب‌شده به کارت اسم بازیکن بچسبد و gap عمومی کانتینر بینشان نیفتد
-   ========================================================== */
 #create-table-content > .selectable-player.selected + .ct-selected-buyin-panel {
   margin-top: calc(-1 * var(--app-block-gap) - 1px) !important;
   margin-bottom: 0 !important;
@@ -3609,12 +3421,11 @@ body::before {
   border-top-right-radius: 0 !important;
   border-top: 0 !important;
 }
-
 </style>
 </head>
 <body>
 
-<!-- Lock screen -->
+
 <div class="lock-screen" id="lock-screen" role="dialog" aria-label="ورود با رمز">
   <div class="lock-card">
     <div class="lock-logo">🔒</div>
@@ -3631,7 +3442,7 @@ body::before {
   </div>
 </div>
 
-<!-- Main pages -->
+
 <div id="page-dashboard" class="page active">
   <div class="app-header"><h1><span>🎰</span> پوکر منیجر</h1></div>
   <div id="dashboard-content"></div>
@@ -3666,7 +3477,7 @@ body::before {
   <div id="settings-content"></div>
 </div>
 
-<!-- Sub pages -->
+
 <div id="sub-player-profile" class="sub-page">
   <div class="sub-header">
     <button class="btn-back" onclick="closeSubPage('sub-player-profile')" aria-label="بازگشت">
@@ -3709,21 +3520,21 @@ body::before {
   </div>
 </div>
 
-<!-- Modal (centered dialog) -->
+
 <div class="modal-overlay" id="modal-overlay" onclick="handleModalOverlayClick(event)">
   <div class="modal" onclick="event.stopPropagation()">
     <div id="modal-content"></div>
   </div>
 </div>
 
-<!-- Confirm dialog -->
+
 <div class="modal-overlay" id="confirm-overlay" onclick="handleConfirmOverlayClick(event)">
   <div class="confirm-modal" id="confirm-modal" onclick="event.stopPropagation()">
     <div id="confirm-content"></div>
   </div>
 </div>
 
-<!-- Toast container -->
+
 <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true"></div>
 <nav class="bottom-nav">
 <div class="nav-item active" onclick="switchPage('dashboard')" data-page="dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg><span>خانه</span></div>
@@ -4106,7 +3917,7 @@ function updateAnalogClock(){const now=new Date();const h=now.getHours()%12,m=no
 function renderDashboard(){const el=document.getElementById('dashboard-content');const s=data.settings;const game=getActiveGame();let html='';
 if(game){const commAmt=getCommissionAmount(game),commLabel=getCommissionLabel(game);html+=`<div class="widget game-live-banner" onclick="switchPage('table')" style="cursor:pointer"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--sp-3)"><span style="font-size:16px;font-weight:700">🎮 بازی در جریان</span><span class="chip chip-felt"><span class="live-dot" style="margin-left:4px"></span> فعال</span></div><div class="glb-sub" style="display:flex;gap:var(--sp-4);margin-bottom:var(--sp-3)"><span>👥 ${game.players.length} بازیکن</span><span>🕐 شروع: <span class="num">${getTimeStr(game.startTime)}</span></span></div><div class="timer" id="dash-timer" style="font-size:24px">${elapsedStr(game.startTime)}</div>${game.commission&&game.commission.enabled?`<div class="comm-line" style="margin-top:var(--sp-3);text-align:center">💰 کانیات: ${commLabel} = <span class="num">${fmt(commAmt)}</span> ${getCurrency()}</div>`:''}</div>`}
 else html+=`<div class="idle-banner"><div style="font-size:48px;margin-bottom:var(--sp-3)">🃏</div><h2>میز آماده است</h2><p style="margin-bottom:var(--sp-4)">برای شروع بازی یک میز جدید ایجاد کنید</p><button class="btn btn-gold" onclick="openCreateTablePage()" style="padding:var(--sp-3) 32px;font-size:15px">+ ایجاد میز جدید</button></div>`;
-if(s.widgets.dateTime){const isA=s.clockType==='analog';html+=`<div class="widget"><div class="widget-title" style="justify-content:center;margin-bottom:var(--sp-2)">📅 تاریخ و زمان</div>${isA?getAnalogClockHtml():`<div class="datetime-time" id="dash-clock">${new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false})}</div>`}<div class="datetime-date" style="margin-top:${isA?'12':'4'}px">${getDateStr(Date.now())}</div></div>`}
+if(s.widgets.dateTime){const isA=s.clockType==='analog';html+=`<div class="widget datetime-widget"><div class="widget-title datetime-title" style="margin-bottom:var(--sp-2)">📅 تاریخ و زمان</div>${isA?getAnalogClockHtml():`<div class="datetime-time" id="dash-clock">${new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false})}</div>`}<div class="datetime-date" style="margin-top:${isA?'12':'4'}px">${getDateStr(Date.now())}</div></div>`}
 if(s.widgets.statsSummary){const cg=data.games.filter(g=>g.status==='closed');const tm=cg.reduce((s,g)=>s+g.players.reduce((ss,p)=>ss+p.buyIns.reduce((sss,b)=>sss+b.amount,0),0),0);let bw=0;cg.forEach(g=>g.players.forEach(p=>{if(p.cashedOut){const pr=(p.cashOutAmount||0)-p.buyIns.reduce((s,b)=>s+b.amount,0);if(pr>bw)bw=pr}}));html+=`<div class="widget"><div class="widget-header"><span class="widget-title">📈 خلاصه آمار</span></div><div class="stat-row"><div class="stat-box"><div class="stat-value blue">${fmt(cg.length)}</div><div class="stat-label">کل بازی‌ها</div></div><div class="stat-box"><div class="stat-value gold">${fmt(data.players.length)}</div><div class="stat-label">بازیکنان</div></div></div><div class="stat-row"><div class="stat-box"><div class="stat-value">${fmt(tm)}</div><div class="stat-label">پول در گردش (${getCurrency()})</div></div><div class="stat-box"><div class="stat-value green">${fmt(bw)}</div><div class="stat-label">بزرگترین برد</div></div></div></div>`}
 if(s.widgets.topPlayers){const ranked=data.players.map(p=>({...p,stats:getPlayerStats(p.id)})).filter(p=>p.stats.totalGames>0).sort((a,b)=>b.stats.totalProfit-a.stats.totalProfit).slice(0,3);html+=`<div class="widget"><div class="widget-header"><span class="widget-title">🏆 برترین بازیکنان</span><button class="widget-action" onclick="switchPage('players')">نمایش همه ←</button></div>`;if(!ranked.length)html+=`<p style="text-align:center;color:var(--text2);font-size:13px;padding:var(--sp-4)">هنوز بازی‌ای انجام نشده</p>`;else ranked.forEach((p,i)=>{const pc=p.stats.totalProfit>0?'green':p.stats.totalProfit<0?'red':'gray';html+=`<div class="player-card" onclick="openPlayerProfile('${p.id}')"><div class="player-avatar">${i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)}</div><div class="player-info"><div class="player-name">${p.name}</div><div class="player-meta">${p.stats.totalGames} بازی · ${p.stats.totalGames>0?Math.round(p.stats.wins/p.stats.totalGames*100):0}% برد</div></div><div class="player-amount ${pc}"><span class="num">${fmtSign(p.stats.totalProfit)}</span></div></div>`});html+=`</div>`}
 if(s.widgets.notes)html+=`<div class="widget"><div class="widget-header"><span class="widget-title">📝 یادداشت‌ها</span></div><textarea class="form-input" placeholder="یادداشت‌ها..." oninput="data.notes=this.value;saveData()" style="min-height:100px">${data.notes||''}</textarea></div>`;
@@ -4384,30 +4195,6 @@ if(isPasswordSet()){showLockScreen();}else{renderDashboard();}
 
 
 <script>
-/* NAVBAR STATIC LOCK — deliberately NOT tied to visualViewport.
-   iOS Safari changes visualViewport while scrolling; linking navbar to it makes the bar jump. */
-(function () {
-  function lockNavStatic() {
-    document.documentElement.style.setProperty('--nav-fixed-bottom-extra', '0px');
-  }
-  window.addEventListener('resize', lockNavStatic, { passive: true });
-  window.addEventListener('orientationchange', function () { setTimeout(lockNavStatic, 120); }, { passive: true });
-  document.addEventListener('DOMContentLoaded', lockNavStatic);
-  lockNavStatic();
-})();
-</script>
-
-
-
-<script>
-/* Deep iOS PWA nav lock disabled: final CSS uses a small fixed bottom offset to avoid the black gap in Add to Home Screen mode. */
-</script>
-
-
-
-<script>
-/* Stable iOS standalone height lock.
-   Do not use visualViewport here; it changes while scrolling in iOS PWA. */
 (function () {
   function isIOS() {
     return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
