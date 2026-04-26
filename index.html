@@ -3231,6 +3231,101 @@ body::before {
   }
 }
 
+
+
+/* ==========================================================
+   FINAL iOS PWA BOTTOM GAP FIX
+   مشکل: در حالت Add to Home Screen، مقدار safe-area پایین در بعضی صفحه‌ها/اسکرول‌ها بزرگ‌تر از حد لازم تفسیر می‌شد و navbar بالاتر می‌رفت؛ نتیجه یک نوار/کادر مشکی خالی زیر navbar بود.
+   راه‌حل: ظاهر navbar حفظ می‌شود، اما فاصله پایین روی یک مقدار کوچک و ثابت قفل می‌شود؛ safe-area دیگر ارتفاع navbar را بالا نمی‌کشد.
+   ========================================================== */
+@media (max-width: 699px) and (hover: none) and (pointer: coarse) {
+  :root {
+    --nav-fixed-height: 64px;
+    --nav-bottom-locked: 8px;
+    --nav-frozen-bottom: var(--nav-bottom-locked) !important;
+    --nav-static-bottom: var(--nav-bottom-locked) !important;
+    --nav-fixed-bottom-extra: 0px !important;
+  }
+
+  html,
+  body {
+    width: 100% !important;
+    height: 100svh !important;
+    min-height: 100svh !important;
+    overflow: hidden !important;
+    background-color: #000 !important;
+  }
+
+  @supports (height: 100dvh) {
+    html,
+    body {
+      height: 100dvh !important;
+      min-height: 100dvh !important;
+    }
+  }
+
+  body {
+    position: fixed !important;
+    inset: 0 !important;
+  }
+
+  .bottom-nav {
+    position: fixed !important;
+    top: auto !important;
+    left: 50% !important;
+    right: auto !important;
+    bottom: var(--nav-bottom-locked) !important;
+    transform: translate3d(-50%, 0, 0) !important;
+    -webkit-transform: translate3d(-50%, 0, 0) !important;
+    width: min(calc(100vw - 32px), 390px) !important;
+    max-width: none !important;
+    height: var(--nav-fixed-height) !important;
+    min-height: var(--nav-fixed-height) !important;
+    margin: 0 !important;
+    padding: 0 8px !important;
+    z-index: 1500 !important;
+  }
+
+  .page {
+    position: fixed !important;
+    inset: 0 !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-y: contain !important;
+    padding-bottom: calc(var(--nav-fixed-height) + var(--nav-bottom-locked) + 18px) !important;
+    scroll-padding-bottom: calc(var(--nav-fixed-height) + var(--nav-bottom-locked) + 18px) !important;
+  }
+
+  .sub-page:not(.center-modal-page) {
+    position: fixed !important;
+    inset: 0 !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-y: contain !important;
+    padding-bottom: calc(var(--nav-fixed-height) + var(--nav-bottom-locked) + 22px) !important;
+    scroll-padding-bottom: calc(var(--nav-fixed-height) + var(--nav-bottom-locked) + 22px) !important;
+  }
+
+  .page:not(.active) {
+    display: none !important;
+    pointer-events: none !important;
+  }
+
+  .page.active {
+    display: block !important;
+    pointer-events: auto !important;
+  }
+}
+
+@media (max-width: 360px) and (hover: none) and (pointer: coarse) {
+  :root {
+    --nav-fixed-height: 60px;
+    --nav-bottom-locked: 7px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -4017,31 +4112,7 @@ if(isPasswordSet()){showLockScreen();}else{renderDashboard();}
 
 
 <script>
-/* Deep iOS PWA nav lock: freeze the computed safe-area bottom value.
-   It is recalculated only on load/orientation, never during scroll. */
-(function () {
-  var root = document.documentElement;
-  function isTouchPhone() {
-    return window.matchMedia && window.matchMedia('(max-width: 699px) and (hover: none) and (pointer: coarse)').matches;
-  }
-  function freezeBottom() {
-    if (!isTouchPhone() || !document.body) return;
-    var probe = document.createElement('div');
-    probe.style.cssText = 'position:fixed;left:-9999px;bottom:max(6px,calc(env(safe-area-inset-bottom,0px) - 12px));width:1px;height:1px;visibility:hidden;pointer-events:none;';
-    document.body.appendChild(probe);
-    var bottom = getComputedStyle(probe).bottom || '6px';
-    probe.remove();
-    root.style.setProperty('--nav-frozen-bottom', bottom);
-  }
-  function afterOrientation() {
-    setTimeout(freezeBottom, 160);
-    setTimeout(freezeBottom, 420);
-  }
-  document.addEventListener('DOMContentLoaded', freezeBottom, { passive: true });
-  window.addEventListener('load', freezeBottom, { passive: true });
-  window.addEventListener('orientationchange', afterOrientation, { passive: true });
-  freezeBottom();
-})();
+/* Deep iOS PWA nav lock disabled: final CSS uses a small fixed bottom offset to avoid the black gap in Add to Home Screen mode. */
 </script>
 
 </body>
