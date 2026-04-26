@@ -3422,7 +3422,6 @@ body::before {
   border-top: 0 !important;
 }
 
-/* Mobile ambient background: very subtle green/gold glow so glass cards remain visible. */
 @media (max-width: 699px) {
   html,
   body {
@@ -3460,9 +3459,6 @@ body::before {
   }
 }
 
-
-
-/* ---- Refined liquid glass: subtle refraction, no gray wash ---- */
 :root {
   --liquid-surface: rgba(10, 14, 12, 0.38);
   --liquid-edge: rgba(255, 255, 255, 0.092);
@@ -3581,10 +3577,6 @@ body::before {
   }
 }
 
-
-/* ---- Fixed ambient background + true reactive glass ----
-   The color now lives behind the app, not inside the cards. Scrollable pages move over
-   this fixed layer, so glass surfaces subtly change based on the background underneath. */
 :root {
   --ambient-green-1: rgba(34, 169, 74, 0.118);
   --ambient-green-2: rgba(34, 169, 74, 0.045);
@@ -3747,9 +3739,6 @@ body {
   }
 }
 
-
-
-/* ---- Final polish: create-table title centering + lock-screen spacing ---- */
 #sub-create-table .center-modal-card .sub-header {
   display: flex !important;
   justify-content: center !important;
@@ -3808,8 +3797,6 @@ body {
   margin-top: var(--sp-1) !important;
 }
 
-
-/* ---- Settlement/history spacing polish ---- */
 #game-detail-content,
 #settlement-content {
   gap: var(--app-block-gap) !important;
@@ -3925,9 +3912,6 @@ body {
   margin-top: var(--sp-1) !important;
 }
 
-
-
-/* ---- Action button colors: PDF / Close ---- */
 .btn-pdf {
   background:
     linear-gradient(180deg, rgba(94,174,255,0.22), rgba(94,174,255,0.105)) !important;
@@ -3964,9 +3948,6 @@ body {
   border-color: rgba(216,169,58,0.46) !important;
 }
 
-
-
-/* ---- Unified color system pass: poker felt / money gold / risk red / info blue / neutral glass ---- */
 :root {
   --pm-felt: #22a94a;
   --pm-felt-deep: #156b28;
@@ -3994,7 +3975,6 @@ body {
   --pm-neutral-line-hi: rgba(255,255,255,0.17);
 }
 
-/* Primary app actions: create/add/start/active/success = felt green */
 .btn-primary,
 .toggle.on {
   background: linear-gradient(180deg, #2dc14e, var(--pm-felt)) !important;
@@ -4022,7 +4002,6 @@ body {
   border-color: var(--pm-felt-line) !important;
 }
 
-/* Money / reports / safe financial actions = gold */
 .btn-gold,
 .btn-pdf,
 .quick-amt.selected {
@@ -4060,7 +4039,6 @@ body {
   color: var(--pm-money-hi) !important;
 }
 
-/* Destructive / loss / warning = red */
 .btn-danger {
   background: linear-gradient(180deg, #ff6666, var(--pm-risk-deep)) !important;
   color: #fff !important;
@@ -4082,7 +4060,6 @@ body {
   color: var(--pm-risk) !important;
 }
 
-/* Info stays blue only for informational numbers/badges, not random action buttons */
 .stat-value.blue,
 .chip-blue {
   color: var(--pm-info) !important;
@@ -4093,7 +4070,6 @@ body {
   border-color: var(--pm-info-line) !important;
 }
 
-/* Neutral / cancel / close / secondary = glass neutral, consistent with app chrome */
 .btn-secondary,
 .btn-outline,
 .btn-close-soft {
@@ -4112,7 +4088,6 @@ body {
   border-color: var(--pm-neutral-line-hi) !important;
 }
 
-/* Inputs and search: neutral glass, not a separate radius/color language */
 .form-input,
 .search-box input,
 .ct-selected-buyin-input {
@@ -4127,7 +4102,6 @@ body {
   box-shadow: 0 0 0 3px rgba(34,169,74,0.24) !important;
 }
 
-/* Table/player/status cards: keep semantic colors readable and aligned */
 .player-amount.green,
 .stat-value.green,
 .tp-profit.green {
@@ -4144,7 +4118,6 @@ body {
   border-color: rgba(34,169,74,0.36) !important;
 }
 
-/* Selected player blocks use felt green; their nested selected amount remains gold */
 .selectable-player.selected {
   border-color: rgba(34,169,74,0.48) !important;
   background:
@@ -4159,14 +4132,10 @@ body {
   background: rgba(8, 16, 12, 0.48) !important;
 }
 
-/* Keep PDF/report button in the money/report family rather than isolated blue. */
 .btn-pdf::first-letter {
   color: inherit;
 }
 
-
-
-/* ---- Final fix: PDF hover must stay in gold/report family, never blue ---- */
 .btn-pdf,
 .btn-pdf:focus,
 .btn-pdf:active {
@@ -4188,9 +4157,6 @@ body {
     inset 0 1px 0 rgba(255,255,255,0.24) !important;
 }
 
-
-
-/* ---- Settlement page final layout polish ---- */
 #sub-settlement > .sub-header,
 #settlement-content {
   width: min(100%, 680px) !important;
@@ -4365,9 +4331,6 @@ body {
   }
 }
 
-
-
-/* ---- End-game confirmation modal polish ---- */
 .modal:has(.end-game-modal) {
   width: min(100%, 460px) !important;
   max-width: 460px !important;
@@ -4487,14 +4450,10 @@ body {
   }
 }
 
-
-
-/* ---- Final width system + end-game modal repair ---- */
 :root {
   --app-content-max: 720px;
 }
 
-/* Keep main page-like content on one visual width across desktop/tablet/mobile */
 .app-header,
 .sub-page:not(.center-modal-page) > .sub-header,
 #dashboard-content,
@@ -4513,7 +4472,6 @@ body {
   margin-inline: auto !important;
 }
 
-/* End-game confirmation is a main workflow panel, so it follows the same width rule. */
 .modal:has(.end-game-modal) {
   width: min(calc(100vw - 32px), var(--app-content-max)) !important;
   max-width: var(--app-content-max) !important;
@@ -4675,9 +4633,6 @@ body {
   }
 }
 
-
-
-/* ---- End-game modal padding correction: unified width, proper breathing room ---- */
 .modal:has(.end-game-modal) {
   width: min(calc(100vw - 32px), var(--app-content-max)) !important;
   max-width: var(--app-content-max) !important;
@@ -4752,9 +4707,6 @@ body {
   }
 }
 
-
-
-/* ---- FINAL FIX: End-game modal text layout and padding ---- */
 .modal:has(.end-game-modal) {
   width: min(calc(100vw - 48px), 720px) !important;
   max-width: 720px !important;
@@ -4927,7 +4879,6 @@ body {
 <body>
 <div class="app-ambient-bg" aria-hidden="true"></div>
 
-
 <div class="lock-screen" id="lock-screen" role="dialog" aria-label="ورود با رمز">
   <div class="lock-card">
     <div class="lock-logo">🔒</div>
@@ -4943,7 +4894,6 @@ body {
     <button class="btn btn-gold btn-block" id="lock-submit" onclick="submitLockPassword()">ورود</button>
   </div>
 </div>
-
 
 <div id="page-dashboard" class="page active">
   <div class="app-header"><h1><span>🎰</span> پوکر منیجر</h1></div>
@@ -4978,7 +4928,6 @@ body {
   <div class="app-header"><h1><span>⚙️</span> تنظیمات</h1></div>
   <div id="settings-content"></div>
 </div>
-
 
 <div id="sub-player-profile" class="sub-page">
   <div class="sub-header">
@@ -5022,20 +4971,17 @@ body {
   </div>
 </div>
 
-
 <div class="modal-overlay" id="modal-overlay" onclick="handleModalOverlayClick(event)">
   <div class="modal" onclick="event.stopPropagation()">
     <div id="modal-content"></div>
   </div>
 </div>
 
-
 <div class="modal-overlay" id="confirm-overlay" onclick="handleConfirmOverlayClick(event)">
   <div class="confirm-modal" id="confirm-modal" onclick="event.stopPropagation()">
     <div id="confirm-content"></div>
   </div>
 </div>
-
 
 <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true"></div>
 <nav class="bottom-nav">
@@ -5076,8 +5022,6 @@ function getPlayerStats(pid,startDate,endDate){let tg=0,w=0,l=0,dr=0,tb=0,tc=0;c
 function getCommissionAmount(game){if(!game||!game.commission||!game.commission.enabled)return 0;const totalBI=game.players.reduce((s,p)=>s+p.buyIns.reduce((ss,b)=>ss+b.amount,0),0);switch(game.commission.type){case'fixed':return game.commission.fixedAmount||0;case'percentage':return Math.round(totalBI*(game.commission.percentage||0)/100);case'percentage_capped':{const calc=Math.round(totalBI*(game.commission.percentage||0)/100);return game.commission.cap>0?Math.min(calc,game.commission.cap):calc}default:return 0}}
 function getCommissionLabel(game){if(!game||!game.commission||!game.commission.enabled)return'';switch(game.commission.type){case'fixed':return'ثابت: '+fmt(game.commission.fixedAmount)+' '+getCurrency();case'percentage':return game.commission.percentage+'% از گردش';case'percentage_capped':return game.commission.percentage+'% از گردش (سقف: '+fmt(game.commission.cap)+')';default:return''}}
 function switchPage(p){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById('page-'+p).classList.add('active');document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.querySelector(`.nav-item[data-page="${p}"]`).classList.add('active');document.querySelectorAll('.sub-page').forEach(s=>s.classList.remove('active'));renderPage(p)}
-
-/* ===== iOS-style swipe between top-level pages ===== */
 (function(){
   const PAGES=['dashboard','table','players','history','settings'];
   let st=null;
@@ -5091,7 +5035,6 @@ function switchPage(p){document.querySelectorAll('.page').forEach(x=>x.classList
     if(document.querySelector('.modal-overlay.active'))return;
     if(e.touches.length!==1)return;
     const t=e.touches[0];
-    // Skip edge zones (left edge already used for sub-page back)
     if(t.clientX<28||t.clientX>window.innerWidth-28)return;
     if(e.target.closest('input,textarea,select,button,.amount-slider,.player-card,.tx-edit,.qa-item,.toggle,.dp-day,.dp-nav-btn,.widget-action'))return;
     st={sx:t.clientX,sy:t.clientY,t0:Date.now(),dx:0,locked:false,abort:false,pageEl:document.querySelector('.page.active')};
@@ -5119,9 +5062,6 @@ function switchPage(p){document.querySelectorAll('.page').forEach(x=>x.classList
     const cur=currentPage();
     const idx=PAGES.indexOf(cur);
     let target=null;
-    // RTL: in RTL, dx > 0 means swipe to right (visually toward "next" in LTR sense which is "previous" in RTL)
-    // User said: swipe left-to-right in home → table (which is index+1)
-    // So dx > 0 = next page (idx+1), dx < 0 = previous (idx-1)
     if((dx>w*TRIGGER_PCT||(dx>30&&vel>TRIGGER_VEL))&&idx<PAGES.length-1) target=PAGES[idx+1];
     else if((dx<-w*TRIGGER_PCT||(dx<-30&&vel>TRIGGER_VEL))&&idx>0) target=PAGES[idx-1];
     document.body.style.overflow='';
@@ -5146,8 +5086,6 @@ function switchPage(p){document.querySelectorAll('.page').forEach(x=>x.classList
 function renderPage(p){switch(p){case'dashboard':renderDashboard();break;case'table':renderTablePage();break;case'players':renderPlayersPage();break;case'history':renderHistoryPage();break;case'settings':renderSettingsPage();break}}
 function openSubPage(id){document.getElementById(id).classList.add('active')}
 function closeSubPage(id){document.getElementById(id).classList.remove('active')}
-
-/* ===== iOS-style swipe-back gesture for sub-pages ===== */
 (function(){
   let st=null;
   const EDGE=28, TRIGGER=0.28; // 28px edge zone, 28% of width to commit
@@ -5204,8 +5142,6 @@ function showModal(h){document.getElementById('modal-content').innerHTML=h;docum
 function hideModal(){document.getElementById('modal-overlay').classList.remove('active')}
 function handleModalOverlayClick(e){if(e.target===e.currentTarget)hideModal()}
 function handleCenterPageOverlayClick(e,id){if(e.target===e.currentTarget)closeSubPage(id)}
-
-/* ===== Toast & Confirm (replace native alert/confirm) ===== */
 let _pendingConfirm=null;
 const TOAST_ICONS={success:'✓',error:'✕',warn:'⚠',info:'ℹ'};
 function toast(message,type='info',duration=2600){
@@ -5233,8 +5169,6 @@ function confirmDialog(opts){
 function _confirmOk(){document.getElementById('confirm-overlay').classList.remove('active');const cb=_pendingConfirm;_pendingConfirm=null;if(cb)cb()}
 function _confirmCancel(){document.getElementById('confirm-overlay').classList.remove('active');_pendingConfirm=null}
 function handleConfirmOverlayClick(e){if(e.target===e.currentTarget)_confirmCancel()}
-
-/* ===== Password Lock System ===== */
 async function sha256(text){
   const buf=new TextEncoder().encode(text);
   const hash=await crypto.subtle.digest('SHA-256',buf);
@@ -5282,14 +5216,11 @@ function togglePasswordVisibility(inputId,btn){
       :`<path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" y1="2" x2="22" y2="22"/>`;
   }
 }
-/* Submit password on Enter key */
 document.addEventListener('keydown',function(e){
   if(e.key==='Enter'&&document.getElementById('lock-screen').classList.contains('active')){
     e.preventDefault();submitLockPassword();
   }
 });
-
-/* ----- Set / Change / Disable password flows ----- */
 function openSetPasswordModal(){
   showModal(`<h3>🔒 تنظیم رمز عبور</h3>
   <p style="font-size:13px;color:var(--text2);margin-bottom:var(--sp-4);line-height:1.6">برای ورود به اپ رمز عبور لازم خواهد بود. توجه: اگر رمز را فراموش کنید، تنها راه بازنشانی، حذف داده‌ها از تنظیمات مرورگر است.</p>
@@ -5363,15 +5294,11 @@ function lockNow(){
   if(!isPasswordSet()){toast('ابتدا رمز عبور را تنظیم کنید','warn');return}
   showLockScreen();
 }
-
-/* ===== Jalali Date Utilities ===== */
 function gregorianToJalali(gy,gm,gd){const g_d_m=[0,31,59,90,120,151,181,212,243,273,304,334];let jy=(gy<=1600)?0:979;gy-=(gy<=1600)?621:1600;let gy2=(gm>2)?(gy+1):gy;let days=(365*gy)+Math.floor((gy2+3)/4)-Math.floor((gy2+99)/100)+Math.floor((gy2+399)/400)-80+gd+g_d_m[gm-1];jy+=33*Math.floor(days/12053);days%=12053;jy+=4*Math.floor(days/1461);days%=1461;if(days>365){jy+=Math.floor((days-1)/365);days=(days-1)%365}let jm,jd;if(days<186){jm=1+Math.floor(days/31);jd=1+(days%31)}else{jm=7+Math.floor((days-186)/30);jd=1+((days-186)%30)}return [jy,jm,jd]}
 function jalaliToGregorian(jy,jm,jd){let gy=(jy<=979)?621:1600;jy-=(jy<=979)?0:979;let days=(365*jy)+(Math.floor(jy/33)*8)+Math.floor(((jy%33)+3)/4)+78+jd+((jm<7)?(jm-1)*31:((jm-7)*30)+186);gy+=400*Math.floor(days/146097);days%=146097;if(days>36524){gy+=100*Math.floor(--days/36524);days%=36524;if(days>=365)days++}gy+=4*Math.floor(days/1461);days%=1461;if(days>365){gy+=Math.floor((days-1)/365);days=(days-1)%365}let gd=days+1;const sal_a=[0,31,((gy%4===0&&gy%100!==0)||(gy%400===0))?29:28,31,30,31,30,31,31,30,31,30,31];let gm=0;for(gm=0;gm<13&&gd>sal_a[gm];gm++)gd-=sal_a[gm];return [gy,gm,gd]}
 function jalaliDaysInMonth(jy,jm){if(jm<=6)return 31;if(jm<=11)return 30;const isLeap=((((jy-(jy>0?474:473))%2820+474+38)*682)%2816)<682;return isLeap?30:29}
 function tsToJalaliStr(ts){if(!ts)return '';const d=new Date(ts);const [jy,jm,jd]=gregorianToJalali(d.getFullYear(),d.getMonth()+1,d.getDate());return `${jy}/${String(jm).padStart(2,'0')}/${String(jd).padStart(2,'0')}`}
 function jalaliStrToTs(s,endOfDay){if(!s)return null;const m=s.match(/^(\d{4})\/(\d{1,2})\/(\d{1,2})$/);if(!m)return null;const [gy,gm,gd]=jalaliToGregorian(+m[1],+m[2],+m[3]);const dt=new Date(gy,gm-1,gd);if(endOfDay)dt.setHours(23,59,59,999);else dt.setHours(0,0,0,0);return dt.getTime()}
-
-/* ===== Persian Date Picker ===== */
 let _datePickerCtx=null;
 const J_MONTHS=['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
 const J_WEEKDAYS=['ش','ی','د','س','چ','پ','ج'];
@@ -5385,7 +5312,6 @@ function openDatePicker(id,currentTs,onSelect){
 function renderDatePicker(){
   const {viewY,viewM,selY,selM,selD}=_datePickerCtx;
   const days=jalaliDaysInMonth(viewY,viewM);
-  // Compute weekday of 1st (Saturday=0..Friday=6 for Persian week)
   const [gy,gm,gd]=jalaliToGregorian(viewY,viewM,1);
   const jsDow=new Date(gy,gm-1,gd).getDay(); // Sun=0..Sat=6
   const startCol=(jsDow+1)%7; // map: Sat->0, Sun->1, ...Fri->6
@@ -5592,8 +5518,6 @@ function renderSettingsPage(){
   const el=document.getElementById('settings-content');
   const currencies=[['تومان','تومان'],['ریال','ریال'],['دلار','دلار'],['یورو','یورو'],['$','$'],['€','€']];
   let html='';
-
-  /* ===== Group 1: Appearance ===== */
   html+=`<div class="settings-group">
     <div class="settings-group-header">
       <div class="settings-group-icon">🎨</div>
@@ -5648,8 +5572,6 @@ function renderSettingsPage(){
       </div>
     </div>
   </div>`;
-
-  /* ===== Group 2: Game Defaults ===== */
   html+=`<div class="settings-group">
     <div class="settings-group-header">
       <div class="settings-group-icon">🎮</div>
@@ -5671,8 +5593,6 @@ function renderSettingsPage(){
       <input class="form-input mt-3" type="number" value="${s.sliderStep}" style="direction:ltr" onchange="data.settings.sliderStep=parseInt(this.value)||500000;saveData();toast('ذخیره شد','success')">
     </div>
   </div>`;
-
-  /* ===== Group 3: Quick Amounts ===== */
   html+=`<div class="settings-group">
     <div class="settings-group-header">
       <div class="settings-group-icon">⚡</div>
@@ -5701,8 +5621,6 @@ function renderSettingsPage(){
       </div>
     </div>
   </div>`;
-
-  /* ===== Group 4: Security ===== */
   const pwOn=isPasswordSet();
   html+=`<div class="settings-group">
     <div class="settings-group-header">
@@ -5722,8 +5640,6 @@ function renderSettingsPage(){
       </div>
     </div>
   </div>`;
-
-  /* ===== Group 5: Data Management ===== */
   html+=`<div class="settings-group">
     <div class="settings-group-header">
       <div class="settings-group-icon">💾</div>
@@ -5744,8 +5660,6 @@ function renderSettingsPage(){
       <button class="btn btn-danger btn-block mt-3" onclick="resetAllData()">🗑 حذف تمام داده‌ها</button>
     </div>
   </div>`;
-
-  /* ===== Group 6: About ===== */
   html+=`<div class="settings-group">
     <div class="settings-group-header">
       <div class="settings-group-icon">ℹ️</div>
@@ -5772,7 +5686,6 @@ function resetAllData(){confirmDialog({title:'حذف تمام داده‌ها؟'
 loadData();
 if(isPasswordSet()){showLockScreen();}else{renderDashboard();}
 </script>
-
 
 <script>
 (function () {
