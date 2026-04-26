@@ -151,7 +151,7 @@ button { cursor: pointer; }
   display: none;
   padding: var(--sp-4);
   padding-top: calc(var(--sp-4) + env(safe-area-inset-top, 0px));
-  padding-bottom: calc(var(--sp-6) + 100px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: calc(90px + env(safe-area-inset-bottom));
 }
 .page.active { display: block; }
 
@@ -247,20 +247,24 @@ button { cursor: pointer; }
 /* ---- Bottom Navigation — floating pill ---- */
 .bottom-nav {
   position: fixed;
-  bottom: max(8px, calc(env(safe-area-inset-bottom, 0px) - 16px));
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: max(12px, calc(env(safe-area-inset-bottom) + 8px));
+  left: 16px;
+  right: 16px;
+  margin: 0 auto;
   background: rgba(22, 24, 28, 0.32);
   backdrop-filter: blur(60px) saturate(200%);
   -webkit-backdrop-filter: blur(60px) saturate(200%);
   border: 1px solid rgba(255,255,255,0.14);
   display: flex;
+  align-items: center;
   z-index: 1000;
-  padding: 10px 8px;
+  padding: 0 8px;
   gap: 4px;
   border-radius: 999px;
   box-shadow: 0 12px 40px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.06);
-  width: min(92%, 380px);
+  width: auto;
+  max-width: 380px;
+  height: 64px;
 }
 .nav-item {
   flex: 1;
