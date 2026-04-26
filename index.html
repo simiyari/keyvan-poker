@@ -3421,9 +3421,336 @@ body::before {
   border-top-right-radius: 0 !important;
   border-top: 0 !important;
 }
+
+/* Mobile ambient background: very subtle green/gold glow so glass cards remain visible. */
+@media (max-width: 699px) {
+  html,
+  body {
+    background-color: #000 !important;
+  }
+
+  body {
+    background-image:
+      radial-gradient(420px 340px at 86% 6%, rgba(34,169,74,0.085), transparent 68%),
+      radial-gradient(360px 320px at 6% 48%, rgba(216,169,58,0.052), transparent 72%),
+      radial-gradient(440px 360px at 92% 96%, rgba(34,169,74,0.050), transparent 74%),
+      linear-gradient(180deg, #000 0%, #020302 100%) !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+  }
+
+  .page.active {
+    background: transparent !important;
+  }
+
+  .sub-page:not(.center-modal-page) {
+    background:
+      radial-gradient(420px 340px at 86% 6%, rgba(34,169,74,0.080), transparent 68%),
+      radial-gradient(360px 320px at 8% 50%, rgba(216,169,58,0.050), transparent 72%),
+      rgba(0, 0, 0, 0.84) !important;
+  }
+
+  .center-modal-page {
+    background-color: rgba(0,0,0,0.78) !important;
+    background-image:
+      radial-gradient(420px 340px at 86% 6%, rgba(34,169,74,0.075), transparent 68%),
+      radial-gradient(360px 320px at 8% 50%, rgba(216,169,58,0.045), transparent 72%) !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+  }
+}
+
+
+
+/* ---- Refined liquid glass: subtle refraction, no gray wash ---- */
+:root {
+  --liquid-surface: rgba(10, 14, 12, 0.38);
+  --liquid-edge: rgba(255, 255, 255, 0.092);
+  --liquid-edge-hi: rgba(255, 255, 255, 0.135);
+  --liquid-green: rgba(34, 169, 74, 0.052);
+  --liquid-gold: rgba(216, 169, 58, 0.040);
+}
+
+.widget:not(.game-live-banner):not(.felt-banner),
+.idle-banner,
+.card,
+.player-card,
+.settlement-item,
+.info-box,
+.tx-list,
+.qa-item,
+.setting-item,
+.modal,
+.confirm-modal,
+.selectable-player:not(.selected) {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--liquid-surface);
+  background-image:
+    radial-gradient(130% 115% at 86% -18%, var(--liquid-green), transparent 48%),
+    radial-gradient(115% 100% at -8% 108%, var(--liquid-gold), transparent 52%),
+    linear-gradient(145deg, rgba(255,255,255,0.036), rgba(255,255,255,0.010) 52%, rgba(255,255,255,0.024));
+  border-color: var(--liquid-edge);
+  box-shadow:
+    var(--glass-shadow),
+    inset 0 1px 0 rgba(255,255,255,0.075),
+    inset 0 -1px 0 rgba(255,255,255,0.020);
+}
+
+.widget:not(.game-live-banner):not(.felt-banner)::before,
+.idle-banner::before,
+.card::before,
+.player-card::before,
+.settlement-item::before,
+.info-box::before,
+.tx-list::before,
+.qa-item::before,
+.setting-item::before,
+.modal::before,
+.confirm-modal::before,
+.selectable-player:not(.selected)::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    linear-gradient(132deg, rgba(255,255,255,0.055), transparent 24%, transparent 72%, rgba(255,255,255,0.018)),
+    radial-gradient(90% 70% at 82% 0%, rgba(34,169,74,0.050), transparent 60%),
+    radial-gradient(80% 70% at 0% 100%, rgba(216,169,58,0.036), transparent 62%);
+  opacity: 0.34;
+}
+
+.widget:not(.game-live-banner):not(.felt-banner)::after,
+.idle-banner::after,
+.card::after,
+.player-card::after,
+.settlement-item::after,
+.info-box::after,
+.tx-list::after,
+.qa-item::after,
+.setting-item::after,
+.modal::after,
+.confirm-modal::after,
+.selectable-player:not(.selected)::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.020),
+    inset 0 1px 0 rgba(255,255,255,0.040);
+}
+
+.widget:not(.game-live-banner):not(.felt-banner):hover,
+.card:hover,
+.player-card:hover,
+.setting-item:hover,
+.selectable-player:not(.selected):hover {
+  border-color: var(--liquid-edge-hi);
+}
+
+.selectable-player.selected {
+  background:
+    radial-gradient(130% 110% at 84% -14%, rgba(34,169,74,0.090), transparent 52%),
+    linear-gradient(180deg, rgba(34,169,74,0.18), rgba(34,169,74,0.055)) !important;
+  box-shadow:
+    0 4px 16px rgba(34,169,74,0.16),
+    inset 0 1px 0 rgba(255,255,255,0.055) !important;
+}
+
+@media (max-width: 700px) {
+  .widget:not(.game-live-banner):not(.felt-banner),
+  .idle-banner,
+  .card,
+  .player-card,
+  .settlement-item,
+  .info-box,
+  .tx-list,
+  .qa-item,
+  .setting-item,
+  .modal,
+  .confirm-modal,
+  .selectable-player:not(.selected) {
+    background-color: rgba(9, 13, 11, 0.40);
+    background-image:
+      radial-gradient(135% 115% at 88% -16%, rgba(34,169,74,0.060), transparent 50%),
+      radial-gradient(120% 105% at -10% 108%, rgba(216,169,58,0.045), transparent 54%),
+      linear-gradient(145deg, rgba(255,255,255,0.032), rgba(255,255,255,0.010) 54%, rgba(255,255,255,0.021));
+  }
+}
+
+
+/* ---- Fixed ambient background + true reactive glass ----
+   The color now lives behind the app, not inside the cards. Scrollable pages move over
+   this fixed layer, so glass surfaces subtly change based on the background underneath. */
+:root {
+  --ambient-green-1: rgba(34, 169, 74, 0.105);
+  --ambient-green-2: rgba(34, 169, 74, 0.060);
+  --ambient-gold-1: rgba(216, 169, 58, 0.060);
+  --ambient-gold-2: rgba(216, 169, 58, 0.038);
+  --reactive-glass-bg: rgba(8, 12, 10, 0.30);
+  --reactive-glass-bg-strong: rgba(8, 12, 10, 0.38);
+  --reactive-glass-border: rgba(255,255,255,0.095);
+  --reactive-glass-border-hi: rgba(255,255,255,0.145);
+}
+
+html { background: #000 !important; }
+
+body {
+  background-color: #000 !important;
+  background-image: none !important;
+  background-attachment: initial !important;
+}
+
+.app-ambient-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-color: #000;
+  background-image:
+    radial-gradient(780px 620px at 84% 4%, var(--ambient-green-1), transparent 67%),
+    radial-gradient(620px 520px at 8% 42%, var(--ambient-gold-1), transparent 72%),
+    radial-gradient(760px 620px at 92% 98%, var(--ambient-green-2), transparent 76%),
+    radial-gradient(560px 480px at 20% 104%, var(--ambient-gold-2), transparent 78%),
+    linear-gradient(180deg, #000 0%, #020403 100%);
+  background-repeat: no-repeat;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+.page { position: relative; z-index: 1; background: transparent !important; }
+.page.active { background: transparent !important; }
+
+.sub-page:not(.center-modal-page) {
+  background: rgba(0,0,0,0.76) !important;
+  backdrop-filter: blur(24px) saturate(145%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(145%) !important;
+}
+
+.center-modal-page {
+  background-color: rgba(0,0,0,0.72) !important;
+  background-image: none !important;
+  backdrop-filter: blur(24px) saturate(145%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(145%) !important;
+}
+
+.widget:not(.game-live-banner):not(.felt-banner),
+.idle-banner,
+.card,
+.player-card,
+.settlement-item,
+.info-box,
+.tx-list,
+.qa-item,
+.setting-item,
+.modal,
+.confirm-modal,
+.selectable-player:not(.selected) {
+  background-color: var(--reactive-glass-bg) !important;
+  background-image: linear-gradient(145deg, rgba(255,255,255,0.038), rgba(255,255,255,0.010) 58%, rgba(255,255,255,0.020)) !important;
+  border-color: var(--reactive-glass-border) !important;
+  backdrop-filter: blur(26px) saturate(172%) contrast(1.04) !important;
+  -webkit-backdrop-filter: blur(26px) saturate(172%) contrast(1.04) !important;
+  box-shadow:
+    var(--glass-shadow),
+    inset 0 1px 0 rgba(255,255,255,0.074),
+    inset 0 -1px 0 rgba(255,255,255,0.018) !important;
+}
+
+.widget:not(.game-live-banner):not(.felt-banner)::before,
+.idle-banner::before,
+.card::before,
+.player-card::before,
+.settlement-item::before,
+.info-box::before,
+.tx-list::before,
+.qa-item::before,
+.setting-item::before,
+.modal::before,
+.confirm-modal::before,
+.selectable-player:not(.selected)::before {
+  background: linear-gradient(135deg, rgba(255,255,255,0.060), transparent 26%, transparent 72%, rgba(255,255,255,0.018)) !important;
+  opacity: 0.28 !important;
+}
+
+.widget:not(.game-live-banner):not(.felt-banner)::after,
+.idle-banner::after,
+.card::after,
+.player-card::after,
+.settlement-item::after,
+.info-box::after,
+.tx-list::after,
+.qa-item::after,
+.setting-item::after,
+.modal::after,
+.confirm-modal::after,
+.selectable-player:not(.selected)::after {
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.020),
+    inset 0 1px 0 rgba(255,255,255,0.046) !important;
+}
+
+.widget:not(.game-live-banner):not(.felt-banner):hover,
+.card:hover,
+.player-card:hover,
+.setting-item:hover,
+.selectable-player:not(.selected):hover {
+  border-color: var(--reactive-glass-border-hi) !important;
+}
+
+@media (max-width: 699px) {
+  .app-ambient-bg {
+    background-image:
+      radial-gradient(440px 360px at 86% 5%, rgba(34,169,74,0.115), transparent 68%),
+      radial-gradient(390px 330px at 6% 45%, rgba(216,169,58,0.065), transparent 74%),
+      radial-gradient(480px 380px at 94% 97%, rgba(34,169,74,0.068), transparent 76%),
+      radial-gradient(360px 300px at 22% 105%, rgba(216,169,58,0.042), transparent 80%),
+      linear-gradient(180deg, #000 0%, #020403 100%);
+  }
+
+  .widget:not(.game-live-banner):not(.felt-banner),
+  .idle-banner,
+  .card,
+  .player-card,
+  .settlement-item,
+  .info-box,
+  .tx-list,
+  .qa-item,
+  .setting-item,
+  .modal,
+  .confirm-modal,
+  .selectable-player:not(.selected) {
+    background-color: var(--reactive-glass-bg-strong) !important;
+    background-image: linear-gradient(145deg, rgba(255,255,255,0.034), rgba(255,255,255,0.009) 58%, rgba(255,255,255,0.018)) !important;
+    backdrop-filter: blur(24px) saturate(170%) contrast(1.035) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(170%) contrast(1.035) !important;
+  }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .widget:not(.game-live-banner):not(.felt-banner),
+  .idle-banner,
+  .card,
+  .player-card,
+  .settlement-item,
+  .info-box,
+  .tx-list,
+  .qa-item,
+  .setting-item,
+  .modal,
+  .confirm-modal,
+  .selectable-player:not(.selected) {
+    background-color: rgba(12, 16, 14, 0.72) !important;
+  }
+}
+
 </style>
 </head>
 <body>
+<div class="app-ambient-bg" aria-hidden="true"></div>
 
 
 <div class="lock-screen" id="lock-screen" role="dialog" aria-label="ورود با رمز">
