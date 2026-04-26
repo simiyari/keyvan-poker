@@ -1802,6 +1802,1015 @@ input[type=number]:hover, input[type=number]:focus { -moz-appearance: number-inp
 .mb-4 { margin-bottom: var(--sp-4); }
 .gap-2 { gap: var(--sp-2); }
 .flex-col { display: flex; flex-direction: column; }
+
+
+/* ==========================================================
+   RESPONSIVE + iOS SAFE-AREA FIX — added by ChatGPT
+   هدف: نوار پایین استانداردتر روی آیفون + جلوگیری از کش‌آمدن UI روی iPad/Desktop
+   ========================================================== */
+:root {
+  --nav-height: 64px;
+  --nav-side-gap: 16px;
+  --nav-bottom-gap: 10px;
+  --page-max-phone: 430px;
+  --page-max-tablet: 720px;
+  --page-max-desktop: 1040px;
+}
+
+html,
+body {
+  min-height: 100svh;
+}
+
+body {
+  overscroll-behavior-y: none;
+}
+
+.page {
+  width: min(100%, var(--page-max-phone));
+  margin-inline: auto;
+  padding-inline: max(var(--sp-4), env(safe-area-inset-left, 0px)) max(var(--sp-4), env(safe-area-inset-right, 0px));
+  padding-bottom: calc(var(--nav-height) + var(--nav-bottom-gap) + 24px + env(safe-area-inset-bottom, 0px));
+}
+
+.sub-page {
+  padding-inline: max(var(--sp-4), env(safe-area-inset-left, 0px)) max(var(--sp-4), env(safe-area-inset-right, 0px));
+  padding-bottom: calc(var(--nav-height) + var(--nav-bottom-gap) + 36px + env(safe-area-inset-bottom, 0px));
+}
+
+.bottom-nav {
+  left: 50%;
+  right: auto;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + var(--nav-bottom-gap));
+  width: min(calc(100vw - (var(--nav-side-gap) * 2)), 390px);
+  max-width: none;
+  transform: translateX(-50%);
+  height: var(--nav-height);
+  padding: 0 8px;
+}
+
+.nav-item {
+  min-width: 0;
+  height: calc(var(--nav-height) - 14px);
+}
+
+.modal-overlay {
+  padding: max(var(--sp-4), env(safe-area-inset-top, 0px)) max(var(--sp-4), env(safe-area-inset-right, 0px)) max(var(--sp-4), env(safe-area-inset-bottom, 0px)) max(var(--sp-4), env(safe-area-inset-left, 0px));
+}
+
+@media (min-width: 700px) {
+  :root {
+    --nav-bottom-gap: 14px;
+  }
+
+  .page,
+  .sub-page {
+    width: min(100%, var(--page-max-tablet));
+    padding-inline: 24px;
+  }
+
+  #dashboard-content {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    align-items: start;
+  }
+
+  #dashboard-content > * {
+    margin-bottom: 0 !important;
+  }
+
+  #dashboard-content > .game-live-banner,
+  #dashboard-content > .idle-banner,
+  #dashboard-content > .felt-banner {
+    grid-column: 1 / -1;
+  }
+
+  .bottom-nav {
+    width: min(calc(100vw - 48px), 430px);
+  }
+}
+
+@media (min-width: 900px) {
+  .page,
+  .sub-page {
+    width: min(100%, var(--page-max-desktop));
+    max-width: var(--page-max-desktop);
+    padding: 28px 32px calc(var(--nav-height) + var(--nav-bottom-gap) + 32px + env(safe-area-inset-bottom, 0px));
+  }
+
+  #dashboard-content {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #table-content,
+  #players-list,
+  #history-content,
+  #settings-content,
+  #profile-content,
+  #game-detail-content,
+  #settlement-content,
+  #create-table-content {
+    max-width: 720px;
+    margin-inline: auto;
+  }
+
+  .app-header,
+  .sub-header {
+    max-width: 720px;
+    margin-inline: auto;
+  }
+
+  #page-dashboard .app-header,
+  #page-dashboard #dashboard-content {
+    max-width: none;
+  }
+
+  .bottom-nav {
+    width: min(520px, calc(100vw - 64px));
+    height: 66px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .page,
+  .sub-page {
+    width: min(100%, 1100px);
+    max-width: 1100px;
+  }
+
+  #dashboard-content {
+    gap: 18px;
+  }
+}
+
+@media (max-width: 360px) {
+  :root {
+    --nav-side-gap: 10px;
+    --nav-bottom-gap: 8px;
+  }
+
+  .bottom-nav {
+    height: 60px;
+    padding-inline: 6px;
+  }
+
+  .nav-item svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+
+
+/* ==========================================================
+   CREATE TABLE AS FULL-SCREEN iOS/macOS SHEET — updated by ChatGPT
+   هدف: ایجاد میز از وسط با حس پاپ‌آپ باز شود، اما صفحه کامل باشد
+   ========================================================== */
+@keyframes macSheetIn {
+  from {
+    opacity: 0;
+    transform: scale(0.975) translateY(10px);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+}
+
+.center-modal-page {
+  position: fixed;
+  inset: 0;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: rgba(0, 0, 0, 0.42);
+  background-image:
+    radial-gradient(900px 640px at 50% 0%, rgba(34,169,74,0.10), transparent 68%),
+    radial-gradient(760px 560px at 50% 100%, rgba(216,169,58,0.06), transparent 68%);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  z-index: 1080;
+  overflow: hidden;
+  align-items: stretch;
+  justify-content: stretch;
+  animation: overlayFadeIn 0.22s ease-out;
+}
+
+.center-modal-page.active {
+  display: flex;
+}
+
+.center-modal-card {
+  width: 100%;
+  height: 100svh;
+  max-height: none;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  background:
+    radial-gradient(900px 640px at 50% 0%, rgba(34,169,74,0.07), transparent 68%),
+    rgba(0, 0, 0, 0.74);
+  backdrop-filter: blur(36px) saturate(180%);
+  -webkit-backdrop-filter: blur(36px) saturate(180%);
+  border: none;
+  border-radius: 0;
+  padding:
+    calc(var(--sp-4) + env(safe-area-inset-top, 0px))
+    max(var(--sp-4), env(safe-area-inset-right, 0px))
+    calc(var(--sp-6) + env(safe-area-inset-bottom, 0px))
+    max(var(--sp-4), env(safe-area-inset-left, 0px));
+  box-shadow: none;
+  animation: macSheetIn 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+  transform-origin: center center;
+}
+
+.center-modal-card .sub-header {
+  max-width: 720px !important;
+  margin: 0 auto var(--sp-4) !important;
+  position: sticky;
+  top: calc((var(--sp-4) + env(safe-area-inset-top, 0px)) * -1);
+  z-index: 5;
+  padding:
+    calc(var(--sp-2) + env(safe-area-inset-top, 0px))
+    0
+    var(--sp-3);
+  background: linear-gradient(180deg, rgba(0,0,0,0.86), rgba(0,0,0,0.68) 72%, rgba(0,0,0,0));
+  backdrop-filter: blur(28px) saturate(160%);
+  -webkit-backdrop-filter: blur(28px) saturate(160%);
+}
+
+.center-modal-card .sub-header h2 {
+  font-size: 17px;
+  text-align: center;
+}
+
+.center-modal-card .btn-back {
+  width: 40px;
+  height: 40px;
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(255,255,255,0.10);
+}
+
+.center-modal-card #create-table-content {
+  max-width: 720px !important;
+  margin-inline: auto !important;
+}
+
+.center-modal-card #create-table-content > div:last-child {
+  padding-bottom: 0 !important;
+}
+
+@media (min-width: 900px) {
+  .center-modal-card {
+    padding-inline: 32px;
+  }
+}
+
+
+/* ==========================================================
+   CREATE TABLE FULLSCREEN CLEAN FIX — remove black box under title
+   ========================================================== */
+#sub-create-table.center-modal-page {
+  background: rgba(0, 0, 0, 0.46) !important;
+  background-image:
+    radial-gradient(900px 640px at 50% 0%, rgba(34,169,74,0.10), transparent 68%),
+    radial-gradient(760px 560px at 50% 100%, rgba(216,169,58,0.055), transparent 68%) !important;
+}
+
+#sub-create-table .center-modal-card {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  padding-top: calc(var(--sp-3) + env(safe-area-inset-top, 0px)) !important;
+}
+
+#sub-create-table .center-modal-card .sub-header {
+  position: relative !important;
+  top: auto !important;
+  max-width: 720px !important;
+  margin: 0 auto var(--sp-3) !important;
+  padding: 0 !important;
+  min-height: 48px;
+  background: transparent !important;
+  background-image: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+#sub-create-table .center-modal-card .sub-header h2 {
+  text-align: center !important;
+  font-size: 17px !important;
+  color: #fff !important;
+  text-shadow: 0 1px 12px rgba(0,0,0,0.55);
+}
+
+#sub-create-table .center-modal-card .btn-back {
+  background: rgba(255,255,255,0.08) !important;
+  backdrop-filter: blur(18px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
+  border: 1px solid rgba(255,255,255,0.13) !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.06) !important;
+}
+
+#sub-create-table #create-table-content {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+#sub-create-table #create-table-content > .felt-banner:first-child {
+  margin-top: 0 !important;
+}
+
+
+
+/* ==========================================================
+   UNIFIED CONTENT WIDTH FIX — added by ChatGPT
+   هدف: همه صفحه‌ها، هدرها، سرچ‌بارها و کارت‌های اصلی از یک قانون عرض پیروی کنند
+   ========================================================== */
+:root {
+  --app-content-max: 720px;
+  --app-page-gutter: var(--sp-4);
+}
+
+/* صفحه اصلی هنوز تمام عرض viewport را می‌گیرد؛ خود محتوا با قانون واحد وسط‌چین می‌شود */
+.page,
+.sub-page:not(.center-modal-page) {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding-inline:
+    max(var(--app-page-gutter), env(safe-area-inset-left, 0px))
+    max(var(--app-page-gutter), env(safe-area-inset-right, 0px)) !important;
+}
+
+/* قانون واحد برای همه هدرها و کانتینرهای اصلی */
+.app-header,
+.sub-page:not(.center-modal-page) > .sub-header,
+#dashboard-content,
+#table-content,
+#page-players > .search-box,
+#players-list,
+#history-content,
+#settings-content,
+#profile-content,
+#game-detail-content,
+#settlement-content,
+#sub-create-table .center-modal-card .sub-header,
+#sub-create-table #create-table-content {
+  width: min(100%, var(--app-content-max)) !important;
+  max-width: var(--app-content-max) !important;
+  margin-inline: auto !important;
+}
+
+/* صفحه هوم هم مثل بقیه صفحه‌ها یک ستون منظم با همان عرض استاندارد دارد */
+#dashboard-content {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: var(--sp-3) !important;
+  align-items: stretch !important;
+}
+
+#dashboard-content > * {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-bottom: 0 !important;
+  grid-column: auto !important;
+}
+
+/* کارت‌ها و باکس‌های اصلی داخل صفحات همیشه عرض کامل کانتینر استاندارد را بگیرند */
+.widget,
+.felt-banner,
+.idle-banner,
+.game-live-banner,
+.card,
+.player-card,
+.table-player,
+.tx-list,
+.info-box,
+.setting-item,
+.search-box,
+.filter-chips,
+.commission-box,
+.balance-box {
+  max-width: 100%;
+}
+
+/* در تبلت و دسکتاپ فقط فاصله‌های کناری بیشتر می‌شود، نه قانون عرض محتوا */
+@media (min-width: 700px) {
+  :root {
+    --app-page-gutter: 24px;
+  }
+
+  #dashboard-content {
+    grid-template-columns: 1fr !important;
+    gap: var(--sp-4) !important;
+  }
+}
+
+@media (min-width: 900px) {
+  .page,
+  .sub-page:not(.center-modal-page) {
+    padding-inline: 32px !important;
+  }
+
+  .app-header,
+  .sub-page:not(.center-modal-page) > .sub-header,
+  #dashboard-content,
+  #table-content,
+  #page-players > .search-box,
+  #players-list,
+  #history-content,
+  #settings-content,
+  #profile-content,
+  #game-detail-content,
+  #settlement-content,
+  #sub-create-table .center-modal-card .sub-header,
+  #sub-create-table #create-table-content {
+    width: min(100%, var(--app-content-max)) !important;
+    max-width: var(--app-content-max) !important;
+    margin-inline: auto !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .page,
+  .sub-page:not(.center-modal-page) {
+    max-width: none !important;
+  }
+}
+
+
+/* ==========================================================
+   UNIFIED SPACING SYSTEM — added by ChatGPT
+   هدف: فاصله‌ی بین باکس‌ها، کارت‌ها، سرچ‌بارها و بخش‌های مشابه در کل اپ یکدست شود
+   ========================================================== */
+:root {
+  --app-block-gap: 12px;      /* فاصله استاندارد بین باکس‌های اصلی */
+  --app-section-gap: 16px;    /* فاصله بین گروه‌های بزرگ‌تر */
+  --app-control-gap: 8px;     /* فاصله بین دکمه‌ها و کنترل‌های کوچک */
+  --app-card-padding: 16px;   /* پدینگ داخلی استاندارد کارت‌ها */
+  --app-card-padding-sm: 12px;
+}
+
+/* هدرها همیشه با فاصله‌ی واحد از محتوای زیرشان جدا شوند */
+.app-header,
+.sub-header,
+#sub-create-table .center-modal-card .sub-header {
+  margin-bottom: var(--app-block-gap) !important;
+}
+
+/* کانتینرهای محتوایی کل اپ با یک سیستم فاصله چیده شوند */
+#dashboard-content,
+#table-content,
+#players-list,
+#history-content,
+#settings-content,
+#profile-content,
+#game-detail-content,
+#settlement-content,
+#create-table-content {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: var(--app-block-gap) !important;
+}
+
+/* همه فرزندان مستقیم کانتینرها margin پراکنده نداشته باشند؛ gap بالا کنترل می‌کند */
+#dashboard-content > *,
+#table-content > *,
+#players-list > *,
+#history-content > *,
+#settings-content > *,
+#profile-content > *,
+#game-detail-content > *,
+#settlement-content > *,
+#create-table-content > * {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* سرچ‌بار صفحه بازیکنان چون بیرون از players-list است، فاصله‌اش جداگانه استاندارد شد */
+#page-players > .search-box {
+  margin-bottom: var(--app-block-gap) !important;
+}
+
+/* کارت‌ها و باکس‌های هم‌جنس در تمام صفحات، پدینگ و margin یکسان داشته باشند */
+.widget,
+.felt-banner,
+.idle-banner,
+.game-live-banner,
+.card,
+.player-card,
+.table-player,
+.setting-item,
+.info-box,
+.tx-list,
+.commission-box,
+.balance-box,
+.settlement-item,
+.selectable-player {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.widget,
+.felt-banner,
+.idle-banner,
+.game-live-banner,
+.table-player,
+.setting-item,
+.info-box,
+.commission-box,
+.balance-box {
+  padding: var(--app-card-padding) !important;
+}
+
+.card,
+.player-card,
+.settlement-item,
+.selectable-player {
+  padding: var(--app-card-padding-sm) !important;
+}
+
+/* گروه‌های تنظیمات: فاصله‌ی کارت‌ها مثل بقیه اپ، نه فشرده‌تر */
+.settings-group {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: var(--app-block-gap) !important;
+  margin: 0 !important;
+}
+.settings-group + .settings-group {
+  margin-top: var(--app-section-gap) !important;
+}
+.settings-group-header {
+  margin: 0 !important;
+  padding: 0 var(--sp-1) !important;
+}
+.setting-item + .setting-item {
+  margin-top: 0 !important;
+}
+
+/* لیست‌ها و آیتم‌های تکراری با gap کنترل شوند، نه marginهای متفاوت */
+.tx-list {
+  overflow: hidden;
+}
+.tx-item {
+  padding: var(--app-card-padding-sm) var(--app-card-padding) !important;
+}
+.qa-item {
+  margin-bottom: 0 !important;
+}
+#qa-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: var(--app-control-gap) !important;
+}
+
+/* فرم‌ها، دکمه‌های سریع، فیلترها و ردیف‌های آماری با فاصله واحد */
+.form-group {
+  margin-bottom: var(--app-section-gap) !important;
+}
+.form-group:last-child {
+  margin-bottom: 0 !important;
+}
+.quick-amounts,
+.filter-chips,
+.btn-group,
+.stat-row {
+  gap: var(--app-control-gap) !important;
+}
+.quick-amounts,
+.filter-chips,
+.stat-row,
+.slider-container {
+  margin-top: var(--app-block-gap) !important;
+  margin-bottom: var(--app-block-gap) !important;
+}
+
+/* عنوان بخش‌ها با قانون ثابت نمایش داده شوند */
+.section-title {
+  margin-top: var(--app-section-gap) !important;
+  margin-bottom: 0 !important;
+}
+#dashboard-content > .section-title:first-child,
+#table-content > .section-title:first-child,
+#history-content > .section-title:first-child,
+#settings-content > .section-title:first-child,
+#profile-content > .section-title:first-child,
+#game-detail-content > .section-title:first-child,
+#settlement-content > .section-title:first-child,
+#create-table-content > .section-title:first-child {
+  margin-top: 0 !important;
+}
+
+/* جداکننده‌ها هم فاصله ثابت داشته باشند */
+.divider {
+  margin: var(--app-section-gap) 0 !important;
+}
+
+/* محتوای داخل پاپ‌آپ‌ها هم با فاصله‌ی واحدتر نمایش داده شود */
+.modal h3,
+.confirm-title {
+  margin-bottom: var(--app-block-gap) !important;
+}
+.modal .btn-group,
+.confirm-actions,
+.flex-col.gap-2 {
+  gap: var(--app-control-gap) !important;
+}
+.modal .form-group:last-of-type {
+  margin-bottom: var(--app-block-gap) !important;
+}
+
+/* در دسکتاپ هم فاصله‌ها بزرگ‌تر از موبایل نشوند تا حس یکپارچگی حفظ شود */
+@media (min-width: 700px) {
+  #dashboard-content,
+  #table-content,
+  #players-list,
+  #history-content,
+  #settings-content,
+  #profile-content,
+  #game-detail-content,
+  #settlement-content,
+  #create-table-content {
+    gap: var(--app-block-gap) !important;
+  }
+}
+
+
+/* ==========================================================
+   BALANCED INTERNAL SPACING FIX — added by ChatGPT
+   هدف: فاصله‌های داخل باکس‌ها هم مثل فاصله چپ/راست و گپ افقی، منظم و یکدست باشد
+   ========================================================== */
+:root {
+  --app-inner-gap: 8px;
+  --app-content-gap: 12px;
+}
+
+.stat-row {
+  margin: 0 !important;
+  gap: var(--app-inner-gap) !important;
+}
+.stat-row + .stat-row {
+  margin-top: var(--app-inner-gap) !important;
+}
+.stat-box {
+  padding: 12px 10px !important;
+}
+.stat-value {
+  margin-bottom: 3px !important;
+}
+.widget-header {
+  margin-bottom: var(--app-content-gap) !important;
+}
+.widget-title {
+  margin-bottom: 0 !important;
+}
+.widget > .widget-title:first-child {
+  margin-bottom: var(--app-content-gap) !important;
+}
+.widget > .player-card + .player-card,
+.widget > .card + .card,
+.widget > .settlement-item + .settlement-item,
+.widget > .selectable-player + .selectable-player {
+  margin-top: var(--app-inner-gap) !important;
+}
+.widget > .form-group,
+.modal > .form-group,
+#create-table-content .form-group {
+  margin-bottom: var(--app-content-gap) !important;
+}
+.widget > .form-group:last-child,
+.modal > .form-group:last-child,
+#create-table-content .form-group:last-child {
+  margin-bottom: 0 !important;
+}
+.slider-container {
+  margin: var(--app-content-gap) 0 !important;
+}
+.quick-amounts,
+.filter-chips {
+  gap: var(--app-inner-gap) !important;
+  margin: var(--app-content-gap) 0 !important;
+}
+.search-box {
+  margin-bottom: var(--app-block-gap) !important;
+}
+#players-list .player-card + .player-card,
+#table-content .table-player + .table-player,
+#history-content .card + .card,
+#settings-content .setting-item + .setting-item,
+#profile-content .player-card + .player-card,
+#game-detail-content .player-card + .player-card,
+#create-table-content .selectable-player + .selectable-player {
+  margin-top: 0 !important;
+}
+.settings-group {
+  gap: var(--app-block-gap) !important;
+}
+.settings-group + .settings-group {
+  margin-top: var(--app-section-gap) !important;
+}
+#create-table-content > .felt-banner + *,
+#create-table-content > .form-group + .slider-container,
+#create-table-content > .slider-container + .quick-amounts,
+#create-table-content > .quick-amounts + .form-group,
+#create-table-content > .divider + * {
+  margin-top: 0 !important;
+}
+.widget[style*="padding:40px"] {
+  padding: 32px 20px !important;
+}
+
+
+/* ==========================================================
+   CAREFUL BUTTON RADIUS UNIFICATION — added by ChatGPT
+   هدف: دکمه‌های متنی در همه بخش‌ها از یک گردی و حس بصری واحد پیروی کنند
+   نکته: دکمه‌های آیکونی/دایره‌ای مثل بستن، برگشت، حذف و ویرایش عمداً دست‌نخورده می‌مانند
+   ========================================================== */
+:root {
+  --app-button-radius: 999px;
+  --app-button-border: rgba(255,255,255,0.10);
+  --app-button-bg: rgba(255,255,255,0.045);
+  --app-button-bg-hover: rgba(255,255,255,0.075);
+}
+
+/* فقط دکمه‌های متنی و انتخابی؛ نه دکمه‌های گرد آیکونی */
+.btn,
+.filter-chip,
+.quick-amt,
+.widget-action {
+  border-radius: var(--app-button-radius) !important;
+  transition:
+    transform 0.14s cubic-bezier(0.32, 0.72, 0, 1),
+    background 0.16s ease,
+    border-color 0.16s ease,
+    filter 0.16s ease,
+    opacity 0.16s ease !important;
+}
+
+/* دکمه‌های کوچک هم همان زبان طراحی را داشته باشند */
+.btn-sm,
+.widget-action {
+  border-radius: var(--app-button-radius) !important;
+}
+
+/* دکمه‌های خنثی، فیلترها و مبالغ سریع از یک سطح شیشه‌ای مشترک استفاده کنند */
+.btn-secondary,
+.btn-outline,
+.filter-chip,
+.quick-amt:not(.selected) {
+  background: var(--app-button-bg) !important;
+  border-color: var(--app-button-border) !important;
+  box-shadow: var(--glass-shadow) !important;
+}
+
+.btn-secondary:hover,
+.btn-outline:hover,
+.filter-chip:hover,
+.quick-amt:not(.selected):hover {
+  background: var(--app-button-bg-hover) !important;
+  border-color: rgba(255,255,255,0.16) !important;
+}
+
+/* حالت انتخاب‌شده فیلترها و مبالغ سریع شبیه هم باشد، فقط رنگ معنایی فرق کند */
+.filter-chip.active {
+  background: var(--felt-light) !important;
+  border-color: rgba(34,169,74,0.58) !important;
+  color: var(--green) !important;
+  box-shadow: 0 4px 14px rgba(34,169,74,0.16), inset 0 1px 0 rgba(255,255,255,0.05) !important;
+}
+
+.quick-amt.selected {
+  background: var(--gold-bg) !important;
+  border-color: rgba(216,169,58,0.72) !important;
+  color: var(--gold) !important;
+  box-shadow: 0 4px 14px rgba(216,169,58,0.14), inset 0 1px 0 rgba(255,255,255,0.05) !important;
+}
+
+/* اندازه‌ها را دستکاری شدید نمی‌کنیم؛ فقط حداقل ارتفاع کنترل‌های مشابه هماهنگ می‌شود */
+.filter-chip {
+  min-height: 40px;
+}
+.quick-amt {
+  min-height: 38px;
+}
+.btn-sm {
+  min-height: 36px;
+}
+
+/* دکمه‌های اصلی فقط گردی مشترک می‌گیرند و رنگ/حس اصلی خودشان حفظ می‌شود */
+.btn-primary,
+.btn-gold,
+.btn-danger {
+  border-radius: var(--app-button-radius) !important;
+}
+
+/* دکمه‌های تمام‌عرض مثل شروع بازی و ذخیره، منظم‌تر اما نه خیلی بزرگ */
+.btn-block {
+  min-height: 46px;
+}
+
+/* دکمه افزودن در تنظیمات یا هدرها با بقیه کنترل‌ها هماهنگ بماند */
+.settings-group .btn:not(.btn-block),
+.app-header .btn,
+.sub-header .btn,
+#sub-create-table .btn:not(.btn-block) {
+  min-height: 38px;
+}
+
+/* استثناهای آیکونی: باید دایره‌ای بمانند و شبیه دکمه‌های متنی نشوند */
+.btn-back,
+.lock-toggle,
+.dp-nav-btn,
+.tx-edit,
+.qa-remove {
+  border-radius: 50% !important;
+}
+
+
+/* ==========================================================
+   CONSERVATIVE CONTROL HEIGHT NORMALIZATION — added by ChatGPT
+   هدف: ارتفاع کنترل‌های هم‌خانواده یکی باشد، بدون تغییر چیدمان و عرض‌ها
+   ========================================================== */
+:root {
+  --app-control-h: 44px;       /* input، search، فیلتر، مبلغ سریع، دکمه معمولی */
+  --app-control-h-sm: 38px;    /* دکمه‌های کوچک مثل + جدید */
+  --app-control-h-lg: 48px;    /* CTAهای اصلی تمام‌عرض */
+  --app-control-pad-x: 18px;
+  --app-control-pad-x-sm: 14px;
+}
+
+/* دکمه‌های متنی معمولی: ارتفاع مشترک، عرض آزاد */
+.btn:not(.btn-sm):not(.btn-back),
+.filter-chip,
+.quick-amt {
+  min-height: 0 !important;
+  height: var(--app-control-h) !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1.2 !important;
+}
+
+.btn:not(.btn-sm):not(.btn-back) {
+  padding-inline: var(--app-control-pad-x) !important;
+}
+
+.filter-chip,
+.quick-amt {
+  padding-inline: var(--app-control-pad-x-sm) !important;
+}
+
+/* ورودی‌ها و سرچ‌باکس‌ها هم‌ارتفاع با دکمه‌های معمولی */
+input.form-input,
+select.form-input,
+button.form-input,
+.search-box input,
+.qa-item input {
+  min-height: 0 !important;
+  height: var(--app-control-h) !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  line-height: 1.2 !important;
+}
+
+input.form-input,
+select.form-input,
+button.form-input,
+.qa-item input {
+  padding-inline: 16px !important;
+}
+
+.search-box input {
+  padding-right: 16px !important;
+  padding-left: 44px !important;
+}
+
+select.form-input {
+  padding-right: 16px !important;
+  padding-left: 38px !important;
+  background-position: left 14px center !important;
+}
+
+/* textarea، اسلایدر، toggle، دکمه‌های آیکونی و ناوبری پایین عمداً استثنا هستند */
+textarea.form-input {
+  height: auto !important;
+  min-height: 88px !important;
+  padding: 14px 16px !important;
+  display: block !important;
+  line-height: 1.55 !important;
+}
+
+.btn-sm,
+.widget-action {
+  min-height: 0 !important;
+  height: var(--app-control-h-sm) !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  padding-inline: var(--app-control-pad-x-sm) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1.2 !important;
+}
+
+/* CTAهای تمام‌عرض کمی بلندتر می‌مانند چون کارکرد اصلی/تأکیدی دارند */
+.btn-block:not(.btn-sm) {
+  height: var(--app-control-h-lg) !important;
+}
+
+/* دکمه‌های آیکونی شکل و اندازه مخصوص خودشان را حفظ کنند */
+.qa-remove {
+  width: 32px !important;
+  height: 32px !important;
+}
+
+.btn-back {
+  width: 40px !important;
+  height: 40px !important;
+}
+
+.tx-edit {
+  width: 28px !important;
+  height: 28px !important;
+}
+
+.dp-nav-btn {
+  width: 36px !important;
+  height: 36px !important;
+}
+
+/* ==========================================================
+   iOS STATUS BAR TOP SCRIM — added by ChatGPT
+   هدف: هنگام اسکرول، محتوا زیر نوار وضعیت آیفون با آیکن‌های وای‌فای/باتری قاطی نشود
+   روش: یک گرادینت بسیار کم‌ارتفاع و ثابت، شبیه scrim اپ‌های iOS
+   ========================================================== */
+:root {
+  --ios-top-scrim-height: max(30px, calc(env(safe-area-inset-top, 0px) + 26px));
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--ios-top-scrim-height);
+  pointer-events: none;
+  z-index: 960;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.96) 0%,
+    rgba(0, 0, 0, 0.82) 36%,
+    rgba(0, 0, 0, 0.38) 72%,
+    rgba(0, 0, 0, 0.00) 100%
+  );
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* وقتی صفحه ایجاد میز به‌صورت فول‌اسکرین باز است، چون خودش z-index بالاتری دارد، scrim مخصوص خودش را می‌گیرد */
+.center-modal-page.active::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--ios-top-scrim-height);
+  pointer-events: none;
+  z-index: 6;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.94) 0%,
+    rgba(0, 0, 0, 0.76) 36%,
+    rgba(0, 0, 0, 0.32) 72%,
+    rgba(0, 0, 0, 0.00) 100%
+  );
+}
+
+/* دکمه‌ها و هدر صفحه فول‌اسکرین ایجاد میز بالاتر از scrim بمانند و تیره نشوند */
+.center-modal-page.active .sub-header {
+  position: relative;
+  z-index: 7;
+}
+
+/* روی مودال‌ها و لاک‌اسکرین، خود overlay ها کنترل بصری دارند؛ scrim اصلی زیر آن‌ها می‌ماند */
+.modal-overlay,
+.lock-screen {
+  isolation: isolate;
+}
 </style>
 </head>
 <body>
@@ -1889,14 +2898,16 @@ input[type=number]:hover, input[type=number]:focus { -moz-appearance: number-inp
   <div id="settlement-content"></div>
 </div>
 
-<div id="sub-create-table" class="sub-page">
-  <div class="sub-header">
-    <button class="btn-back" onclick="closeSubPage('sub-create-table')" aria-label="بازگشت">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
-    </button>
-    <h2>ایجاد میز جدید</h2>
+<div id="sub-create-table" class="sub-page center-modal-page" onclick="handleCenterPageOverlayClick(event, 'sub-create-table')">
+  <div class="center-modal-card" onclick="event.stopPropagation()">
+    <div class="sub-header">
+      <button class="btn-back" onclick="closeSubPage('sub-create-table')" aria-label="بستن">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+      <h2>ایجاد میز جدید</h2>
+    </div>
+    <div id="create-table-content"></div>
   </div>
-  <div id="create-table-content"></div>
 </div>
 
 <!-- Modal (centered dialog) -->
@@ -2027,6 +3038,7 @@ function closeSubPage(id){document.getElementById(id).classList.remove('active')
   document.addEventListener('touchstart',function(e){
     const sub=document.querySelector('.sub-page.active');
     if(!sub)return;
+    if(sub.classList.contains('center-modal-page'))return;
     if(document.querySelector('.modal-overlay.active'))return;
     const t=e.touches[0];
     if(t.clientX<=EDGE){
@@ -2075,6 +3087,7 @@ function closeSubPage(id){document.getElementById(id).classList.remove('active')
 function showModal(h){document.getElementById('modal-content').innerHTML=h;document.getElementById('modal-overlay').classList.add('active')}
 function hideModal(){document.getElementById('modal-overlay').classList.remove('active')}
 function handleModalOverlayClick(e){if(e.target===e.currentTarget)hideModal()}
+function handleCenterPageOverlayClick(e,id){if(e.target===e.currentTarget)closeSubPage(id)}
 
 /* ===== Toast & Confirm (replace native alert/confirm) ===== */
 let _pendingConfirm=null;
