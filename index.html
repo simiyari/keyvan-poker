@@ -3326,6 +3326,101 @@ body::before {
   }
 }
 
+
+
+/* ==========================================================
+   REAL iOS STANDALONE PWA VIEWPORT FIX — final safe patch
+   ریشه مشکل کادر مشکی پایین: در حالت Add to Home Screen، 100dvh/100svh در آیفون
+   گاهی ارتفاع کوتاه‌تر از کل صفحه می‌دهد. در نتیجه navbar نسبت به viewport کوتاه
+   فیکس می‌شود و پایین صفحه یک ناحیه سیاه باقی می‌ماند.
+   این patch فقط برای موبایل/تاچ اعمال می‌شود و ارتفاع را با یک متغیر JS پایدار
+   از screen.height پر می‌کند، نه visualViewport و نه مقدار متغیر هنگام اسکرول.
+   ========================================================== */
+:root {
+  --pwa-real-height: 100vh;
+  --nav-real-bottom: 8px;
+}
+
+@media (max-width: 699px) and (hover: none) and (pointer: coarse) {
+  html,
+  body {
+    height: var(--pwa-real-height) !important;
+    min-height: var(--pwa-real-height) !important;
+    max-height: var(--pwa-real-height) !important;
+    overflow: hidden !important;
+    background: #000 !important;
+  }
+
+  body {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100% !important;
+    margin: 0 !important;
+  }
+
+  .page,
+  .sub-page:not(.center-modal-page) {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    height: var(--pwa-real-height) !important;
+    min-height: var(--pwa-real-height) !important;
+    max-height: var(--pwa-real-height) !important;
+    margin: 0 !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-y: contain !important;
+    background-color: transparent !important;
+  }
+
+  .page {
+    padding-bottom: calc(var(--nav-fixed-height, 64px) + var(--nav-real-bottom) + 18px) !important;
+    scroll-padding-bottom: calc(var(--nav-fixed-height, 64px) + var(--nav-real-bottom) + 18px) !important;
+  }
+
+  .sub-page:not(.center-modal-page) {
+    padding-bottom: calc(var(--nav-fixed-height, 64px) + var(--nav-real-bottom) + 22px) !important;
+    scroll-padding-bottom: calc(var(--nav-fixed-height, 64px) + var(--nav-real-bottom) + 22px) !important;
+  }
+
+  .page:not(.active) {
+    display: none !important;
+    pointer-events: none !important;
+  }
+
+  .page.active {
+    display: block !important;
+    pointer-events: auto !important;
+  }
+
+  .bottom-nav {
+    position: fixed !important;
+    top: auto !important;
+    left: 50% !important;
+    right: auto !important;
+    bottom: var(--nav-real-bottom) !important;
+    transform: translate3d(-50%, 0, 0) !important;
+    -webkit-transform: translate3d(-50%, 0, 0) !important;
+    width: min(calc(100vw - 32px), 390px) !important;
+    height: var(--nav-fixed-height, 64px) !important;
+    min-height: var(--nav-fixed-height, 64px) !important;
+    margin: 0 !important;
+    z-index: 1500 !important;
+  }
+
+  body::after,
+  .page::after,
+  .sub-page::after {
+    pointer-events: none !important;
+  }
+}
+
+@media (max-width: 360px) and (hover: none) and (pointer: coarse) {
+  :root { --nav-real-bottom: 7px; }
+}
+
 </style>
 </head>
 <body>
@@ -4113,6 +4208,45 @@ if(isPasswordSet()){showLockScreen();}else{renderDashboard();}
 
 <script>
 /* Deep iOS PWA nav lock disabled: final CSS uses a small fixed bottom offset to avoid the black gap in Add to Home Screen mode. */
+</script>
+
+
+
+<script>
+/* Stable iOS standalone height lock.
+   Do not use visualViewport here; it changes while scrolling in iOS PWA. */
+(function () {
+  function isIOS() {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  }
+  function isStandalone() {
+    return window.navigator.standalone === true ||
+      (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+  }
+  function setStablePwaHeight() {
+    var root = document.documentElement;
+    var touchPhone = window.matchMedia && window.matchMedia('(max-width: 699px) and (hover: none) and (pointer: coarse)').matches;
+    if (!touchPhone) {
+      root.style.removeProperty('--pwa-real-height');
+      return;
+    }
+    var h;
+    if (isIOS() && isStandalone() && window.screen) {
+      var portrait = !(window.matchMedia && window.matchMedia('(orientation: landscape)').matches);
+      var sw = Number(window.screen.width) || 0;
+      var sh = Number(window.screen.height) || 0;
+      h = portrait ? Math.max(sw, sh) : Math.min(sw, sh);
+    } else {
+      h = window.innerHeight || document.documentElement.clientHeight || 0;
+    }
+    if (h > 0) root.style.setProperty('--pwa-real-height', h + 'px');
+  }
+  setStablePwaHeight();
+  window.addEventListener('orientationchange', function () { setTimeout(setStablePwaHeight, 250); }, { passive: true });
+  window.addEventListener('resize', function () { setTimeout(setStablePwaHeight, 80); }, { passive: true });
+  document.addEventListener('DOMContentLoaded', setStablePwaHeight);
+})();
 </script>
 
 </body>
