@@ -5073,6 +5073,40 @@ function setLiquidNavDragging(on){
   if(nav)nav.classList.toggle('liquid-nav-dragging',!!on);
 }
 
+function resetLiquidNavIconProgress(){
+  document.querySelectorAll('.bottom-nav .nav-item').forEach(item=>{
+    item.style.removeProperty('--liquid-icon-alpha');
+    item.style.removeProperty('--liquid-icon-scale');
+  });
+}
+
+function setLiquidNavIconBetween(fromPage,toPage,progress){
+  const nav=document.querySelector('.bottom-nav');
+  if(!nav)return;
+  const p=Math.max(0,Math.min(1,progress||0));
+  const fromItem=nav.querySelector('.nav-item[data-page="'+fromPage+'"]');
+  const toItem=toPage?nav.querySelector('.nav-item[data-page="'+toPage+'"]'):fromItem;
+
+  nav.querySelectorAll('.nav-item').forEach(item=>{
+    item.style.setProperty('--liquid-icon-alpha','0.58');
+    item.style.setProperty('--liquid-icon-scale','1');
+  });
+
+  if(fromItem){
+    const fromAlpha=1-(0.42*p);
+    const fromScale=1.05-(0.05*p);
+    fromItem.style.setProperty('--liquid-icon-alpha',fromAlpha.toFixed(3));
+    fromItem.style.setProperty('--liquid-icon-scale',fromScale.toFixed(3));
+  }
+
+  if(toItem&&toItem!==fromItem){
+    const toAlpha=0.58+(0.42*p);
+    const toScale=1+(0.05*p);
+    toItem.style.setProperty('--liquid-icon-alpha',toAlpha.toFixed(3));
+    toItem.style.setProperty('--liquid-icon-scale',toScale.toFixed(3));
+  }
+}
+
 function clearPageLayerStyles(el){
   if(!el)return;
   ['position','left','right','top','bottom','width','height','maxWidth','margin','zIndex','display','overflowY','transform','transition','willChange','pointerEvents','opacity'].forEach(prop=>{
@@ -5100,6 +5134,8 @@ function preparePageLayer(el,z,topMode){
 }
 
 function finishMainPageSwitch(targetPage,currentEl,targetEl){
+  setLiquidNavDragging(false);
+  resetLiquidNavIconProgress();
   document.querySelectorAll('.page').forEach(page=>{
     page.classList.toggle('active',page===targetEl);
     if(page!==targetEl)clearPageLayerStyles(page);
@@ -5214,6 +5250,7 @@ function switchPage(p,opts){
   function resetSwipeStyles(st){
     if(!st)return;
     setLiquidNavDragging(false);
+    resetLiquidNavIconProgress();
     clearPageLayerStyles(st.currentEl);
     if(st.targetEl){
       st.targetEl.classList.remove('active');
@@ -5250,6 +5287,7 @@ function switchPage(p,opts){
       st.targetEl.style.transform='translate3d('+(-direction*st.width)+'px,0,0)';
       st.targetEl.style.opacity='0.92';
       setLiquidNavBetween(st.page,st.targetPage,0);
+      setLiquidNavIconBetween(st.page,st.targetPage,0);
     }
   }
 
@@ -5285,6 +5323,7 @@ function switchPage(p,opts){
       document.body.style.touchAction='none';
       setLiquidNavDragging(true);
       setLiquidNavBetween(st.page,st.page,0);
+      setLiquidNavIconBetween(st.page,st.page,0);
     }
 
     e.preventDefault();
@@ -5296,6 +5335,7 @@ function switchPage(p,opts){
       st.currentEl.style.transform='translate3d('+rubber+'px,0,0)';
       st.currentEl.style.opacity='1';
       setLiquidNavBetween(st.page,st.page,0);
+      setLiquidNavIconBetween(st.page,st.page,0);
       return;
     }
 
@@ -5306,6 +5346,7 @@ function switchPage(p,opts){
     st.targetEl.style.transform='translate3d('+(limited-st.direction*st.width)+'px,0,0)';
     st.targetEl.style.opacity=String(0.90+progress*0.10);
     setLiquidNavBetween(st.page,st.targetPage,progress);
+    setLiquidNavIconBetween(st.page,st.targetPage,progress);
   },{passive:false});
 
   document.addEventListener('touchend',function(){
@@ -5323,8 +5364,8 @@ function switchPage(p,opts){
     const finishEase='transform '+finishMs+'ms cubic-bezier(0.22, 1, 0.36, 1), opacity '+finishMs+'ms ease';
     const cancelEase='transform '+cancelMs+'ms cubic-bezier(0.22, 1, 0.36, 1), opacity '+cancelMs+'ms ease';
 
-    setLiquidNavDragging(false);
     setLiquidNavBetween(st.page,st.targetPage||st.page,shouldCommit?1:0);
+    setLiquidNavIconBetween(st.page,st.targetPage||st.page,shouldCommit?1:0);
 
     st.currentEl.style.transition=shouldCommit?finishEase:cancelEase;
     if(st.targetEl)st.targetEl.style.transition=shouldCommit?finishEase:cancelEase;
@@ -6272,6 +6313,24 @@ body.main-page-transitioning { overflow-x: hidden !important; }
   syncLiquidNav();
 })();
 </script>
+
+
+<style id="liquid-nav-swipe-icon-sync-fix">
+.bottom-nav.liquid-nav-dragging .nav-item {
+  color: rgba(255,255,255,var(--liquid-icon-alpha,0.58)) !important;
+  transition: none !important;
+}
+.bottom-nav.liquid-nav-dragging .nav-item svg {
+  transform: scale(var(--liquid-icon-scale,1)) !important;
+  transition: none !important;
+}
+.bottom-nav.liquid-nav-dragging .nav-item.active {
+  color: rgba(255,255,255,var(--liquid-icon-alpha,1)) !important;
+}
+.bottom-nav.liquid-nav-dragging .nav-item.active svg {
+  transform: scale(var(--liquid-icon-scale,1.05)) !important;
+}
+</style>
 
 </body>
 </html>
