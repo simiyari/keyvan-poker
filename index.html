@@ -6412,8 +6412,7 @@ body.has-custom-background .btn-outline,
 body.has-custom-background .btn-back,
 body.has-custom-background .dp-nav-btn,
 body.has-custom-background .tx-edit,
-body.has-custom-background .settings-group-icon,
-body.has-custom-background .background-preview {
+body.has-custom-background .settings-group-icon {
   background-color: rgba(8, 10, 12, 0.26) !important;
   background-image:
     linear-gradient(145deg, rgba(255,255,255,0.040), rgba(255,255,255,0.010) 60%, rgba(255,255,255,0.020)) !important;
@@ -6492,6 +6491,213 @@ body.has-custom-background .bottom-nav::after {
   will-change: transform;
 }
 </style>
+
+<style id="background-preview-image-fix">
+.background-preview.has-image {
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+}
+body.has-custom-background .background-preview.has-image {
+  background-color: rgba(8, 10, 12, 0.18) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+</style>
+
+
+<style id="adaptive-wallpaper-accent-style">
+/*
+  Adaptive accent for custom wallpapers.
+  Only active when the user chooses a custom background.
+  It neutralizes old green/gold selection accents and derives a subtle readable accent from the wallpaper.
+*/
+body.has-custom-background {
+  --adaptive-accent-rgb: 226, 230, 236;
+  --adaptive-accent-text: rgb(var(--adaptive-accent-rgb));
+  --adaptive-accent-bg: rgba(var(--adaptive-accent-rgb), 0.105);
+  --adaptive-accent-bg-strong: rgba(var(--adaptive-accent-rgb), 0.155);
+  --adaptive-accent-border: rgba(var(--adaptive-accent-rgb), 0.245);
+  --adaptive-accent-ring: rgba(var(--adaptive-accent-rgb), 0.18);
+}
+
+/* Selected / active UI controls: neutral/adaptive instead of hard green. */
+body.has-custom-background .filter-chip.active,
+body.has-custom-background .quick-amt.selected,
+body.has-custom-background .dp-day.selected,
+body.has-custom-background .selectable-player.selected,
+body.has-custom-background .table-player:not(.cashed-out) .tp-badge.active-badge {
+  color: var(--adaptive-accent-text) !important;
+  background-color: var(--adaptive-accent-bg-strong) !important;
+  background-image: linear-gradient(145deg, rgba(var(--adaptive-accent-rgb), 0.17), rgba(255,255,255,0.018) 62%, rgba(var(--adaptive-accent-rgb), 0.08)) !important;
+  border-color: var(--adaptive-accent-border) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.055), 0 8px 20px rgba(0,0,0,0.13) !important;
+}
+
+body.has-custom-background .selectable-player.selected .sp-check {
+  color: #fff !important;
+  background: rgba(var(--adaptive-accent-rgb), 0.32) !important;
+  border-color: rgba(var(--adaptive-accent-rgb), 0.42) !important;
+}
+
+body.has-custom-background .toggle.on {
+  background: linear-gradient(180deg, rgba(var(--adaptive-accent-rgb), 0.36), rgba(var(--adaptive-accent-rgb), 0.22)) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08) !important;
+}
+
+body.has-custom-background .widget-action,
+body.has-custom-background .chip-felt,
+body.has-custom-background .chip-green,
+body.has-custom-background .chip-gold {
+  color: var(--adaptive-accent-text) !important;
+  background: var(--adaptive-accent-bg) !important;
+  border-color: var(--adaptive-accent-border) !important;
+}
+
+/* Focus rings should also follow the wallpaper instead of hard green. */
+body.has-custom-background .form-input:focus,
+body.has-custom-background textarea.form-input:focus,
+body.has-custom-background .search-box input:focus,
+body.has-custom-background .qa-item input:focus {
+  border-color: rgba(var(--adaptive-accent-rgb), 0.42) !important;
+  box-shadow: 0 0 0 3px var(--adaptive-accent-ring) !important;
+}
+
+/* Primary action keeps contrast but stops being a fixed green on custom wallpapers. */
+body.has-custom-background .btn-primary {
+  color: #fff !important;
+  background: linear-gradient(180deg, rgba(var(--adaptive-accent-rgb), 0.34), rgba(var(--adaptive-accent-rgb), 0.20)) !important;
+  border-color: rgba(var(--adaptive-accent-rgb), 0.26) !important;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.10) !important;
+}
+
+/* Small text accents that are not semantic profit/loss. */
+body.has-custom-background .tp-badge.active-badge,
+body.has-custom-background .sp-check,
+body.has-custom-background .background-preview span {
+  border-color: var(--adaptive-accent-border) !important;
+}
+</style>
+
+<script id="adaptive-wallpaper-accent-script">
+(function(){
+  function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
+  function rgbToHsl(r,g,b){
+    r/=255;g/=255;b/=255;
+    var max=Math.max(r,g,b), min=Math.min(r,g,b);
+    var h=0,s=0,l=(max+min)/2;
+    if(max!==min){
+      var d=max-min;
+      s=l>0.5?d/(2-max-min):d/(max+min);
+      switch(max){
+        case r:h=(g-b)/d+(g<b?6:0);break;
+        case g:h=(b-r)/d+2;break;
+        case b:h=(r-g)/d+4;break;
+      }
+      h/=6;
+    }
+    return [h,s,l];
+  }
+  function hslToRgb(h,s,l){
+    function hue2rgb(p,q,t){
+      if(t<0)t+=1;if(t>1)t-=1;
+      if(t<1/6)return p+(q-p)*6*t;
+      if(t<1/2)return q;
+      if(t<2/3)return p+(q-p)*(2/3-t)*6;
+      return p;
+    }
+    var r,g,b;
+    if(s===0){r=g=b=l;}else{
+      var q=l<0.5?l*(1+s):l+s-l*s;
+      var p=2*l-q;
+      r=hue2rgb(p,q,h+1/3);g=hue2rgb(p,q,h);b=hue2rgb(p,q,h-1/3);
+    }
+    return [Math.round(r*255),Math.round(g*255),Math.round(b*255)];
+  }
+  function setAccent(rgb){
+    var root=document.documentElement;
+    root.style.setProperty('--adaptive-accent-rgb', rgb[0]+', '+rgb[1]+', '+rgb[2]);
+  }
+  function resetAccent(){
+    document.documentElement.style.removeProperty('--adaptive-accent-rgb');
+  }
+  function deriveAccentFromImage(src){
+    return new Promise(function(resolve){
+      var img=new Image();
+      img.onload=function(){
+        try{
+          var size=42;
+          var canvas=document.createElement('canvas');
+          canvas.width=size;canvas.height=size;
+          var ctx=canvas.getContext('2d',{willReadFrequently:true});
+          ctx.drawImage(img,0,0,size,size);
+          var data=ctx.getImageData(0,0,size,size).data;
+          var sr=0,sg=0,sb=0,sw=0;
+          for(var i=0;i<data.length;i+=4){
+            var a=data[i+3]; if(a<150) continue;
+            var r=data[i], g=data[i+1], b=data[i+2];
+            var hsl=rgbToHsl(r,g,b), s=hsl[1], l=hsl[2];
+            if(l<0.10 || l>0.94) continue;
+            var colorWeight=0.22 + s*1.85;
+            var midWeight=0.35 + (1 - Math.abs(l-0.50)*2)*0.90;
+            var w=colorWeight*midWeight;
+            sr+=r*w; sg+=g*w; sb+=b*w; sw+=w;
+          }
+          if(!sw){resolve([226,230,236]);return;}
+          var avg=[sr/sw,sg/sw,sb/sw];
+          var hsl=rgbToHsl(avg[0],avg[1],avg[2]);
+          var h=hsl[0], s=hsl[1];
+          if(s<0.10){resolve([226,230,236]);return;}
+          /* Light, muted accent: readable on dark glass but still related to the wallpaper. */
+          var out=hslToRgb(h, clamp(s*0.72,0.18,0.42), 0.76);
+          resolve(out);
+        }catch(e){resolve([226,230,236]);}
+      };
+      img.onerror=function(){resolve([226,230,236]);};
+      img.src=src;
+    });
+  }
+  var accentToken=0;
+  function refreshAdaptiveAccent(){
+    var bg=null;
+    try{ bg=(data&&data.settings)?data.settings.backgroundImage:null; }catch(e){ bg=null; }
+    if(!bg){ resetAccent(); return; }
+    var token=++accentToken;
+    deriveAccentFromImage(bg).then(function(rgb){
+      if(token!==accentToken) return;
+      setAccent(rgb);
+    });
+  }
+
+  var originalApply=window.applyAppBackground;
+  if(typeof originalApply==='function' && !originalApply.__adaptiveAccentWrapped){
+    var wrapped=function(){
+      var result=originalApply.apply(this,arguments);
+      setTimeout(refreshAdaptiveAccent,0);
+      return result;
+    };
+    wrapped.__adaptiveAccentWrapped=true;
+    window.applyAppBackground=wrapped;
+  }
+
+  var originalReset=window.resetAppBackground;
+  if(typeof originalReset==='function' && !originalReset.__adaptiveAccentWrapped){
+    window.resetAppBackground=function(){
+      var result=originalReset.apply(this,arguments);
+      resetAccent();
+      return result;
+    };
+    window.resetAppBackground.__adaptiveAccentWrapped=true;
+  }
+
+  window.refreshAdaptiveWallpaperAccent=refreshAdaptiveAccent;
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',function(){setTimeout(refreshAdaptiveAccent,60);});
+  }else{
+    setTimeout(refreshAdaptiveAccent,60);
+  }
+})();
+</script>
 
 </body>
 </html>
