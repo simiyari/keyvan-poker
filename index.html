@@ -5670,7 +5670,7 @@ if(isPasswordSet()){showLockScreen();}else{renderDashboard();}
   --liquid-nav-gutter-y: 5px;
   --liquid-nav-gap: 7px;
   --liquid-nav-radius: 999px;
-  --liquid-nav-bottom: max(12px, calc(env(safe-area-inset-bottom, 0px) + 8px));
+  --liquid-nav-bottom: max(6px, calc(env(safe-area-inset-bottom, 0px) + 4px));
   --liquid-nav-count: 5;
   --liquid-nav-slot: calc((100% - (var(--liquid-nav-gutter-x) * 2) - (var(--liquid-nav-gap) * 4)) / 5);
 }
@@ -5860,7 +5860,7 @@ body.main-page-transitioning {
 }
 
 @media (min-width: 900px) {
-  :root { --liquid-nav-bottom: 18px; }
+  :root { --liquid-nav-bottom: 9px; }
   .bottom-nav { width: min(528px, calc(100vw - 64px)) !important; }
 }
 </style>
