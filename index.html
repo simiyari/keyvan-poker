@@ -6328,5 +6328,170 @@ body.main-page-transitioning {
 })();
 </script>
 
+
+<style id="custom-background-unified-glass-fix">
+/*
+  Uniform glass for custom photo backgrounds.
+  This block only activates after the user selects a custom background, so the default theme stays intact.
+  It makes all content surfaces use the same: subtle glass + low blur + very light dark tint.
+*/
+body.has-custom-background {
+  --surface-glass-bg: rgba(8, 10, 12, 0.30);
+  --surface-glass-bg-strong: rgba(8, 10, 12, 0.36);
+  --surface-glass-border: rgba(255, 255, 255, 0.105);
+  --surface-glass-border-strong: rgba(255, 255, 255, 0.14);
+  --surface-glass-highlight: rgba(255, 255, 255, 0.045);
+  --surface-glass-shadow: 0 10px 28px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.045);
+}
+
+/* Main cards / boxes / list surfaces */
+body.has-custom-background .widget:not(.game-live-banner):not(.felt-banner),
+body.has-custom-background .idle-banner,
+body.has-custom-background .card,
+body.has-custom-background .player-card,
+body.has-custom-background .settlement-item,
+body.has-custom-background .info-box,
+body.has-custom-background .tx-list,
+body.has-custom-background .qa-item,
+body.has-custom-background .setting-item,
+body.has-custom-background .selectable-player,
+body.has-custom-background .stat-box,
+body.has-custom-background .table-player,
+body.has-custom-background .commission-box,
+body.has-custom-background .balance-box,
+body.has-custom-background .modal,
+body.has-custom-background .confirm-modal {
+  background-color: var(--surface-glass-bg) !important;
+  background-image:
+    linear-gradient(145deg, var(--surface-glass-highlight), rgba(255,255,255,0.012) 58%, rgba(255,255,255,0.025)) !important;
+  border-color: var(--surface-glass-border) !important;
+  box-shadow: var(--surface-glass-shadow) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(112%) !important;
+  backdrop-filter: blur(8px) saturate(112%) !important;
+  background-clip: padding-box !important;
+  -webkit-background-clip: padding-box !important;
+  -webkit-backface-visibility: hidden !important;
+  backface-visibility: hidden !important;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Slightly stronger surfaces that must still read as active/important */
+body.has-custom-background .table-player:not(.cashed-out),
+body.has-custom-background .selectable-player.selected,
+body.has-custom-background .filter-chip.active,
+body.has-custom-background .quick-amt.selected {
+  background-color: var(--surface-glass-bg-strong) !important;
+  background-image:
+    linear-gradient(145deg, rgba(255,255,255,0.060), rgba(255,255,255,0.018) 58%, rgba(255,255,255,0.030)) !important;
+  border-color: var(--surface-glass-border-strong) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(114%) !important;
+  backdrop-filter: blur(8px) saturate(114%) !important;
+}
+
+/* Rows inside list boxes should not look like a different material */
+body.has-custom-background .tx-item {
+  background-color: transparent !important;
+  background-image: none !important;
+  border-bottom-color: rgba(255,255,255,0.075) !important;
+}
+body.has-custom-background .tx-item-cashout {
+  background-color: rgba(8, 10, 12, 0.18) !important;
+}
+
+/* Inputs and neutral controls get the same material, but without becoming white/opaque. */
+body.has-custom-background .form-input,
+body.has-custom-background textarea.form-input,
+body.has-custom-background .search-box input,
+body.has-custom-background .qa-item input,
+body.has-custom-background .quick-amt,
+body.has-custom-background .filter-chip,
+body.has-custom-background .widget-action,
+body.has-custom-background .btn-secondary,
+body.has-custom-background .btn-outline,
+body.has-custom-background .btn-back,
+body.has-custom-background .dp-nav-btn,
+body.has-custom-background .tx-edit,
+body.has-custom-background .settings-group-icon,
+body.has-custom-background .background-preview {
+  background-color: rgba(8, 10, 12, 0.26) !important;
+  background-image:
+    linear-gradient(145deg, rgba(255,255,255,0.040), rgba(255,255,255,0.010) 60%, rgba(255,255,255,0.020)) !important;
+  border-color: rgba(255,255,255,0.10) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.035) !important;
+  -webkit-backdrop-filter: blur(7px) saturate(110%) !important;
+  backdrop-filter: blur(7px) saturate(110%) !important;
+  -webkit-backface-visibility: hidden !important;
+  backface-visibility: hidden !important;
+}
+
+/* Keep colored action buttons colored; only normalize their glass depth slightly. */
+body.has-custom-background .btn-primary,
+body.has-custom-background .btn-gold,
+body.has-custom-background .btn-danger {
+  -webkit-backdrop-filter: blur(7px) saturate(112%) !important;
+  backdrop-filter: blur(7px) saturate(112%) !important;
+}
+
+/* Disable old pseudo glass tiles on content boxes; these caused gray square flashes on iOS. */
+body.has-custom-background .widget:not(.game-live-banner):not(.felt-banner)::before,
+body.has-custom-background .widget:not(.game-live-banner):not(.felt-banner)::after,
+body.has-custom-background .idle-banner::before,
+body.has-custom-background .idle-banner::after,
+body.has-custom-background .card::before,
+body.has-custom-background .card::after,
+body.has-custom-background .player-card::before,
+body.has-custom-background .player-card::after,
+body.has-custom-background .settlement-item::before,
+body.has-custom-background .settlement-item::after,
+body.has-custom-background .info-box::before,
+body.has-custom-background .info-box::after,
+body.has-custom-background .tx-list::before,
+body.has-custom-background .tx-list::after,
+body.has-custom-background .qa-item::before,
+body.has-custom-background .qa-item::after,
+body.has-custom-background .setting-item::before,
+body.has-custom-background .setting-item::after,
+body.has-custom-background .selectable-player::before,
+body.has-custom-background .selectable-player::after,
+body.has-custom-background .stat-box::before,
+body.has-custom-background .stat-box::after,
+body.has-custom-background .table-player::before,
+body.has-custom-background .table-player::after,
+body.has-custom-background .commission-box::before,
+body.has-custom-background .commission-box::after,
+body.has-custom-background .balance-box::before,
+body.has-custom-background .balance-box::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* During page movement, keep surfaces on their own layer to reduce Safari re-compositing flashes. */
+body.has-custom-background.main-page-transitioning .widget:not(.game-live-banner):not(.felt-banner),
+body.has-custom-background.main-page-transitioning .idle-banner,
+body.has-custom-background.main-page-transitioning .card,
+body.has-custom-background.main-page-transitioning .player-card,
+body.has-custom-background.main-page-transitioning .settlement-item,
+body.has-custom-background.main-page-transitioning .info-box,
+body.has-custom-background.main-page-transitioning .tx-list,
+body.has-custom-background.main-page-transitioning .qa-item,
+body.has-custom-background.main-page-transitioning .setting-item,
+body.has-custom-background.main-page-transitioning .selectable-player,
+body.has-custom-background.main-page-transitioning .stat-box,
+body.has-custom-background.main-page-transitioning .table-player,
+body.has-custom-background.main-page-transitioning .commission-box,
+body.has-custom-background.main-page-transitioning .balance-box {
+  -webkit-backdrop-filter: blur(8px) saturate(112%) !important;
+  backdrop-filter: blur(8px) saturate(112%) !important;
+}
+
+/* Keep the navbar material separate; do not touch the geometry or liquid bubble. */
+body.has-custom-background .bottom-nav,
+body.has-custom-background .bottom-nav::before,
+body.has-custom-background .bottom-nav::after {
+  will-change: transform;
+}
+</style>
+
 </body>
 </html>
