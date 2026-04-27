@@ -5664,6 +5664,128 @@ if(isPasswordSet()){showLockScreen();}else{renderDashboard();}
 
 <!-- CONSOLIDATED FINAL NAVBAR + LIQUID SWIPE PATCH: one clean geometry source, no preview/run side effects -->
 <!-- iPhone/PWA placement: navbar is pulled down into the safe-area margin with --liquid-nav-bottom. -->
+
+<style id="stable-glass-card-fix">
+/*
+  iOS Safari/PWA fix:
+  Cards used live backdrop-filter. When their parent page is moved with transform during
+  swipe, Safari recomposites the backdrop a few frames later, so boxes appear to darken.
+  Keep the navbar liquid, but make content cards use a stable glass paint instead of live backdrop.
+*/
+.widget:not(.game-live-banner):not(.felt-banner),
+.idle-banner,
+.card,
+.player-card,
+.settlement-item,
+.info-box,
+.tx-list,
+.qa-item,
+.setting-item,
+.selectable-player:not(.selected),
+.stat-box,
+.table-player.cashed-out {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  background-color: rgba(8, 12, 10, 0.38) !important;
+  background-image:
+    linear-gradient(145deg, rgba(255,255,255,0.038), rgba(255,255,255,0.010) 58%, rgba(255,255,255,0.020)) !important;
+  border-color: rgba(255,255,255,0.095) !important;
+  transition-property: border-color, box-shadow, transform !important;
+}
+
+.table-player:not(.cashed-out) {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  background-color: rgba(12, 18, 14, 0.46) !important;
+  background-image:
+    linear-gradient(145deg, rgba(255,255,255,0.044), rgba(255,255,255,0.012) 58%, rgba(255,255,255,0.024)) !important;
+  border-color: rgba(255,255,255,0.12) !important;
+  transition-property: border-color, box-shadow, transform !important;
+}
+
+/* Keep actual input/textarea fields untouched; this prevents the white-note-box bug. */
+.form-input,
+textarea.form-input,
+.qa-item input,
+.search-box input {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+</style>
+
+<style id="stable-glass-pseudo-flash-fix">
+/*
+  Fix for the short gray square flash on cards after page swipe/click.
+  The old glass skin used ::before / ::after highlight layers on cards. After disabling
+  live backdrop-filter for iOS stability, those pseudo layers can be composited as gray
+  tiles for a few frames during transform transitions. Turn them off only for content
+  cards; keep the navbar pseudo bubble untouched.
+*/
+.widget:not(.game-live-banner):not(.felt-banner)::before,
+.widget:not(.game-live-banner):not(.felt-banner)::after,
+.idle-banner::before,
+.idle-banner::after,
+.card::before,
+.card::after,
+.player-card::before,
+.player-card::after,
+.settlement-item::before,
+.settlement-item::after,
+.info-box::before,
+.info-box::after,
+.tx-list::before,
+.tx-list::after,
+.qa-item::before,
+.qa-item::after,
+.setting-item::before,
+.setting-item::after,
+.selectable-player:not(.selected)::before,
+.selectable-player:not(.selected)::after,
+.stat-box::before,
+.stat-box::after,
+.table-player::before,
+.table-player::after {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+}
+
+.widget:not(.game-live-banner):not(.felt-banner),
+.idle-banner,
+.card,
+.player-card,
+.settlement-item,
+.info-box,
+.tx-list,
+.qa-item,
+.setting-item,
+.selectable-player:not(.selected),
+.stat-box,
+.table-player {
+  background-clip: padding-box !important;
+  -webkit-background-clip: padding-box !important;
+}
+
+body.main-page-transitioning .widget:not(.game-live-banner):not(.felt-banner),
+body.main-page-transitioning .idle-banner,
+body.main-page-transitioning .card,
+body.main-page-transitioning .player-card,
+body.main-page-transitioning .settlement-item,
+body.main-page-transitioning .info-box,
+body.main-page-transitioning .tx-list,
+body.main-page-transitioning .qa-item,
+body.main-page-transitioning .setting-item,
+body.main-page-transitioning .selectable-player:not(.selected),
+body.main-page-transitioning .stat-box,
+body.main-page-transitioning .table-player {
+  -webkit-backface-visibility: hidden !important;
+  backface-visibility: hidden !important;
+}
+</style>
+
+
 <style id="final-liquid-navbar-and-page-swipe">
 :root {
   --liquid-nav-height: 64px;
@@ -5946,9 +6068,6 @@ body.main-page-transitioning {
     document.querySelectorAll('.sub-page').forEach(function (sub) { sub.classList.remove('active'); });
     document.body.style.overflowX = ''; document.body.style.touchAction = ''; document.body.classList.remove('main-page-transitioning');
     transitionState = false; setNavClasses(false, false); setNavActive(targetPage, true);
-    // Do not call render(targetPage) here. The target page is already rendered before
-    // the swipe/click transition starts; re-rendering after the animation causes a delayed
-    // repaint of glass widgets on iOS Safari, which looks like the cards darken after a pause.
     try { window.scrollTo({ top: 0, left: 0, behavior: 'auto' }); } catch (e) { window.scrollTo(0, 0); }
   }
 
@@ -5967,12 +6086,12 @@ body.main-page-transitioning {
     if (transitionState || window.matchMedia('(prefers-reduced-motion: reduce)').matches) { instantSwitch(targetPage); return; }
     transitionState = true; document.body.classList.add('main-page-transitioning'); document.body.style.overflowX = 'hidden'; document.body.style.touchAction = 'pan-y';
     var w = window.innerWidth; var dir = direction || (PAGES.indexOf(targetPage) > PAGES.indexOf(currentPage) ? 1 : -1); var ms = 560;
-    var ease = 'transform ' + ms + 'ms cubic-bezier(0.16, 1, 0.30, 1), opacity ' + ms + 'ms ease';
+    var ease = 'transform ' + ms + 'ms cubic-bezier(0.16, 1, 0.30, 1)';
     targetEl.classList.add('active'); render(targetPage); prepareLayer(currentEl, 100, true); prepareLayer(targetEl, 101, false);
-    currentEl.style.transform = 'translate3d(0,0,0)'; currentEl.style.opacity = '1'; targetEl.style.transform = 'translate3d(' + (-dir * w) + 'px,0,0)'; targetEl.style.opacity = '0.92';
+    currentEl.style.transform = 'translate3d(0,0,0)'; currentEl.style.opacity = '1'; targetEl.style.transform = 'translate3d(' + (-dir * w) + 'px,0,0)'; targetEl.style.opacity = '1';
     setNavActive(targetPage, false); setNavClasses(false, true, ms); setBubbleBetween(currentPage, currentPage, 0, false); setIconBetween(currentPage, targetPage, 0);
     void (document.querySelector('.bottom-nav') || document.body).offsetWidth;
-    requestAnimationFrame(function () { currentEl.style.transition = ease; targetEl.style.transition = ease; setBubbleBetween(currentPage, targetPage, 1, false); setIconBetween(currentPage, targetPage, 1); currentEl.style.transform = 'translate3d(' + (dir * w) + 'px,0,0)'; currentEl.style.opacity = '0.94'; targetEl.style.transform = 'translate3d(0,0,0)'; targetEl.style.opacity = '1'; });
+    requestAnimationFrame(function () { currentEl.style.transition = ease; targetEl.style.transition = ease; setBubbleBetween(currentPage, targetPage, 1, false); setIconBetween(currentPage, targetPage, 1); currentEl.style.transform = 'translate3d(' + (dir * w) + 'px,0,0)'; currentEl.style.opacity = '1'; targetEl.style.transform = 'translate3d(0,0,0)'; targetEl.style.opacity = '1'; });
     var done = false; function complete() { if (done) return; done = true; targetEl.removeEventListener('transitionend', complete); finishSwitch(targetPage, currentEl, targetEl); }
     targetEl.addEventListener('transitionend', complete, { once: true }); setTimeout(complete, ms + 140);
   }
@@ -5990,7 +6109,7 @@ body.main-page-transitioning {
     if (st.targetEl) { st.targetEl.classList.remove('active'); clearLayer(st.targetEl); }
     st.direction = dir; var curIdx = PAGES.indexOf(st.page); var targetIdx = curIdx + (dir > 0 ? 1 : -1); st.targetPage = PAGES[targetIdx] || null; st.targetEl = st.targetPage ? getPageEl(st.targetPage) : null;
     prepareLayer(st.currentEl, 100, true); st.currentEl.style.transition = 'none'; st.currentEl.style.opacity = '1';
-    if (st.targetEl) { st.targetEl.classList.add('active'); render(st.targetPage); prepareLayer(st.targetEl, 101, false); st.targetEl.style.transition = 'none'; st.targetEl.style.transform = 'translate3d(' + (-dir * st.width) + 'px,0,0)'; st.targetEl.style.opacity = '0.92'; setBubbleBetween(st.page, st.targetPage, 0, true); setIconBetween(st.page, st.targetPage, 0); }
+    if (st.targetEl) { st.targetEl.classList.add('active'); render(st.targetPage); prepareLayer(st.targetEl, 101, false); st.targetEl.style.transition = 'none'; st.targetEl.style.transform = 'translate3d(' + (-dir * st.width) + 'px,0,0)'; st.targetEl.style.opacity = '1'; setBubbleBetween(st.page, st.targetPage, 0, true); setIconBetween(st.page, st.targetPage, 0); }
   }
 
   function resetSwipe(st) {
@@ -6007,8 +6126,8 @@ body.main-page-transitioning {
     e.preventDefault(); st.dx = dx; setupSwipeTarget(st, dx);
     if (!st.targetEl) { var rubber = dx * 0.22; st.currentEl.style.transform = 'translate3d(' + rubber + 'px,0,0)'; st.currentEl.style.opacity = '1'; st.progress = 0; setBubbleBetween(st.page, st.page, 0, false); setIconBetween(st.page, st.page, 0); return; }
     var limited = clamp(dx, -st.width, st.width); var progress = clamp(Math.abs(limited) / st.width, 0, 1); st.progress = progress;
-    st.currentEl.style.transform = 'translate3d(' + limited + 'px,0,0)'; st.currentEl.style.opacity = String(1 - progress * 0.06);
-    st.targetEl.style.transform = 'translate3d(' + (limited - st.direction * st.width) + 'px,0,0)'; st.targetEl.style.opacity = String(0.90 + progress * 0.10);
+    st.currentEl.style.transform = 'translate3d(' + limited + 'px,0,0)'; st.currentEl.style.opacity = '1';
+    st.targetEl.style.transform = 'translate3d(' + (limited - st.direction * st.width) + 'px,0,0)'; st.targetEl.style.opacity = '1';
     setBubbleBetween(st.page, st.targetPage, progress, true); setIconBetween(st.page, st.targetPage, progress);
   }, { passive: false });
 
@@ -6017,8 +6136,8 @@ body.main-page-transitioning {
     if (st.abort || !st.locked) { resetSwipe(st); return; }
     var dt = Date.now() - st.t0; var velocity = Math.abs(st.dx) / Math.max(dt, 1); var progress = clamp(Math.abs(st.dx) / st.width, 0, 1); var shouldCommit = !!st.targetEl && (Math.abs(st.dx) > st.width * TRIGGER_PCT || velocity > TRIGGER_VEL);
     var finishMs = Math.round(560 + (1 - progress) * 240); var cancelMs = Math.round(440 + progress * 220); var ms = shouldCommit ? finishMs : cancelMs;
-    var finishEase = 'transform ' + finishMs + 'ms cubic-bezier(0.16, 1, 0.30, 1), opacity ' + finishMs + 'ms ease';
-    var cancelEase = 'transform ' + cancelMs + 'ms cubic-bezier(0.20, 0.92, 0.25, 1), opacity ' + cancelMs + 'ms ease';
+    var finishEase = 'transform ' + finishMs + 'ms cubic-bezier(0.16, 1, 0.30, 1)';
+    var cancelEase = 'transform ' + cancelMs + 'ms cubic-bezier(0.20, 0.92, 0.25, 1)';
 
     setBubbleBetween(st.page, st.targetPage || st.page, progress, !!st.targetEl);
     setIconBetween(st.page, st.targetPage || st.page, progress);
@@ -6028,11 +6147,11 @@ body.main-page-transitioning {
 
     st.currentEl.style.transition = shouldCommit ? finishEase : cancelEase; if (st.targetEl) st.targetEl.style.transition = shouldCommit ? finishEase : cancelEase;
     if (shouldCommit) {
-      st.currentEl.style.transform = 'translate3d(' + (st.direction * st.width) + 'px,0,0)'; st.currentEl.style.opacity = '0.94'; st.targetEl.style.transform = 'translate3d(0,0,0)'; st.targetEl.style.opacity = '1'; setNavActive(st.targetPage, false);
+      st.currentEl.style.transform = 'translate3d(' + (st.direction * st.width) + 'px,0,0)'; st.currentEl.style.opacity = '1'; st.targetEl.style.transform = 'translate3d(0,0,0)'; st.targetEl.style.opacity = '1'; setNavActive(st.targetPage, false);
       var done = false; function complete() { if (done) return; done = true; st.targetEl.removeEventListener('transitionend', complete); finishSwitch(st.targetPage, st.currentEl, st.targetEl); }
       st.targetEl.addEventListener('transitionend', complete, { once: true }); setTimeout(complete, finishMs + 140);
     } else {
-      st.currentEl.style.transform = 'translate3d(0,0,0)'; st.currentEl.style.opacity = '1'; if (st.targetEl) { st.targetEl.style.transform = 'translate3d(' + (-st.direction * st.width) + 'px,0,0)'; st.targetEl.style.opacity = '0.90'; }
+      st.currentEl.style.transform = 'translate3d(0,0,0)'; st.currentEl.style.opacity = '1'; if (st.targetEl) { st.targetEl.style.transform = 'translate3d(' + (-st.direction * st.width) + 'px,0,0)'; st.targetEl.style.opacity = '1'; }
       setTimeout(function () { resetSwipe(st); setNavActive(st.page, true); }, cancelMs + 90);
     }
   }, { passive: true });
