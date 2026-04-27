@@ -5629,12 +5629,31 @@ function renderSettingsPage(){
 }
 function applyAppBackground(){
   const bg=data&&data.settings?data.settings.backgroundImage:null;
+  const ambient=document.querySelector('.app-ambient-bg');
   if(bg){
     document.documentElement.style.setProperty('--app-custom-background',`url("${bg}")`);
+    document.documentElement.classList.add('has-custom-background');
     document.body.classList.add('has-custom-background');
+    /* The visible app background is .app-ambient-bg, not body.
+       Apply the image directly too, so iPhone/PWA Safari cannot keep the old gradients. */
+    if(ambient){
+      ambient.style.backgroundImage=`linear-gradient(rgba(0,0,0,0.18), rgba(0,0,0,0.18)), url("${bg}")`;
+      ambient.style.backgroundSize='cover';
+      ambient.style.backgroundPosition='center center';
+      ambient.style.backgroundRepeat='no-repeat';
+      ambient.style.backgroundAttachment='fixed';
+    }
   }else{
     document.documentElement.style.removeProperty('--app-custom-background');
+    document.documentElement.classList.remove('has-custom-background');
     document.body.classList.remove('has-custom-background');
+    if(ambient){
+      ambient.style.removeProperty('background-image');
+      ambient.style.removeProperty('background-size');
+      ambient.style.removeProperty('background-position');
+      ambient.style.removeProperty('background-repeat');
+      ambient.style.removeProperty('background-attachment');
+    }
   }
 }
 function compressBackgroundImage(file){
@@ -5753,21 +5772,28 @@ if(isPasswordSet()){showLockScreen();}else{renderDashboard();}
 
 
 <style id="custom-background-setting-style">
+html.has-custom-background,
 body.has-custom-background {
   background-color: #000 !important;
-  background-image: var(--app-custom-background) !important;
+  background-image: none !important;
+}
+body.has-custom-background .app-ambient-bg {
+  background-color: #000 !important;
+  background-image:
+    linear-gradient(rgba(0,0,0,0.18), rgba(0,0,0,0.18)),
+    var(--app-custom-background) !important;
   background-size: cover !important;
   background-position: center center !important;
   background-repeat: no-repeat !important;
   background-attachment: fixed !important;
 }
-body.has-custom-background .sub-page {
-  background-color: transparent !important;
-  background-image: var(--app-custom-background) !important;
-  background-size: cover !important;
-  background-position: center center !important;
-  background-repeat: no-repeat !important;
-  background-attachment: fixed !important;
+body.has-custom-background .sub-page:not(.center-modal-page) {
+  background-color: rgba(0,0,0,0.58) !important;
+  background-image: none !important;
+}
+body.has-custom-background .center-modal-page {
+  background-color: rgba(0,0,0,0.62) !important;
+  background-image: none !important;
 }
 .background-preview {
   height: 132px;
