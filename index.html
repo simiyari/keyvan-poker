@@ -5767,220 +5767,6 @@ if(isPasswordSet()){showLockScreen();}else{renderDashboard();}
 </script>
 
 
-
-<style id="page-glass-prewarm-fix">
-/*
-  iOS/PWA glass warm-up:
-  Keep the page content pre-rendered before it is swiped into view. This reduces the
-  Safari delay where glass cards first appear flat and then become blurred.
-*/
-body.pm-prewarming .page.pm-prewarm {
-  display: block !important;
-  position: fixed !important;
-  top: 0 !important;
-  left: 50% !important;
-  right: auto !important;
-  bottom: auto !important;
-  width: min(100%, var(--page-max-phone, 430px)) !important;
-  max-width: var(--page-max-phone, 430px) !important;
-  height: 100svh !important;
-  margin: 0 !important;
-  padding-top: calc(var(--sp-4, 16px) + env(safe-area-inset-top, 0px)) !important;
-  padding-bottom: calc(var(--liquid-nav-height, 64px) + var(--liquid-nav-bottom, 20px) + 22px) !important;
-  transform: translate3d(-50%, 0, 0) !important;
-  opacity: 0.012 !important;
-  pointer-events: none !important;
-  overflow: hidden !important;
-  z-index: -1 !important;
-  visibility: visible !important;
-  contain: layout paint style !important;
-}
-
-@media (min-width: 700px) {
-  body.pm-prewarming .page.pm-prewarm {
-    width: min(100%, var(--page-max-tablet, 720px)) !important;
-    max-width: var(--page-max-tablet, 720px) !important;
-  }
-}
-@media (min-width: 900px) {
-  body.pm-prewarming .page.pm-prewarm {
-    width: min(100%, var(--page-max-desktop, 1040px)) !important;
-    max-width: var(--page-max-desktop, 1040px) !important;
-  }
-}
-
-/* Promote glass surfaces early so Safari does not wait until after the swipe. */
-.widget,
-.idle-banner,
-.card,
-.player-card,
-.settlement-item,
-.info-box,
-.tx-list,
-.qa-item,
-.setting-item,
-.selectable-player,
-.stat-box,
-.table-player,
-.commission-box,
-.balance-box,
-.form-input,
-.search-box input,
-.quick-amt,
-.filter-chip,
-.btn-secondary,
-.btn-outline,
-.widget-action,
-.game-live-banner,
-.felt-banner {
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-}
-
-/* Make the "empty table / create table" surfaces use the same custom-background glass as the rest. */
-body.has-custom-background #table-content > .widget:not(.game-live-banner),
-body.has-custom-background #create-table-content > .widget:not(.game-live-banner):not(.felt-banner),
-body.has-custom-background #create-table-content .ct-selected-buyin-panel,
-body.has-custom-background #create-table-content [style*="background:var(--glass-bg)"] {
-  color: var(--text) !important;
-  background-color: var(--surface-glass-bg) !important;
-  background-image: linear-gradient(145deg, var(--surface-glass-highlight), rgba(255,255,255,0.010) 60%, rgba(255,255,255,0.020)) !important;
-  border-color: var(--surface-glass-border) !important;
-  box-shadow: var(--surface-glass-shadow) !important;
-  -webkit-backdrop-filter: blur(8px) saturate(108%) !important;
-  backdrop-filter: blur(8px) saturate(108%) !important;
-}
-</style>
-
-<script id="page-glass-prewarm-script">
-(function () {
-  'use strict';
-
-  var PAGES = ['dashboard', 'table', 'players', 'history', 'settings'];
-  var warmed = Object.create(null);
-  var dirty = Object.create(null);
-  var warming = false;
-  var scheduled = false;
-
-  window.__pmMarkPageRendered = function (page) {
-    if (!page) return;
-    warmed[page] = true;
-    dirty[page] = false;
-  };
-
-  window.__pmShouldSkipPageRender = function (page) {
-    return !!(page && warmed[page] && !dirty[page]);
-  };
-
-  function activePageName() {
-    var active = document.querySelector('.page.active');
-    return active && active.id ? active.id.replace('page-', '') : 'dashboard';
-  }
-
-  function getPageEl(page) {
-    return document.getElementById('page-' + page);
-  }
-
-  function forceWarmGlass(root) {
-    if (!root) return;
-    var nodes = root.querySelectorAll('.widget,.idle-banner,.card,.player-card,.settlement-item,.info-box,.tx-list,.qa-item,.setting-item,.selectable-player,.stat-box,.table-player,.commission-box,.balance-box,.form-input,.search-box input,.quick-amt,.filter-chip,.btn-secondary,.btn-outline,.widget-action,.game-live-banner,.felt-banner');
-    nodes.forEach(function (el) {
-      try {
-        el.style.webkitTransform = el.style.webkitTransform || 'translateZ(0)';
-        el.style.transform = el.style.transform || 'translateZ(0)';
-        void el.offsetHeight;
-        getComputedStyle(el).webkitBackdropFilter || getComputedStyle(el).backdropFilter;
-      } catch (e) {}
-    });
-  }
-
-  function warmAllPages(reason) {
-    if (warming || typeof window.renderPage !== 'function') return;
-    warming = true;
-    scheduled = false;
-
-    var current = activePageName();
-    var activeEl = getPageEl(current);
-    document.body.classList.add('pm-prewarming');
-
-    PAGES.forEach(function (page) {
-      var el = getPageEl(page);
-      if (!el) return;
-
-      var wasActive = el.classList.contains('active');
-      if (!wasActive) el.classList.add('pm-prewarm');
-
-      try {
-        window.renderPage(page);
-        warmed[page] = true;
-        dirty[page] = false;
-        forceWarmGlass(el);
-      } catch (e) {
-        dirty[page] = true;
-      }
-
-      if (!wasActive) el.classList.remove('pm-prewarm');
-    });
-
-    document.querySelectorAll('.page').forEach(function (el) {
-      el.classList.toggle('active', el === activeEl);
-      el.classList.remove('pm-prewarm');
-    });
-
-    requestAnimationFrame(function () {
-      forceWarmGlass(document.body);
-      document.body.classList.remove('pm-prewarming');
-      warming = false;
-    });
-  }
-
-  function scheduleWarmAll(reason, delay) {
-    if (scheduled) return;
-    scheduled = true;
-    var run = function () { warmAllPages(reason); };
-    setTimeout(function () {
-      if ('requestIdleCallback' in window) {
-        requestIdleCallback(run, { timeout: 700 });
-      } else {
-        requestAnimationFrame(function () { setTimeout(run, 0); });
-      }
-    }, delay || 0);
-  }
-
-  window.__pmWarmAllPages = warmAllPages;
-  window.__pmInvalidateAndWarmPages = function (reason) {
-    PAGES.forEach(function (p) { dirty[p] = true; });
-    scheduleWarmAll(reason || 'invalidate', 80);
-  };
-
-  if (typeof window.saveData === 'function' && !window.saveData.__pmPrewarmWrapped) {
-    var oldSaveData = window.saveData;
-    var wrappedSaveData = function () {
-      var result = oldSaveData.apply(this, arguments);
-      window.__pmInvalidateAndWarmPages('saveData');
-      return result;
-    };
-    wrappedSaveData.__pmPrewarmWrapped = true;
-    window.saveData = wrappedSaveData;
-    try { saveData = wrappedSaveData; } catch (e) {}
-  }
-
-  window.addEventListener('load', function () {
-    scheduleWarmAll('load', 120);
-    setTimeout(function () { forceWarmGlass(document.body); }, 650);
-    setTimeout(function () { scheduleWarmAll('second-pass', 0); }, 1200);
-  }, { passive: true });
-
-  document.addEventListener('visibilitychange', function () {
-    if (!document.hidden) scheduleWarmAll('visibility', 120);
-  }, { passive: true });
-
-  setTimeout(function () { scheduleWarmAll('early', 0); }, 200);
-})();
-</script>
-
 <!-- CONSOLIDATED FINAL NAVBAR + LIQUID SWIPE PATCH: one clean geometry source, no preview/run side effects -->
 <!-- iPhone/PWA placement: navbar is pulled down into the safe-area margin with --liquid-nav-bottom. -->
 
@@ -6170,17 +5956,118 @@ body.main-page-transitioning .table-player {
   --liquid-nav-gutter-y: 5px;
   --liquid-nav-gap: 7px;
   --liquid-nav-radius: 999px;
-  /* iPhone home-indicator balance: for modern iPhones resolves to about 21px. */
   --liquid-home-indicator-height: 5px;
   --liquid-home-indicator-outer-gap: clamp(6px, calc(env(safe-area-inset-bottom, 0px) * 0.24), 9px);
   --liquid-nav-bottom: calc((var(--liquid-home-indicator-outer-gap) * 2) + var(--liquid-home-indicator-height));
   --liquid-nav-count: 5;
   --liquid-nav-slot: calc((100% - (var(--liquid-nav-gutter-x) * 2) - (var(--liquid-nav-gap) * 4)) / 5);
+
+  --pm-mounted-page-width: min(100%, var(--page-max-phone, 430px));
+  --pm-page-transition-ms: 560ms;
+  --pm-page-ease: cubic-bezier(0.16, 1, 0.30, 1);
+}
+
+/*
+  Main fix:
+  Pages are no longer display:none -> display:block on every navigation.
+  All main pages stay mounted off-screen, so Safari/iOS has their glass layers ready
+  before the user swipes or taps the navbar. This prevents the "flat first, blur later" flash.
+*/
+html,
+body {
+  overflow-x: hidden !important;
 }
 
 body.main-page-transitioning {
   overflow-x: hidden !important;
   overscroll-behavior-x: none !important;
+}
+
+.page {
+  display: block !important;
+  position: fixed !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  left: 50% !important;
+  right: auto !important;
+  width: var(--pm-mounted-page-width) !important;
+  max-width: var(--pm-mounted-page-width) !important;
+  height: var(--pwa-real-height, 100svh) !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding-top: calc(var(--sp-4, 16px) + env(safe-area-inset-top, 0px)) !important;
+  padding-inline: max(var(--sp-4, 16px), env(safe-area-inset-left, 0px)) max(var(--sp-4, 16px), env(safe-area-inset-right, 0px)) !important;
+  padding-bottom: calc(var(--liquid-nav-height) + var(--liquid-nav-bottom) + 18px) !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  transform: translate3d(calc(-50% + var(--pm-page-x, 500vw)), 0, 0) !important;
+  transition: transform var(--pm-page-transition-ms) var(--pm-page-ease) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  contain: layout paint style !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+  will-change: transform !important;
+}
+
+.page.active {
+  pointer-events: auto !important;
+  z-index: 3 !important;
+}
+
+.page.pm-transition-visible {
+  visibility: visible !important;
+  pointer-events: none !important;
+}
+
+.page.pm-current {
+  z-index: 4 !important;
+}
+
+.page.pm-target {
+  z-index: 5 !important;
+}
+
+body.pm-page-dragging .page,
+.page.pm-no-transition {
+  transition: none !important;
+}
+
+.sub-page:not(.center-modal-page) {
+  padding-bottom: calc(var(--liquid-nav-height) + var(--liquid-nav-bottom) + 22px) !important;
+  scroll-padding-bottom: calc(var(--liquid-nav-height) + var(--liquid-nav-bottom) + 22px) !important;
+}
+
+/* Keep glass cards warm/composited without changing their appearance. */
+.widget,
+.idle-banner,
+.card,
+.player-card,
+.settlement-item,
+.info-box,
+.tx-list,
+.qa-item,
+.setting-item,
+.selectable-player,
+.stat-box,
+.table-player,
+.commission-box,
+.balance-box,
+.form-input,
+.search-box input,
+.quick-amt,
+.filter-chip,
+.btn-secondary,
+.btn-outline,
+.widget-action,
+.game-live-banner,
+.felt-banner {
+  -webkit-backface-visibility: hidden !important;
+  backface-visibility: hidden !important;
+  transform: translateZ(0);
 }
 
 .bottom-nav {
@@ -6342,29 +6229,42 @@ body.main-page-transitioning {
 
 .bottom-nav .nav-item:active { transform: scale(0.94) !important; }
 
-.page {
-  padding-bottom: calc(var(--liquid-nav-height) + var(--liquid-nav-bottom) + 18px) !important;
-  scroll-padding-bottom: calc(var(--liquid-nav-height) + var(--liquid-nav-bottom) + 18px) !important;
-}
-.sub-page:not(.center-modal-page) {
-  padding-bottom: calc(var(--liquid-nav-height) + var(--liquid-nav-bottom) + 22px) !important;
-  scroll-padding-bottom: calc(var(--liquid-nav-height) + var(--liquid-nav-bottom) + 22px) !important;
-}
-
 @media (max-width: 360px) {
-  :root { --liquid-nav-height: 62px; --liquid-nav-gutter-x: 6px; --liquid-nav-gutter-y: 5px; --liquid-nav-gap: 6px; }
+  :root {
+    --liquid-nav-height: 62px;
+    --liquid-nav-gutter-x: 6px;
+    --liquid-nav-gutter-y: 5px;
+    --liquid-nav-gap: 6px;
+    --pm-mounted-page-width: min(100%, var(--page-max-phone, 430px));
+  }
   .bottom-nav { width: min(calc(100vw - 20px), 386px) !important; }
   .bottom-nav .nav-item svg { width: 21px !important; height: 21px !important; min-width: 21px !important; min-height: 21px !important; }
 }
 
 @media (min-width: 700px) {
-  :root { --liquid-nav-height: 66px; --liquid-nav-gutter-x: 8px; --liquid-nav-gutter-y: 5px; --liquid-nav-gap: 8px; }
+  :root {
+    --liquid-nav-height: 66px;
+    --liquid-nav-gutter-x: 8px;
+    --liquid-nav-gutter-y: 5px;
+    --liquid-nav-gap: 8px;
+    --pm-mounted-page-width: min(100%, var(--page-max-tablet, 720px));
+  }
   .bottom-nav { width: min(calc(100vw - 48px), 448px) !important; }
+  .page {
+    padding-inline: 24px !important;
+  }
 }
 
 @media (min-width: 900px) {
-  :root { --liquid-nav-bottom: 18px; }
+  :root {
+    --liquid-nav-bottom: 18px;
+    --pm-mounted-page-width: min(100%, var(--page-max-desktop, 1040px));
+  }
   .bottom-nav { width: min(528px, calc(100vw - 64px)) !important; }
+  .page {
+    padding-inline: 32px !important;
+    padding-bottom: 110px !important;
+  }
 }
 </style>
 
@@ -6374,19 +6274,62 @@ body.main-page-transitioning {
 
   var PAGES = ['dashboard', 'table', 'players', 'history', 'settings'];
   var VISUAL_INDEX = { settings: 0, history: 1, players: 2, table: 3, dashboard: 4 };
+  var rendered = Object.create(null);
+  var dirty = Object.create(null);
   var transitionState = false;
   var swipeState = null;
+  var renderAllTimer = 0;
 
   function clamp(n, min, max) { return Math.max(min, Math.min(n, max)); }
-  function cssNumber(el, name, fallback) { var raw = getComputedStyle(el).getPropertyValue(name).trim(); var n = parseFloat(raw); return Number.isFinite(n) ? n : fallback; }
-  function getCurrentPage() { var active = document.querySelector('.page.active'); return active && active.id ? active.id.replace('page-', '') : 'dashboard'; }
+  function cssNumber(el, name, fallback) {
+    var raw = getComputedStyle(el).getPropertyValue(name).trim();
+    var n = parseFloat(raw);
+    return Number.isFinite(n) ? n : fallback;
+  }
   function getPageEl(page) { return document.getElementById('page-' + page); }
-  function render(page) {
-    if (window.__pmShouldSkipPageRender && window.__pmShouldSkipPageRender(page)) return;
+  function indexOf(page) { var i = PAGES.indexOf(page); return i < 0 ? 0 : i; }
+  function getCurrentPage() {
+    var active = document.querySelector('.page.active');
+    return active && active.id ? active.id.replace('page-', '') : 'dashboard';
+  }
+
+  function forceWarm(root) {
+    if (!root) return;
+    var nodes = root.querySelectorAll('.widget,.idle-banner,.card,.player-card,.settlement-item,.info-box,.tx-list,.qa-item,.setting-item,.selectable-player,.stat-box,.table-player,.commission-box,.balance-box,.form-input,.search-box input,.quick-amt,.filter-chip,.btn-secondary,.btn-outline,.widget-action,.game-live-banner,.felt-banner');
+    nodes.forEach(function (el) {
+      try {
+        void el.offsetHeight;
+        var cs = getComputedStyle(el);
+        cs.webkitBackdropFilter || cs.backdropFilter || cs.backgroundColor;
+      } catch (e) {}
+    });
+  }
+
+  function render(page, force) {
+    if (PAGES.indexOf(page) < 0) return;
+    if (!force && rendered[page] && !dirty[page]) return;
     if (typeof window.renderPage === 'function') {
       window.renderPage(page);
-      if (window.__pmMarkPageRendered) window.__pmMarkPageRendered(page);
+      rendered[page] = true;
+      dirty[page] = false;
+      forceWarm(getPageEl(page));
     }
+  }
+
+  function renderInactivePagesSoon(delay) {
+    clearTimeout(renderAllTimer);
+    renderAllTimer = setTimeout(function () {
+      var current = getCurrentPage();
+      PAGES.forEach(function (p) {
+        if (p !== current) render(p, true);
+      });
+      forceWarm(document.body);
+    }, delay || 90);
+  }
+
+  function renderAllPages(force) {
+    PAGES.forEach(function (p) { render(p, !!force); });
+    forceWarm(document.body);
   }
 
   function metric(page) {
@@ -6407,7 +6350,9 @@ body.main-page-transitioning {
 
   function setBubbleBetween(fromPage, toPage, progress, elastic) {
     var nav = document.querySelector('.bottom-nav'); if (!nav) return;
-    var from = metric(fromPage); var to = metric(toPage || fromPage) || from; if (!from || !to) return;
+    var from = metric(fromPage);
+    var to = metric(toPage || fromPage) || from;
+    if (!from || !to) return;
     var p = clamp(progress || 0, 0, 1);
     var baseW = from.w + (to.w - from.w) * p;
     var center = from.cx + (to.cx - from.cx) * p;
@@ -6432,119 +6377,377 @@ body.main-page-transitioning {
     var p = clamp(progress || 0, 0, 1);
     var fromItem = nav.querySelector('.nav-item[data-page="' + fromPage + '"]');
     var toItem = toPage ? nav.querySelector('.nav-item[data-page="' + toPage + '"]') : fromItem;
-    nav.querySelectorAll('.nav-item').forEach(function (item) { item.style.setProperty('--liquid-icon-alpha', '0.58'); item.style.setProperty('--liquid-icon-scale', '1'); });
-    if (fromItem) { fromItem.style.setProperty('--liquid-icon-alpha', (1 - 0.42 * p).toFixed(3)); fromItem.style.setProperty('--liquid-icon-scale', (1.05 - 0.05 * p).toFixed(3)); }
-    if (toItem && toItem !== fromItem) { toItem.style.setProperty('--liquid-icon-alpha', (0.58 + 0.42 * p).toFixed(3)); toItem.style.setProperty('--liquid-icon-scale', (1 + 0.05 * p).toFixed(3)); }
+    nav.querySelectorAll('.nav-item').forEach(function (item) {
+      item.style.setProperty('--liquid-icon-alpha', '0.58');
+      item.style.setProperty('--liquid-icon-scale', '1');
+    });
+    if (fromItem) {
+      fromItem.style.setProperty('--liquid-icon-alpha', (1 - 0.42 * p).toFixed(3));
+      fromItem.style.setProperty('--liquid-icon-scale', (1.05 - 0.05 * p).toFixed(3));
+    }
+    if (toItem && toItem !== fromItem) {
+      toItem.style.setProperty('--liquid-icon-alpha', (0.58 + 0.42 * p).toFixed(3));
+      toItem.style.setProperty('--liquid-icon-scale', (1 + 0.05 * p).toFixed(3));
+    }
   }
 
-  function resetIcons() { document.querySelectorAll('.bottom-nav .nav-item').forEach(function (item) { item.style.removeProperty('--liquid-icon-alpha'); item.style.removeProperty('--liquid-icon-scale'); }); }
-  function setNavClasses(dragging, settling, ms) { var nav = document.querySelector('.bottom-nav'); if (!nav) return; nav.classList.toggle('liquid-nav-dragging', !!dragging); nav.classList.toggle('liquid-nav-settling', !!settling); if (settling && ms) nav.style.setProperty('--liquid-nav-settle-ms', Math.max(180, Math.round(ms)) + 'ms'); if (!settling) nav.style.removeProperty('--liquid-nav-settle-ms'); }
-  function setNavActive(page, sync) { document.querySelectorAll('.bottom-nav .nav-item').forEach(function (item) { item.classList.toggle('active', item.dataset.page === page); }); if (sync !== false) { resetIcons(); setBubbleBetween(page, page, 0, false); } }
-  function syncNav() { if (transitionState || swipeState) return; var active = document.querySelector('.bottom-nav .nav-item.active') || document.querySelector('.bottom-nav .nav-item[data-page="dashboard"]'); var page = active ? active.getAttribute('data-page') : getCurrentPage(); setNavClasses(false, false); resetIcons(); setBubbleBetween(page, page, 0, false); }
-
-  function clearLayer(el) { if (!el) return; ['position','left','right','top','bottom','width','height','maxWidth','margin','zIndex','display','overflowY','transform','transition','willChange','pointerEvents','opacity'].forEach(function (prop) { el.style[prop] = ''; }); }
-  function prepareLayer(el, z, keepTop) { if (!el) return; var rect = el.getBoundingClientRect(); el.style.position = 'fixed'; el.style.left = rect.left + 'px'; el.style.right = 'auto'; el.style.top = keepTop ? rect.top + 'px' : '0px'; el.style.bottom = 'auto'; el.style.width = rect.width + 'px'; el.style.maxWidth = 'none'; el.style.height = '100svh'; el.style.margin = '0'; el.style.zIndex = String(z); el.style.display = 'block'; el.style.overflowY = 'hidden'; el.style.willChange = 'transform, opacity'; el.style.pointerEvents = 'none'; }
-
-  function finishSwitch(targetPage, currentEl, targetEl) {
-    document.querySelectorAll('.page').forEach(function (pageEl) { pageEl.classList.toggle('active', pageEl === targetEl); if (pageEl !== targetEl) clearLayer(pageEl); });
-    clearLayer(currentEl); clearLayer(targetEl);
-    document.querySelectorAll('.sub-page').forEach(function (sub) { sub.classList.remove('active'); });
-    document.body.style.overflowX = ''; document.body.style.touchAction = ''; document.body.classList.remove('main-page-transitioning');
-    transitionState = false; setNavClasses(false, false); setNavActive(targetPage, true);
-    try { window.scrollTo({ top: 0, left: 0, behavior: 'auto' }); } catch (e) { window.scrollTo(0, 0); }
+  function resetIcons() {
+    document.querySelectorAll('.bottom-nav .nav-item').forEach(function (item) {
+      item.style.removeProperty('--liquid-icon-alpha');
+      item.style.removeProperty('--liquid-icon-scale');
+    });
   }
 
-  function instantSwitch(targetPage) {
-    var targetEl = getPageEl(targetPage); if (!targetEl) return;
-    document.querySelectorAll('.page').forEach(function (pageEl) { clearLayer(pageEl); pageEl.classList.toggle('active', pageEl === targetEl); });
+  function setNavClasses(dragging, settling, ms) {
+    var nav = document.querySelector('.bottom-nav'); if (!nav) return;
+    nav.classList.toggle('liquid-nav-dragging', !!dragging);
+    nav.classList.toggle('liquid-nav-settling', !!settling);
+    if (settling && ms) nav.style.setProperty('--liquid-nav-settle-ms', Math.max(180, Math.round(ms)) + 'ms');
+    if (!settling) nav.style.removeProperty('--liquid-nav-settle-ms');
+  }
+
+  function setNavActive(page, sync) {
+    document.querySelectorAll('.bottom-nav .nav-item').forEach(function (item) {
+      item.classList.toggle('active', item.dataset.page === page);
+    });
+    if (sync !== false) {
+      resetIcons();
+      setBubbleBetween(page, page, 0, false);
+    }
+  }
+
+  function syncNav() {
+    if (transitionState || swipeState) return;
+    var active = document.querySelector('.bottom-nav .nav-item.active') || document.querySelector('.bottom-nav .nav-item[data-page="dashboard"]');
+    var page = active ? active.getAttribute('data-page') : getCurrentPage();
+    setNavClasses(false, false);
+    resetIcons();
+    setBubbleBetween(page, page, 0, false);
+  }
+
+  function setPageVirtualIndex(virtualIndex, withTransition) {
+    document.body.classList.toggle('pm-page-dragging', !withTransition);
+    document.documentElement.style.setProperty('--pm-page-transition-ms', withTransition === false ? '0ms' : '560ms');
+    PAGES.forEach(function (page, i) {
+      var el = getPageEl(page);
+      if (!el) return;
+      var offset = (virtualIndex - i) * 100;
+      el.style.setProperty('--pm-page-x', offset.toFixed(4) + 'vw');
+    });
+  }
+
+  function setActivePage(page) {
+    document.querySelectorAll('.page').forEach(function (el) {
+      var isActive = el.id === 'page-' + page;
+      el.classList.toggle('active', isActive);
+      el.classList.remove('pm-current', 'pm-target', 'pm-transition-visible');
+      if (isActive) el.scrollTop = 0;
+    });
     document.querySelectorAll('.sub-page').forEach(function (sub) { sub.classList.remove('active'); });
-    transitionState = false; document.body.classList.remove('main-page-transitioning'); document.body.style.overflowX = ''; document.body.style.touchAction = '';
-    setNavClasses(false, false); setNavActive(targetPage, true); render(targetPage);
-    try { window.scrollTo({ top: 0, left: 0, behavior: 'auto' }); } catch (e) { window.scrollTo(0, 0); }
+    setPageVirtualIndex(indexOf(page), true);
+    setNavActive(page, true);
+  }
+
+  function finishSwitch(page) {
+    transitionState = false;
+    document.body.classList.remove('main-page-transitioning', 'pm-page-dragging');
+    document.body.style.overflowX = '';
+    document.body.style.touchAction = '';
+    document.documentElement.style.removeProperty('--pm-page-transition-ms');
+    setActivePage(page);
+    setNavClasses(false, false);
+    forceWarm(getPageEl(page));
   }
 
   function animateSwitch(targetPage, direction) {
-    var currentPage = getCurrentPage(); var currentEl = getPageEl(currentPage); var targetEl = getPageEl(targetPage);
-    if (!targetEl || !currentEl || currentEl === targetEl) { instantSwitch(targetPage); return; }
-    if (transitionState || window.matchMedia('(prefers-reduced-motion: reduce)').matches) { instantSwitch(targetPage); return; }
-    transitionState = true; document.body.classList.add('main-page-transitioning'); document.body.style.overflowX = 'hidden'; document.body.style.touchAction = 'pan-y';
-    var w = window.innerWidth; var dir = direction || (PAGES.indexOf(targetPage) > PAGES.indexOf(currentPage) ? 1 : -1); var ms = 560;
-    var ease = 'transform ' + ms + 'ms cubic-bezier(0.16, 1, 0.30, 1)';
-    targetEl.classList.add('active'); render(targetPage); prepareLayer(currentEl, 100, true); prepareLayer(targetEl, 101, false);
-    currentEl.style.transform = 'translate3d(0,0,0)'; currentEl.style.opacity = '1'; targetEl.style.transform = 'translate3d(' + (-dir * w) + 'px,0,0)'; targetEl.style.opacity = '1';
-    setNavActive(targetPage, false); setNavClasses(false, true, ms); setBubbleBetween(currentPage, currentPage, 0, false); setIconBetween(currentPage, targetPage, 0);
-    void (document.querySelector('.bottom-nav') || document.body).offsetWidth;
-    requestAnimationFrame(function () { currentEl.style.transition = ease; targetEl.style.transition = ease; setBubbleBetween(currentPage, targetPage, 1, false); setIconBetween(currentPage, targetPage, 1); currentEl.style.transform = 'translate3d(' + (dir * w) + 'px,0,0)'; currentEl.style.opacity = '1'; targetEl.style.transform = 'translate3d(0,0,0)'; targetEl.style.opacity = '1'; });
-    var done = false; function complete() { if (done) return; done = true; targetEl.removeEventListener('transitionend', complete); finishSwitch(targetPage, currentEl, targetEl); }
-    targetEl.addEventListener('transitionend', complete, { once: true }); setTimeout(complete, ms + 140);
+    var currentPage = getCurrentPage();
+    if (targetPage === currentPage) { render(targetPage); setActivePage(targetPage); return; }
+    if (transitionState || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      render(targetPage, true);
+      finishSwitch(targetPage);
+      return;
+    }
+
+    render(targetPage);
+    transitionState = true;
+    var currentIdx = indexOf(currentPage);
+    var targetIdx = indexOf(targetPage);
+    var dir = direction || (targetIdx > currentIdx ? 1 : -1);
+    var ms = 560;
+
+    document.body.classList.add('main-page-transitioning');
+    document.body.style.overflowX = 'hidden';
+    document.body.style.touchAction = 'pan-y';
+    document.documentElement.style.setProperty('--pm-page-transition-ms', ms + 'ms');
+
+    var currentEl = getPageEl(currentPage);
+    var targetEl = getPageEl(targetPage);
+    if (currentEl) currentEl.classList.add('pm-current', 'pm-transition-visible');
+    if (targetEl) targetEl.classList.add('pm-target', 'pm-transition-visible');
+
+    setPageVirtualIndex(currentIdx, false);
+    setNavActive(targetPage, false);
+    setNavClasses(false, true, ms);
+    setBubbleBetween(currentPage, currentPage, 0, false);
+    setIconBetween(currentPage, targetPage, 0);
+    forceWarm(targetEl);
+
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        document.body.classList.remove('pm-page-dragging');
+        setPageVirtualIndex(targetIdx, true);
+        setBubbleBetween(currentPage, targetPage, 1, false);
+        setIconBetween(currentPage, targetPage, 1);
+
+        var done = false;
+        function complete() {
+          if (done) return;
+          done = true;
+          if (targetEl) targetEl.removeEventListener('transitionend', complete);
+          finishSwitch(targetPage);
+        }
+        if (targetEl) targetEl.addEventListener('transitionend', complete, { once: true });
+        setTimeout(complete, ms + 140);
+      });
+    });
   }
 
-  function enhancedSwitchPage(page, opts) { opts = opts || {}; if (PAGES.indexOf(page) < 0) return; var current = getCurrentPage(); document.querySelectorAll('.sub-page').forEach(function (sub) { sub.classList.remove('active'); }); if (page === current) { setNavActive(page, true); render(page); return; } if (opts.instant) instantSwitch(page); else animateSwitch(page, opts.direction); }
-  window.switchPage = enhancedSwitchPage; try { switchPage = enhancedSwitchPage; } catch (e) {}
-  window.getLiquidNavMetric = metric; window.setLiquidNavBetween = setBubbleBetween; window.syncLiquidNav = syncNav;
+  function enhancedSwitchPage(page, opts) {
+    opts = opts || {};
+    if (PAGES.indexOf(page) < 0) return;
+    document.querySelectorAll('.sub-page').forEach(function (sub) { sub.classList.remove('active'); });
+    var current = getCurrentPage();
+    if (page === current) {
+      render(page);
+      setActivePage(page);
+      return;
+    }
+    animateSwitch(page, opts.direction);
+  }
+
+  window.switchPage = enhancedSwitchPage;
+  try { switchPage = enhancedSwitchPage; } catch (e) {}
+  window.getLiquidNavMetric = metric;
+  window.setLiquidNavBetween = setBubbleBetween;
+  window.syncLiquidNav = syncNav;
 
   var INTERACTIVE = 'input,textarea,select,button,a,.amount-slider,.player-card,.table-player,.tx-edit,.qa-item,.toggle,.dp-day,.dp-nav-btn,.widget-action,.btn,.card,[onclick]';
   var TRIGGER_PCT = 0.26, TRIGGER_VEL = 0.62, EDGE_GUARD = 10;
-  function canStartSwipe(e) { if (transitionState) return false; if (document.querySelector('.sub-page.active')) return false; if (document.querySelector('.modal-overlay.active')) return false; if (!e.touches || e.touches.length !== 1) return false; var t = e.touches[0]; if (t.clientX < EDGE_GUARD || t.clientX > window.innerWidth - EDGE_GUARD) return false; if (e.target && e.target.closest && e.target.closest(INTERACTIVE)) return false; return true; }
 
-  function setupSwipeTarget(st, dx) {
-    var dir = dx > 0 ? 1 : -1; if (st.direction === dir) return;
-    if (st.targetEl) { st.targetEl.classList.remove('active'); clearLayer(st.targetEl); }
-    st.direction = dir; var curIdx = PAGES.indexOf(st.page); var targetIdx = curIdx + (dir > 0 ? 1 : -1); st.targetPage = PAGES[targetIdx] || null; st.targetEl = st.targetPage ? getPageEl(st.targetPage) : null;
-    prepareLayer(st.currentEl, 100, true); st.currentEl.style.transition = 'none'; st.currentEl.style.opacity = '1';
-    if (st.targetEl) { st.targetEl.classList.add('active'); render(st.targetPage); prepareLayer(st.targetEl, 101, false); st.targetEl.style.transition = 'none'; st.targetEl.style.transform = 'translate3d(' + (-dir * st.width) + 'px,0,0)'; st.targetEl.style.opacity = '1'; setBubbleBetween(st.page, st.targetPage, 0, true); setIconBetween(st.page, st.targetPage, 0); }
+  function canStartSwipe(e) {
+    if (transitionState) return false;
+    if (document.querySelector('.sub-page.active')) return false;
+    if (document.querySelector('.modal-overlay.active')) return false;
+    if (!e.touches || e.touches.length !== 1) return false;
+    var t = e.touches[0];
+    if (t.clientX < EDGE_GUARD || t.clientX > window.innerWidth - EDGE_GUARD) return false;
+    if (e.target && e.target.closest && e.target.closest(INTERACTIVE)) return false;
+    return true;
   }
 
-  function resetSwipe(st) {
-    if (!st) return; setNavClasses(false, false); resetIcons(); setBubbleBetween(st.page, st.page, 0, false); clearLayer(st.currentEl);
-    if (st.targetEl) { st.targetEl.classList.remove('active'); clearLayer(st.targetEl); }
-    document.body.style.overflowX = ''; document.body.style.touchAction = ''; document.body.classList.remove('main-page-transitioning'); transitionState = false;
-  }
-
-  document.addEventListener('touchstart', function (e) { if (!canStartSwipe(e)) return; var t = e.touches[0]; var page = getCurrentPage(); var currentEl = getPageEl(page); if (!currentEl) return; swipeState = { page: page, currentEl: currentEl, sx: t.clientX, sy: t.clientY, dx: 0, t0: Date.now(), locked: false, abort: false, width: window.innerWidth, direction: 0, targetPage: null, targetEl: null, progress: 0 }; }, { passive: true });
+  document.addEventListener('touchstart', function (e) {
+    if (!canStartSwipe(e)) return;
+    var t = e.touches[0];
+    var page = getCurrentPage();
+    var currentEl = getPageEl(page);
+    if (!currentEl) return;
+    swipeState = {
+      page: page,
+      pageIndex: indexOf(page),
+      sx: t.clientX,
+      sy: t.clientY,
+      dx: 0,
+      t0: Date.now(),
+      locked: false,
+      abort: false,
+      width: window.innerWidth,
+      direction: 0,
+      targetPage: null,
+      targetIndex: null,
+      progress: 0
+    };
+  }, { passive: true });
 
   document.addEventListener('touchmove', function (e) {
-    var st = swipeState; if (!st || st.abort) return; var t = e.touches[0]; var dx = t.clientX - st.sx; var dy = t.clientY - st.sy;
-    if (!st.locked) { if (Math.abs(dy) > Math.abs(dx) + 8) { st.abort = true; swipeState = null; return; } if (Math.abs(dx) < 12) return; st.locked = true; transitionState = true; document.body.classList.add('main-page-transitioning'); document.body.style.overflowX = 'hidden'; document.body.style.touchAction = 'none'; setNavClasses(true, false); setBubbleBetween(st.page, st.page, 0, false); setIconBetween(st.page, st.page, 0); }
-    e.preventDefault(); st.dx = dx; setupSwipeTarget(st, dx);
-    if (!st.targetEl) { var rubber = dx * 0.22; st.currentEl.style.transform = 'translate3d(' + rubber + 'px,0,0)'; st.currentEl.style.opacity = '1'; st.progress = 0; setBubbleBetween(st.page, st.page, 0, false); setIconBetween(st.page, st.page, 0); return; }
-    var limited = clamp(dx, -st.width, st.width); var progress = clamp(Math.abs(limited) / st.width, 0, 1); st.progress = progress;
-    st.currentEl.style.transform = 'translate3d(' + limited + 'px,0,0)'; st.currentEl.style.opacity = '1';
-    st.targetEl.style.transform = 'translate3d(' + (limited - st.direction * st.width) + 'px,0,0)'; st.targetEl.style.opacity = '1';
-    setBubbleBetween(st.page, st.targetPage, progress, true); setIconBetween(st.page, st.targetPage, progress);
+    var st = swipeState;
+    if (!st || st.abort) return;
+    var t = e.touches[0];
+    var dx = t.clientX - st.sx;
+    var dy = t.clientY - st.sy;
+
+    if (!st.locked) {
+      if (Math.abs(dy) > Math.abs(dx) + 8) {
+        st.abort = true;
+        swipeState = null;
+        return;
+      }
+      if (Math.abs(dx) < 12) return;
+
+      st.locked = true;
+      transitionState = true;
+      document.body.classList.add('main-page-transitioning', 'pm-page-dragging');
+      document.body.style.overflowX = 'hidden';
+      document.body.style.touchAction = 'none';
+      setNavClasses(true, false);
+      setBubbleBetween(st.page, st.page, 0, false);
+      setIconBetween(st.page, st.page, 0);
+    }
+
+    e.preventDefault();
+    st.dx = dx;
+    var dir = dx > 0 ? 1 : -1;
+    var targetIdx = st.pageIndex + (dir > 0 ? 1 : -1);
+
+    if (targetIdx < 0 || targetIdx >= PAGES.length) {
+      var rubber = dx * 0.22;
+      setPageVirtualIndex(st.pageIndex + rubber / st.width, false);
+      st.progress = 0;
+      setBubbleBetween(st.page, st.page, 0, false);
+      setIconBetween(st.page, st.page, 0);
+      return;
+    }
+
+    if (st.direction !== dir) {
+      st.direction = dir;
+      st.targetIndex = targetIdx;
+      st.targetPage = PAGES[targetIdx];
+      render(st.targetPage);
+      var currentEl = getPageEl(st.page);
+      var targetEl = getPageEl(st.targetPage);
+      if (currentEl) currentEl.classList.add('pm-current', 'pm-transition-visible');
+      if (targetEl) {
+        targetEl.classList.add('pm-target', 'pm-transition-visible');
+        forceWarm(targetEl);
+      }
+    }
+
+    var limited = clamp(dx, -st.width, st.width);
+    var progress = clamp(Math.abs(limited) / st.width, 0, 1);
+    st.progress = progress;
+
+    setPageVirtualIndex(st.pageIndex + limited / st.width, false);
+    setBubbleBetween(st.page, st.targetPage, progress, true);
+    setIconBetween(st.page, st.targetPage, progress);
   }, { passive: false });
 
   document.addEventListener('touchend', function () {
-    var st = swipeState; if (!st) return; swipeState = null;
-    if (st.abort || !st.locked) { resetSwipe(st); return; }
-    var dt = Date.now() - st.t0; var velocity = Math.abs(st.dx) / Math.max(dt, 1); var progress = clamp(Math.abs(st.dx) / st.width, 0, 1); var shouldCommit = !!st.targetEl && (Math.abs(st.dx) > st.width * TRIGGER_PCT || velocity > TRIGGER_VEL);
-    var finishMs = Math.round(560 + (1 - progress) * 240); var cancelMs = Math.round(440 + progress * 220); var ms = shouldCommit ? finishMs : cancelMs;
-    var finishEase = 'transform ' + finishMs + 'ms cubic-bezier(0.16, 1, 0.30, 1)';
-    var cancelEase = 'transform ' + cancelMs + 'ms cubic-bezier(0.20, 0.92, 0.25, 1)';
+    var st = swipeState;
+    if (!st) return;
+    swipeState = null;
 
-    setBubbleBetween(st.page, st.targetPage || st.page, progress, !!st.targetEl);
-    setIconBetween(st.page, st.targetPage || st.page, progress);
+    if (st.abort || !st.locked) {
+      transitionState = false;
+      document.body.classList.remove('main-page-transitioning', 'pm-page-dragging');
+      setPageVirtualIndex(indexOf(st.page), true);
+      setNavClasses(false, false);
+      resetIcons();
+      setBubbleBetween(st.page, st.page, 0, false);
+      return;
+    }
+
+    var dt = Date.now() - st.t0;
+    var velocity = Math.abs(st.dx) / Math.max(dt, 1);
+    var progress = clamp(Math.abs(st.dx) / st.width, 0, 1);
+    var shouldCommit = !!st.targetPage && (Math.abs(st.dx) > st.width * TRIGGER_PCT || velocity > TRIGGER_VEL);
+    var finishMs = Math.round(560 + (1 - progress) * 240);
+    var cancelMs = Math.round(440 + progress * 220);
+    var ms = shouldCommit ? finishMs : cancelMs;
+
+    document.body.classList.remove('pm-page-dragging');
+    document.documentElement.style.setProperty('--pm-page-transition-ms', ms + 'ms');
     setNavClasses(false, true, ms);
-    var nav = document.querySelector('.bottom-nav'); if (nav) void nav.offsetWidth;
-    requestAnimationFrame(function () { setBubbleBetween(st.page, st.targetPage || st.page, shouldCommit ? 1 : 0, false); setIconBetween(st.page, st.targetPage || st.page, shouldCommit ? 1 : 0); });
+    setBubbleBetween(st.page, st.targetPage || st.page, progress, !!st.targetPage);
+    setIconBetween(st.page, st.targetPage || st.page, progress);
 
-    st.currentEl.style.transition = shouldCommit ? finishEase : cancelEase; if (st.targetEl) st.targetEl.style.transition = shouldCommit ? finishEase : cancelEase;
-    if (shouldCommit) {
-      st.currentEl.style.transform = 'translate3d(' + (st.direction * st.width) + 'px,0,0)'; st.currentEl.style.opacity = '1'; st.targetEl.style.transform = 'translate3d(0,0,0)'; st.targetEl.style.opacity = '1'; setNavActive(st.targetPage, false);
-      var done = false; function complete() { if (done) return; done = true; st.targetEl.removeEventListener('transitionend', complete); finishSwitch(st.targetPage, st.currentEl, st.targetEl); }
-      st.targetEl.addEventListener('transitionend', complete, { once: true }); setTimeout(complete, finishMs + 140);
-    } else {
-      st.currentEl.style.transform = 'translate3d(0,0,0)'; st.currentEl.style.opacity = '1'; if (st.targetEl) { st.targetEl.style.transform = 'translate3d(' + (-st.direction * st.width) + 'px,0,0)'; st.targetEl.style.opacity = '1'; }
-      setTimeout(function () { resetSwipe(st); setNavActive(st.page, true); }, cancelMs + 90);
+    requestAnimationFrame(function () {
+      setPageVirtualIndex(shouldCommit ? st.targetIndex : st.pageIndex, true);
+      setBubbleBetween(st.page, st.targetPage || st.page, shouldCommit ? 1 : 0, false);
+      setIconBetween(st.page, st.targetPage || st.page, shouldCommit ? 1 : 0);
+    });
+
+    var done = false;
+    function complete() {
+      if (done) return;
+      done = true;
+      if (shouldCommit) finishSwitch(st.targetPage);
+      else {
+        transitionState = false;
+        document.body.classList.remove('main-page-transitioning', 'pm-page-dragging');
+        document.body.style.overflowX = '';
+        document.body.style.touchAction = '';
+        document.documentElement.style.removeProperty('--pm-page-transition-ms');
+        setActivePage(st.page);
+        setNavClasses(false, false);
+      }
+    }
+
+    var targetEl = getPageEl(shouldCommit ? st.targetPage : st.page);
+    if (targetEl) targetEl.addEventListener('transitionend', complete, { once: true });
+    setTimeout(complete, ms + 150);
+  }, { passive: true });
+
+  document.addEventListener('touchcancel', function () {
+    var st = swipeState;
+    swipeState = null;
+    if (!st) return;
+    transitionState = false;
+    document.body.classList.remove('main-page-transitioning', 'pm-page-dragging');
+    setActivePage(st.page);
+    setNavClasses(false, false);
+  }, { passive: true });
+
+  if (typeof window.saveData === 'function' && !window.saveData.__pmMountedPagesWrapped) {
+    var oldSaveData = window.saveData;
+    var wrappedSaveData = function () {
+      var result = oldSaveData.apply(this, arguments);
+      PAGES.forEach(function (p) { dirty[p] = true; });
+      dirty[getCurrentPage()] = false;
+      renderInactivePagesSoon(180);
+      return result;
+    };
+    wrappedSaveData.__pmMountedPagesWrapped = true;
+    window.saveData = wrappedSaveData;
+    try { saveData = wrappedSaveData; } catch (e) {}
+  }
+
+  function initMountedPages() {
+    var current = getCurrentPage();
+    renderAllPages(true);
+    document.querySelectorAll('.page').forEach(function (el) {
+      el.classList.toggle('active', el.id === 'page-' + current);
+      el.classList.remove('pm-current', 'pm-target', 'pm-transition-visible');
+    });
+    setPageVirtualIndex(indexOf(current), false);
+    setNavActive(current, true);
+    setTimeout(function () {
+      forceWarm(document.body);
+      setPageVirtualIndex(indexOf(getCurrentPage()), true);
+    }, 120);
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    requestAnimationFrame(initMountedPages);
+  }, { passive: true });
+
+  window.addEventListener('load', function () {
+    requestAnimationFrame(initMountedPages);
+    setTimeout(function () { renderAllPages(false); syncNav(); }, 360);
+    setTimeout(function () { forceWarm(document.body); }, 900);
+  }, { passive: true });
+
+  window.addEventListener('resize', function () {
+    if (!transitionState && !swipeState) {
+      setTimeout(function () { setPageVirtualIndex(indexOf(getCurrentPage()), false); syncNav(); }, 90);
     }
   }, { passive: true });
 
-  document.addEventListener('touchcancel', function () { var st = swipeState; swipeState = null; if (!st) return; resetSwipe(st); }, { passive: true });
-  document.addEventListener('DOMContentLoaded', function () { requestAnimationFrame(syncNav); setTimeout(syncNav, 120); });
-  window.addEventListener('load', function () { requestAnimationFrame(syncNav); setTimeout(syncNav, 220); }, { passive: true });
-  window.addEventListener('resize', function () { if (!transitionState && !swipeState) setTimeout(syncNav, 90); }, { passive: true });
-  window.addEventListener('orientationchange', function () { if (!transitionState && !swipeState) setTimeout(syncNav, 280); }, { passive: true });
-  requestAnimationFrame(syncNav); setTimeout(syncNav, 120);
+  window.addEventListener('orientationchange', function () {
+    if (!transitionState && !swipeState) {
+      setTimeout(function () { setPageVirtualIndex(indexOf(getCurrentPage()), false); syncNav(); }, 280);
+    }
+  }, { passive: true });
+
+  requestAnimationFrame(initMountedPages);
 })();
 </script>
 
