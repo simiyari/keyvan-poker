@@ -5945,7 +5945,10 @@ body.main-page-transitioning {
     clearLayer(currentEl); clearLayer(targetEl);
     document.querySelectorAll('.sub-page').forEach(function (sub) { sub.classList.remove('active'); });
     document.body.style.overflowX = ''; document.body.style.touchAction = ''; document.body.classList.remove('main-page-transitioning');
-    transitionState = false; setNavClasses(false, false); setNavActive(targetPage, true); render(targetPage);
+    transitionState = false; setNavClasses(false, false); setNavActive(targetPage, true);
+    // Do not call render(targetPage) here. The target page is already rendered before
+    // the swipe/click transition starts; re-rendering after the animation causes a delayed
+    // repaint of glass widgets on iOS Safari, which looks like the cards darken after a pause.
     try { window.scrollTo({ top: 0, left: 0, behavior: 'auto' }); } catch (e) { window.scrollTo(0, 0); }
   }
 
