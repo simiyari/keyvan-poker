@@ -4992,13 +4992,13 @@ body {
 <div class="nav-item" onclick="switchPage('settings')" data-page="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg><span>تنظیمات</span></div>
 </nav>
 <script>
-const DEFAULT_DATA={players:[],games:[],activeGameId:null,notes:'',settings:{currency:'تومان',defaultBuyIn:1000000,sliderMax:100000000,sliderStep:500000,quickAmounts:[500000,1000000,2000000,5000000,10000000,20000000],clockType:'analog',widgets:{topPlayers:true,statsSummary:true,notes:true,dateTime:true},passwordEnabled:false,passwordHash:null}};
+const DEFAULT_DATA={players:[],games:[],activeGameId:null,notes:'',settings:{currency:'تومان',defaultBuyIn:1000000,sliderMax:100000000,sliderStep:500000,quickAmounts:[500000,1000000,2000000,5000000,10000000,20000000],clockType:'analog',widgets:{topPlayers:true,statsSummary:true,notes:true,dateTime:true},passwordEnabled:false,passwordHash:null,backgroundImage:null}};
 let data={};let timerInterval=null,clockInterval=null;
 let createTableState={location:'',defaultBuyIn:1000000,selectedPlayers:{},commission:{enabled:false,type:'fixed',fixedAmount:10000000,percentage:10,cap:100000000}};
 let profileFilter='all';let profileCustomStart=null;let profileCustomEnd=null;let currentProfilePlayerId=null;
 let historyFilter='all';let historySearch='';let historyCustomStart=null;let historyCustomEnd=null;
 
-function loadData(){try{const s=localStorage.getItem('pokerManagerData');if(s){data=JSON.parse(s);if(!data.settings)data.settings={...DEFAULT_DATA.settings};if(!data.settings.widgets)data.settings.widgets={...DEFAULT_DATA.settings.widgets};if(!data.settings.quickAmounts)data.settings.quickAmounts=[...DEFAULT_DATA.settings.quickAmounts];if(!data.settings.clockType)data.settings.clockType='analog';if(!data.settings.sliderStep||data.settings.sliderStep<500000)data.settings.sliderStep=500000;if(!data.settings.sliderMax||data.settings.sliderMax<100000000)data.settings.sliderMax=100000000;if(data.settings.passwordEnabled===undefined)data.settings.passwordEnabled=false;if(data.settings.passwordHash===undefined)data.settings.passwordHash=null;if(!data.players)data.players=[];data.players.forEach(p=>{if(p.photo===undefined)p.photo=null});if(!data.games)data.games=[];}else{data=JSON.parse(JSON.stringify(DEFAULT_DATA));}}catch(e){data=JSON.parse(JSON.stringify(DEFAULT_DATA));}}
+function loadData(){try{const s=localStorage.getItem('pokerManagerData');if(s){data=JSON.parse(s);if(!data.settings)data.settings={...DEFAULT_DATA.settings};if(!data.settings.widgets)data.settings.widgets={...DEFAULT_DATA.settings.widgets};if(!data.settings.quickAmounts)data.settings.quickAmounts=[...DEFAULT_DATA.settings.quickAmounts];if(!data.settings.clockType)data.settings.clockType='analog';if(!data.settings.sliderStep||data.settings.sliderStep<500000)data.settings.sliderStep=500000;if(!data.settings.sliderMax||data.settings.sliderMax<100000000)data.settings.sliderMax=100000000;if(data.settings.passwordEnabled===undefined)data.settings.passwordEnabled=false;if(data.settings.passwordHash===undefined)data.settings.passwordHash=null;if(data.settings.backgroundImage===undefined)data.settings.backgroundImage=null;if(!data.players)data.players=[];data.players.forEach(p=>{if(p.photo===undefined)p.photo=null});if(!data.games)data.games=[];}else{data=JSON.parse(JSON.stringify(DEFAULT_DATA));}}catch(e){data=JSON.parse(JSON.stringify(DEFAULT_DATA));}}
 function saveData(){localStorage.setItem('pokerManagerData',JSON.stringify(data))}
 function genId(){return Date.now().toString(36)+Math.random().toString(36).substr(2,5)}
 function fmt(n){if(n===null||n===undefined)return'0';return Number(n).toLocaleString('en-US')}
@@ -5470,6 +5470,19 @@ function renderSettingsPage(){
       </select>
     </div>
     <div class="setting-item">
+      <h4>🖼️ پس‌زمینه اپ</h4>
+      <p>یک تصویر برای پس‌زمینه انتخاب کنید. با انتخاب تصویر، پس‌زمینه پیش‌فرض فعلی حذف می‌شود و عکس جای آن می‌نشیند.</p>
+      <div class="background-preview ${s.backgroundImage?'has-image':''}" style="${s.backgroundImage?`background-image:url('${s.backgroundImage}')`:''}">
+        ${s.backgroundImage?'<span>پس‌زمینه انتخاب‌شده</span>':'<span>پس‌زمینه پیش‌فرض فعلی</span>'}
+      </div>
+      <input type="file" id="background-file" accept="image/*" style="display:none" onchange="handleBackgroundUpload(event)">
+      <div class="btn-group mt-3" style="flex-direction:column">
+        <button class="btn btn-secondary btn-block" onclick="document.getElementById('background-file').click()">📷 انتخاب تصویر پس‌زمینه</button>
+        <button class="btn btn-outline btn-block" onclick="resetAppBackground()" ${s.backgroundImage?'':'disabled'}>↩️ بازگشت به پس‌زمینه پیش‌فرض</button>
+      </div>
+      <p style="font-size:11px;color:var(--text3);margin-top:10px">برای جلوگیری از سنگین شدن اپ، تصویر هنگام ذخیره بهینه‌سازی می‌شود.</p>
+    </div>
+    <div class="setting-item">
       <h4>🧩 ویجت‌های داشبورد</h4>
       <p>انتخاب اینکه چه بخش‌هایی در صفحه خانه نمایش داده شوند</p>
       <div class="mt-3">
@@ -5614,6 +5627,78 @@ function renderSettingsPage(){
 
   el.innerHTML=html;
 }
+function applyAppBackground(){
+  const bg=data&&data.settings?data.settings.backgroundImage:null;
+  if(bg){
+    document.documentElement.style.setProperty('--app-custom-background',`url("${bg}")`);
+    document.body.classList.add('has-custom-background');
+  }else{
+    document.documentElement.style.removeProperty('--app-custom-background');
+    document.body.classList.remove('has-custom-background');
+  }
+}
+function compressBackgroundImage(file){
+  return new Promise((resolve,reject)=>{
+    if(!file||!file.type||!file.type.startsWith('image/')){reject(new Error('invalid-file'));return}
+    const reader=new FileReader();
+    reader.onerror=()=>reject(new Error('read-error'));
+    reader.onload=ev=>{
+      const img=new Image();
+      img.onerror=()=>reject(new Error('image-error'));
+      img.onload=()=>{
+        try{
+          const maxSide=1800;
+          const w=img.naturalWidth||img.width;
+          const h=img.naturalHeight||img.height;
+          const scale=Math.min(1,maxSide/w,maxSide/h);
+          const cw=Math.max(1,Math.round(w*scale));
+          const ch=Math.max(1,Math.round(h*scale));
+          const canvas=document.createElement('canvas');
+          canvas.width=cw;canvas.height=ch;
+          const ctx=canvas.getContext('2d');
+          ctx.drawImage(img,0,0,cw,ch);
+          let quality=0.84;
+          let out=canvas.toDataURL('image/jpeg',quality);
+          while(out.length>2800000&&quality>0.56){quality-=0.08;out=canvas.toDataURL('image/jpeg',quality)}
+          resolve(out);
+        }catch(err){reject(err)}
+      };
+      img.src=ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+async function handleBackgroundUpload(e){
+  const input=e.target;
+  const file=input.files&&input.files[0];
+  if(!file)return;
+  if(!file.type.startsWith('image/')){toast('لطفاً یک فایل عکس انتخاب کنید','error');input.value='';return}
+  try{
+    toast('در حال آماده‌سازی تصویر...','info');
+    const dataUrl=await compressBackgroundImage(file);
+    data.settings.backgroundImage=dataUrl;
+    applyAppBackground();
+    try{saveData()}catch(storageErr){
+      data.settings.backgroundImage=null;
+      applyAppBackground();
+      toast('حجم تصویر زیاد است. لطفاً یک عکس سبک‌تر انتخاب کنید','error');
+      input.value='';
+      return;
+    }
+    renderSettingsPage();
+    toast('پس‌زمینه تغییر کرد','success');
+  }catch(err){
+    toast('خطا در خواندن تصویر','error');
+  }
+  input.value='';
+}
+function resetAppBackground(){
+  data.settings.backgroundImage=null;
+  saveData();
+  applyAppBackground();
+  renderSettingsPage();
+  toast('پس‌زمینه پیش‌فرض فعال شد','success');
+}
 function toggleWidget(k,el){data.settings.widgets[k]=!data.settings.widgets[k];el.classList.toggle('on');saveData()}
 function toggleClockType(el){data.settings.clockType=data.settings.clockType==='analog'?'digital':'analog';el.classList.toggle('on');saveData()}
 function updateQuickAmount(idx,val){if(!isNaN(val)&&val>=0){data.settings.quickAmounts[idx]=val;data.settings.quickAmounts.sort((a,b)=>a-b);saveData();renderSettingsPage()}}
@@ -5623,6 +5708,7 @@ function exportData(){const b=new Blob([JSON.stringify(data,null,2)],{type:'appl
 function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=function(ev){try{const imp=JSON.parse(ev.target.result);if(imp.players&&imp.games){confirmDialog({title:'جایگزینی داده‌ها؟',message:'داده‌های فعلی با محتوای فایل بکاپ جایگزین خواهند شد. پیش از ادامه حتماً یک بکاپ از داده‌های فعلی بگیرید.',confirmText:'جایگزین کن',cancelText:'انصراف',danger:true,icon:'📥',onConfirm:()=>{data=imp;saveData();location.reload()}})}else{toast('فایل بکاپ نامعتبر است','error')}}catch(er){toast('خطا در خواندن فایل','error')}};r.readAsText(f);e.target.value=''}
 function resetAllData(){confirmDialog({title:'حذف تمام داده‌ها؟',message:'تمام بازیکنان، بازی‌ها، تاریخچه و تنظیمات شما پاک خواهند شد.',confirmText:'ادامه',cancelText:'انصراف',danger:true,icon:'🗑',onConfirm:()=>{confirmDialog({title:'کاملاً مطمئنید؟',message:'این عمل <strong>غیرقابل بازگشت</strong> است. پیش از ادامه، حتماً یک بکاپ تهیه کنید.',confirmText:'بله، همه را حذف کن',cancelText:'انصراف',danger:true,icon:'⚠️',onConfirm:()=>{localStorage.removeItem('pokerManagerData');location.reload()}})}})}
 loadData();
+applyAppBackground();
 if(isPasswordSet()){showLockScreen();}else{renderDashboard();}
 </script>
 
@@ -5664,6 +5750,57 @@ if(isPasswordSet()){showLockScreen();}else{renderDashboard();}
 
 <!-- CONSOLIDATED FINAL NAVBAR + LIQUID SWIPE PATCH: one clean geometry source, no preview/run side effects -->
 <!-- iPhone/PWA placement: navbar is pulled down into the safe-area margin with --liquid-nav-bottom. -->
+
+
+<style id="custom-background-setting-style">
+body.has-custom-background {
+  background-color: #000 !important;
+  background-image: var(--app-custom-background) !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+}
+body.has-custom-background .sub-page {
+  background-color: transparent !important;
+  background-image: var(--app-custom-background) !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+}
+.background-preview {
+  height: 132px;
+  margin-top: var(--sp-3);
+  border-radius: var(--radius2);
+  border: 1px solid rgba(255,255,255,0.10);
+  background:
+    radial-gradient(120% 100% at 80% 0%, rgba(34,169,74,0.16), transparent 70%),
+    radial-gradient(100% 90% at 0% 100%, rgba(216,169,58,0.10), transparent 70%),
+    #050607;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  padding: 12px;
+}
+.background-preview span {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.42);
+  border: 1px solid rgba(255,255,255,0.10);
+  color: rgba(255,255,255,0.86);
+  font-size: 12px;
+  font-weight: 600;
+}
+.background-preview.has-image {
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04), 0 8px 24px rgba(0,0,0,0.22);
+}
+</style>
 
 <style id="stable-glass-card-fix">
 /*
