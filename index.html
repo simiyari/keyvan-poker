@@ -6714,5 +6714,83 @@ body.has-custom-background .balance-box::after {
 }
 </style>
 
+
+
+<style id="live-banner-glass-refine">
+/*
+  Refine the active-game green banner so it feels like the same glass system:
+  subtle blur + very light dark tint + readable content.
+  This affects the running-game banner on Home and Table pages.
+*/
+.game-live-banner {
+  background-color: rgba(8, 18, 12, 0.38) !important;
+  background-image:
+    radial-gradient(130% 120% at 10% 0%, rgba(56, 192, 103, 0.24), transparent 52%),
+    radial-gradient(120% 120% at 100% 100%, rgba(34, 169, 74, 0.12), transparent 54%),
+    linear-gradient(180deg, rgba(255,255,255,0.050), rgba(255,255,255,0.018) 34%, rgba(255,255,255,0.030)),
+    linear-gradient(135deg, rgba(7, 20, 12, 0.72), rgba(10, 28, 17, 0.58)) !important;
+  border: 1px solid rgba(126, 219, 157, 0.18) !important;
+  box-shadow:
+    0 12px 28px rgba(0,0,0,0.20),
+    inset 0 1px 0 rgba(255,255,255,0.075) !important;
+  backdrop-filter: blur(12px) saturate(118%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(118%) !important;
+  color: rgba(255,255,255,0.96) !important;
+}
+
+.game-live-banner::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.00) 32%),
+    radial-gradient(90% 75% at 22% 0%, rgba(255,255,255,0.08), transparent 62%) !important;
+  pointer-events: none !important;
+}
+
+.game-live-banner .timer,
+.game-live-banner .glb-sub .num,
+.game-live-banner .comm-line .num,
+.game-live-banner [style*="font-size:16px"],
+.game-live-banner [style*="font-size:17px"] {
+  color: #fff !important;
+  text-shadow: 0 1px 10px rgba(0,0,0,0.22) !important;
+}
+
+.game-live-banner .glb-sub,
+.game-live-banner .comm-line {
+  color: rgba(246, 249, 247, 0.90) !important;
+}
+
+.game-live-banner .chip {
+  background: rgba(255,255,255,0.10) !important;
+  color: #fff !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06) !important;
+  backdrop-filter: blur(8px) saturate(110%) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(110%) !important;
+}
+
+.game-live-banner .live-dot {
+  background: #dfffe9 !important;
+  box-shadow: 0 0 8px rgba(189,255,214,0.55) !important;
+}
+
+body.has-custom-background .game-live-banner {
+  background-color: rgba(8, 13, 11, 0.34) !important;
+  background-image:
+    radial-gradient(130% 120% at 10% 0%, rgba(56, 192, 103, 0.22), transparent 50%),
+    radial-gradient(120% 120% at 100% 100%, rgba(34, 169, 74, 0.10), transparent 52%),
+    linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.020) 34%, rgba(255,255,255,0.028)),
+    linear-gradient(135deg, rgba(7, 16, 11, 0.54), rgba(10, 21, 15, 0.44)) !important;
+  border-color: rgba(255,255,255,0.11) !important;
+  box-shadow:
+    0 12px 28px rgba(0,0,0,0.16),
+    inset 0 1px 0 rgba(255,255,255,0.06) !important;
+  backdrop-filter: blur(12px) saturate(108%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(108%) !important;
+}
+</style>
+
 </body>
 </html>
