@@ -7265,5 +7265,115 @@ body.main-page-transitioning { overflow-x: hidden !important; }
 })();
 </script>
 
+
+
+<style id="liquid-nav-elastic-morph-patch">
+/* Elastic Liquid Bubble Patch
+   فقط حرکت مایع‌مانند حباب را اضافه می‌کند و هندسه/اندازه‌های navbar را دست نمی‌زند. */
+.bottom-nav.liquid-nav-dragging::before {
+  will-change: left, width !important;
+}
+
+.bottom-nav.liquid-nav-settling::before {
+  will-change: left, width !important;
+}
+</style>
+
+<script id="liquid-nav-elastic-morph-patch-script">
+(function () {
+  var PAGE_ORDER = ['dashboard', 'table', 'players', 'history', 'settings'];
+  var VISUAL_INDEX = { settings: 0, history: 1, players: 2, table: 3, dashboard: 4 };
+
+  function cssNumber(el, name, fallback) {
+    var raw = getComputedStyle(el).getPropertyValue(name).trim();
+    var n = parseFloat(raw);
+    return Number.isFinite(n) ? n : fallback;
+  }
+
+  function clamp(n, min, max) {
+    return Math.max(min, Math.min(n, max));
+  }
+
+  function metric(page) {
+    var nav = document.querySelector('.bottom-nav');
+    if (!nav) return null;
+
+    var rect = nav.getBoundingClientRect();
+    var count = PAGE_ORDER.length;
+    var gx = cssNumber(nav, '--liquid-nav-gutter-x', 7);
+    var gap = cssNumber(nav, '--liquid-nav-gap', 7);
+    var usable = rect.width - (gx * 2) - (gap * (count - 1));
+    var slot = usable / count;
+    if (!Number.isFinite(slot) || slot <= 0) return null;
+
+    var i = VISUAL_INDEX[page];
+    if (!Number.isFinite(i)) {
+      var logical = PAGE_ORDER.indexOf(page);
+      i = logical >= 0 ? (count - 1 - logical) : 4;
+    }
+
+    var x = gx + i * (slot + gap);
+    var maxX = rect.width - gx - slot;
+    x = clamp(x, gx, maxX);
+    return { x: x, w: slot, cx: x + slot / 2, gx: gx, right: rect.width - gx };
+  }
+
+  function setElasticBetween(fromPage, toPage, progress) {
+    var nav = document.querySelector('.bottom-nav');
+    if (!nav) return;
+
+    var from = metric(fromPage);
+    var to = metric(toPage || fromPage) || from;
+    if (!from || !to) return;
+
+    var p = clamp(progress || 0, 0, 1);
+    var baseW = from.w + (to.w - from.w) * p;
+    var center = from.cx + (to.cx - from.cx) * p;
+    var distance = Math.abs(to.cx - from.cx);
+    var isDragging = nav.classList.contains('liquid-nav-dragging');
+
+    // وسط حرکت، حباب کمی کش می‌آید؛ در ابتدا و انتها دقیقاً به اندازه اصلی برمی‌گردد.
+    // عددها محافظه‌کارانه انتخاب شده‌اند تا هندسه‌ای که درست شده به‌هم نخورد.
+    var stretch = 0;
+    if (isDragging && distance > 1 && p > 0 && p < 1) {
+      var curve = Math.sin(Math.PI * p);
+      stretch = distance * 0.40 * curve;
+
+      // اجازه نمی‌دهیم حباب به لبه داخلی navbar بخورد یا از آن بیرون بزند.
+      var maxByLeft = (center - from.gx) * 2 - baseW;
+      var maxByRight = (to.right - center) * 2 - baseW;
+      var safeStretch = Math.max(0, Math.min(stretch, maxByLeft, maxByRight));
+      stretch = safeStretch;
+    }
+
+    var w = baseW + stretch;
+    var x = center - w / 2;
+    x = clamp(x, from.gx, to.right - w);
+
+    nav.style.setProperty('--liquid-x', x.toFixed(2) + 'px');
+    nav.style.setProperty('--liquid-w', w.toFixed(2) + 'px');
+    nav.setAttribute('data-liquid-ready', 'true');
+  }
+
+  function syncElastic() {
+    var active = document.querySelector('.bottom-nav .nav-item.active') || document.querySelector('.bottom-nav .nav-item[data-page="dashboard"]');
+    var page = active ? active.getAttribute('data-page') : 'dashboard';
+    setElasticBetween(page, page, 0);
+  }
+
+  window.getLiquidNavMetric = metric;
+  window.setLiquidNavBetween = setElasticBetween;
+  window.syncLiquidNav = syncElastic;
+
+  try { getLiquidNavMetric = metric; } catch (e) {}
+  try { setLiquidNavBetween = setElasticBetween; } catch (e) {}
+  try { syncLiquidNav = syncElastic; } catch (e) {}
+
+  requestAnimationFrame(syncElastic);
+  setTimeout(syncElastic, 80);
+  setTimeout(syncElastic, 260);
+})();
+</script>
+
 </body>
 </html>
