@@ -6376,5 +6376,47 @@ body.main-page-transitioning { overflow-x: hidden !important; }
 }
 </style>
 
+
+<style id="liquid-nav-size-edge-polish">
+:root {
+  --liquid-nav-height: 66px;
+  --liquid-nav-pad: 5px;
+  --liquid-nav-gap: 2px;
+  --liquid-bubble-over: 2.5px;
+}
+.bottom-nav {
+  height: var(--liquid-nav-height) !important;
+  min-height: var(--liquid-nav-height) !important;
+  padding: var(--liquid-nav-pad) !important;
+  gap: var(--liquid-nav-gap) !important;
+  width: min(calc(100vw - 28px), 402px) !important;
+}
+.bottom-nav::before {
+  top: var(--liquid-nav-pad) !important;
+  bottom: var(--liquid-nav-pad) !important;
+  left: calc(var(--liquid-x, var(--liquid-nav-pad)) - var(--liquid-bubble-over)) !important;
+  width: calc(var(--liquid-w, calc((100% - (var(--liquid-nav-pad) * 2) - (var(--liquid-nav-gap) * 4)) / 5)) + (var(--liquid-bubble-over) * 2)) !important;
+}
+.nav-item {
+  height: calc(var(--liquid-nav-height) - (var(--liquid-nav-pad) * 2)) !important;
+}
+.nav-item svg {
+  width: 23px !important;
+  height: 23px !important;
+}
+@media (max-width: 360px) {
+  :root { --liquid-nav-height: 62px; --liquid-nav-pad: 5px; --liquid-bubble-over: 2px; }
+  .bottom-nav { width: min(calc(100vw - 20px), 386px) !important; }
+  .nav-item svg { width: 21px !important; height: 21px !important; }
+}
+@media (min-width: 700px) {
+  :root { --liquid-nav-height: 68px; --liquid-nav-pad: 5px; --liquid-bubble-over: 3px; }
+  .bottom-nav { width: min(calc(100vw - 48px), 448px) !important; }
+}
+@media (min-width: 900px) {
+  :root { --liquid-nav-bottom: 18px; }
+  .bottom-nav { width: min(528px, calc(100vw - 64px)) !important; }
+}
+</style>
 </body>
 </html>
