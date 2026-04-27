@@ -6273,24 +6273,52 @@ body.main-page-transitioning { overflow-x: hidden !important; }
 
 <script id="liquid-glass-nav-fix-script">
 (function () {
+  function readPx(el, name, fallback) {
+    var raw = getComputedStyle(el).getPropertyValue(name).trim();
+    var n = parseFloat(raw);
+    return Number.isFinite(n) ? n : fallback;
+  }
+
+  function precisionNavMetric(page) {
+    var nav = document.querySelector('.bottom-nav');
+    if (!nav) return null;
+    var item = nav.querySelector('.nav-item[data-page="' + page + '"]');
+    if (!item) return null;
+
+    var navRect = nav.getBoundingClientRect();
+    var itemRect = item.getBoundingClientRect();
+    var cs = getComputedStyle(nav);
+    var padLeft = parseFloat(cs.paddingLeft) || 0;
+    var padRight = parseFloat(cs.paddingRight) || 0;
+    var inset = readPx(nav, '--liquid-bubble-side-inset', 3);
+
+    var rawX = itemRect.left - navRect.left;
+    var rawW = itemRect.width;
+    var w = Math.max(44, rawW - inset * 2);
+    var x = rawX + inset;
+
+    var minX = padLeft;
+    var maxX = navRect.width - padRight - w;
+    x = Math.max(minX, Math.min(x, maxX));
+
+    return Number.isFinite(x) && Number.isFinite(w) && w > 0 ? { x: x, w: w } : null;
+  }
+
   function syncLiquidNav() {
     var nav = document.querySelector('.bottom-nav');
     if (!nav) return;
     var active = nav.querySelector('.nav-item.active') || nav.querySelector('.nav-item');
     if (!active) return;
-
-    var navRect = nav.getBoundingClientRect();
-    var activeRect = active.getBoundingClientRect();
-    var x = activeRect.left - navRect.left;
-    var w = activeRect.width;
-
-    if (Number.isFinite(x) && Number.isFinite(w) && w > 0) {
-      nav.style.setProperty('--liquid-x', x.toFixed(2) + 'px');
-      nav.style.setProperty('--liquid-w', w.toFixed(2) + 'px');
-      nav.setAttribute('data-liquid-ready', 'true');
-    }
+    var page = active.getAttribute('data-page');
+    var m = precisionNavMetric(page);
+    if (!m) return;
+    nav.style.setProperty('--liquid-x', m.x.toFixed(2) + 'px');
+    nav.style.setProperty('--liquid-w', m.w.toFixed(2) + 'px');
+    nav.setAttribute('data-liquid-ready', 'true');
   }
 
+  window.getLiquidNavMetric = precisionNavMetric;
+  try { getLiquidNavMetric = precisionNavMetric; } catch (e) {}
   window.syncLiquidNav = syncLiquidNav;
 
   var navForObserver = document.querySelector('.bottom-nav');
@@ -6303,7 +6331,7 @@ body.main-page-transitioning { overflow-x: hidden !important; }
       if (shouldSync) {
         cancelAnimationFrame(navObserverTimer);
         navObserverTimer = requestAnimationFrame(syncLiquidNav);
-        setTimeout(syncLiquidNav, 90);
+        setTimeout(syncLiquidNav, 110);
       }
     }).observe(navForObserver, { subtree: true, attributes: true, attributeFilter: ['class'] });
   }
@@ -6313,7 +6341,7 @@ body.main-page-transitioning { overflow-x: hidden !important; }
     var wrappedSwitchPage = function () {
       var result = originalSwitchPage.apply(this, arguments);
       requestAnimationFrame(syncLiquidNav);
-      setTimeout(syncLiquidNav, 80);
+      setTimeout(syncLiquidNav, 100);
       return result;
     };
     wrappedSwitchPage.__liquidNavWrapped = true;
@@ -6323,20 +6351,20 @@ body.main-page-transitioning { overflow-x: hidden !important; }
   document.addEventListener('click', function (event) {
     if (event.target && event.target.closest && event.target.closest('.bottom-nav .nav-item')) {
       requestAnimationFrame(syncLiquidNav);
-      setTimeout(syncLiquidNav, 80);
+      setTimeout(syncLiquidNav, 100);
     }
   }, true);
 
   window.addEventListener('load', function () {
     syncLiquidNav();
-    setTimeout(syncLiquidNav, 120);
+    setTimeout(syncLiquidNav, 140);
   }, { passive: true });
   document.addEventListener('DOMContentLoaded', function () {
     syncLiquidNav();
-    setTimeout(syncLiquidNav, 120);
+    setTimeout(syncLiquidNav, 140);
   });
-  window.addEventListener('resize', function () { setTimeout(syncLiquidNav, 80); }, { passive: true });
-  window.addEventListener('orientationchange', function () { setTimeout(syncLiquidNav, 250); }, { passive: true });
+  window.addEventListener('resize', function () { setTimeout(syncLiquidNav, 90); }, { passive: true });
+  window.addEventListener('orientationchange', function () { setTimeout(syncLiquidNav, 260); }, { passive: true });
 
   syncLiquidNav();
 })();
@@ -6378,45 +6406,864 @@ body.main-page-transitioning { overflow-x: hidden !important; }
 
 
 <style id="liquid-nav-size-edge-polish">
+/* Precision navbar geometry: the active bubble is measured from the icon slot,
+   then inset equally on both sides. Home and Settings stay symmetrical. */
 :root {
   --liquid-nav-height: 66px;
-  --liquid-nav-pad: 5px;
-  --liquid-nav-gap: 2px;
-  --liquid-bubble-over: 2.5px;
+  --liquid-nav-pad-y: 6px;
+  --liquid-nav-pad-x: 8px;
+  --liquid-nav-gap: 4px;
+  --liquid-bubble-side-inset: 3px;
 }
+
 .bottom-nav {
   height: var(--liquid-nav-height) !important;
   min-height: var(--liquid-nav-height) !important;
-  padding: var(--liquid-nav-pad) !important;
+  padding: var(--liquid-nav-pad-y) var(--liquid-nav-pad-x) !important;
   gap: var(--liquid-nav-gap) !important;
-  width: min(calc(100vw - 28px), 402px) !important;
+  width: min(calc(100vw - 24px), 404px) !important;
+  overflow: hidden !important;
 }
+
 .bottom-nav::before {
-  top: var(--liquid-nav-pad) !important;
-  bottom: var(--liquid-nav-pad) !important;
-  left: calc(var(--liquid-x, var(--liquid-nav-pad)) - var(--liquid-bubble-over)) !important;
-  width: calc(var(--liquid-w, calc((100% - (var(--liquid-nav-pad) * 2) - (var(--liquid-nav-gap) * 4)) / 5)) + (var(--liquid-bubble-over) * 2)) !important;
+  top: var(--liquid-nav-pad-y) !important;
+  bottom: var(--liquid-nav-pad-y) !important;
+  left: var(--liquid-x, calc(var(--liquid-nav-pad-x) + var(--liquid-bubble-side-inset))) !important;
+  width: var(--liquid-w, calc((100% - (var(--liquid-nav-pad-x) * 2) - (var(--liquid-nav-gap) * 4)) / 5 - (var(--liquid-bubble-side-inset) * 2))) !important;
+  max-width: calc(100% - (var(--liquid-nav-pad-x) * 2) - (var(--liquid-bubble-side-inset) * 2)) !important;
 }
+
 .nav-item {
-  height: calc(var(--liquid-nav-height) - (var(--liquid-nav-pad) * 2)) !important;
+  height: calc(var(--liquid-nav-height) - (var(--liquid-nav-pad-y) * 2)) !important;
 }
+
 .nav-item svg {
   width: 23px !important;
   height: 23px !important;
 }
+
 @media (max-width: 360px) {
-  :root { --liquid-nav-height: 62px; --liquid-nav-pad: 5px; --liquid-bubble-over: 2px; }
+  :root {
+    --liquid-nav-height: 62px;
+    --liquid-nav-pad-y: 6px;
+    --liquid-nav-pad-x: 7px;
+    --liquid-bubble-side-inset: 2px;
+  }
   .bottom-nav { width: min(calc(100vw - 20px), 386px) !important; }
   .nav-item svg { width: 21px !important; height: 21px !important; }
 }
+
 @media (min-width: 700px) {
-  :root { --liquid-nav-height: 68px; --liquid-nav-pad: 5px; --liquid-bubble-over: 3px; }
+  :root {
+    --liquid-nav-height: 68px;
+    --liquid-nav-pad-y: 6px;
+    --liquid-nav-pad-x: 9px;
+    --liquid-bubble-side-inset: 3px;
+  }
   .bottom-nav { width: min(calc(100vw - 48px), 448px) !important; }
 }
+
 @media (min-width: 900px) {
   :root { --liquid-nav-bottom: 18px; }
   .bottom-nav { width: min(528px, calc(100vw - 64px)) !important; }
 }
 </style>
+
+
+<style id="navbar-final-geometric-size-fix">
+/* FINAL NAVBAR GEOMETRY FIX
+   The bubble size/position is no longer measured from each nav-item's rendered
+   rectangle. It is calculated from the navbar rail itself, so Home and Settings
+   always use the exact same width and the exact same edge distance. */
+:root {
+  --liquid-nav-height: 66px;
+  --liquid-nav-pad-y: 6px;
+  --liquid-nav-pad-x: 8px;
+  --liquid-nav-gap: 4px;
+  --liquid-bubble-inset-x: 2px;
+  --liquid-nav-count: 5;
+}
+
+.bottom-nav {
+  width: min(calc(100vw - 24px), 404px) !important;
+  height: var(--liquid-nav-height) !important;
+  min-height: var(--liquid-nav-height) !important;
+  padding: var(--liquid-nav-pad-y) var(--liquid-nav-pad-x) !important;
+  gap: var(--liquid-nav-gap) !important;
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  grid-auto-flow: column !important;
+  align-items: stretch !important;
+  justify-items: stretch !important;
+  direction: rtl !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+
+.bottom-nav::before {
+  top: var(--liquid-nav-pad-y) !important;
+  bottom: var(--liquid-nav-pad-y) !important;
+  left: var(--liquid-x, var(--liquid-nav-pad-x)) !important;
+  width: var(--liquid-w, calc((100% - (var(--liquid-nav-pad-x) * 2) - (var(--liquid-nav-gap) * 4)) / 5)) !important;
+  max-width: none !important;
+  box-sizing: border-box !important;
+}
+
+.bottom-nav::after {
+  inset: 1px !important;
+}
+
+.nav-item {
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  flex: unset !important;
+  box-sizing: border-box !important;
+  direction: ltr !important;
+}
+
+.nav-item svg {
+  width: 23px !important;
+  height: 23px !important;
+}
+
+@media (max-width: 360px) {
+  :root {
+    --liquid-nav-height: 62px;
+    --liquid-nav-pad-y: 6px;
+    --liquid-nav-pad-x: 7px;
+    --liquid-nav-gap: 4px;
+    --liquid-bubble-inset-x: 2px;
+  }
+  .bottom-nav { width: min(calc(100vw - 20px), 386px) !important; }
+  .nav-item svg { width: 21px !important; height: 21px !important; }
+}
+
+@media (min-width: 700px) {
+  :root {
+    --liquid-nav-height: 68px;
+    --liquid-nav-pad-y: 6px;
+    --liquid-nav-pad-x: 9px;
+    --liquid-nav-gap: 4px;
+    --liquid-bubble-inset-x: 3px;
+  }
+  .bottom-nav { width: min(calc(100vw - 48px), 448px) !important; }
+}
+
+@media (min-width: 900px) {
+  :root { --liquid-nav-bottom: 18px; }
+  .bottom-nav { width: min(528px, calc(100vw - 64px)) !important; }
+}
+</style>
+
+<script id="navbar-final-geometric-size-fix-script">
+(function () {
+  var PAGE_ORDER = ['dashboard', 'table', 'players', 'history', 'settings'];
+
+  function px(el, name, fallback) {
+    var raw = getComputedStyle(el).getPropertyValue(name).trim();
+    var n = parseFloat(raw);
+    return Number.isFinite(n) ? n : fallback;
+  }
+
+  function clamp(n, min, max) {
+    return Math.max(min, Math.min(n, max));
+  }
+
+  function metricForPage(page) {
+    var nav = document.querySelector('.bottom-nav');
+    if (!nav) return null;
+
+    var count = PAGE_ORDER.length;
+    var logicalIndex = PAGE_ORDER.indexOf(page);
+    if (logicalIndex < 0) {
+      var item = nav.querySelector('.nav-item[data-page="' + page + '"]');
+      if (!item) item = nav.querySelector('.nav-item.active') || nav.querySelector('.nav-item');
+      logicalIndex = Array.prototype.indexOf.call(nav.querySelectorAll('.nav-item'), item);
+      if (logicalIndex < 0) logicalIndex = 0;
+      count = nav.querySelectorAll('.nav-item').length || count;
+    }
+
+    var rect = nav.getBoundingClientRect();
+    var padX = px(nav, '--liquid-nav-pad-x', 8);
+    var gap = px(nav, '--liquid-nav-gap', 4);
+    var inset = px(nav, '--liquid-bubble-inset-x', 2);
+
+    var slotW = (rect.width - padX * 2 - gap * (count - 1)) / count;
+    if (!Number.isFinite(slotW) || slotW <= 0) return null;
+
+    /* The app is RTL: first item (Home/dashboard) is visually on the right.
+       This formula makes the first and last bubbles perfectly symmetric. */
+    var visualIndex = count - 1 - logicalIndex;
+    var bubbleW = Math.max(44, slotW - inset * 2);
+    var x = padX + visualIndex * (slotW + gap) + inset;
+
+    var minX = padX + inset;
+    var maxX = rect.width - padX - inset - bubbleW;
+    x = clamp(x, minX, maxX);
+
+    return { x: x, w: bubbleW };
+  }
+
+  function setMetric(page) {
+    var nav = document.querySelector('.bottom-nav');
+    var m = metricForPage(page);
+    if (!nav || !m) return;
+    nav.style.setProperty('--liquid-x', m.x.toFixed(2) + 'px');
+    nav.style.setProperty('--liquid-w', m.w.toFixed(2) + 'px');
+    nav.setAttribute('data-liquid-ready', 'true');
+  }
+
+  window.getLiquidNavMetric = metricForPage;
+  window.syncLiquidNav = function () {
+    var active = document.querySelector('.bottom-nav .nav-item.active') || document.querySelector('.bottom-nav .nav-item');
+    setMetric(active ? active.getAttribute('data-page') : 'dashboard');
+  };
+
+  window.setLiquidNavBetween = function (fromPage, toPage, progress) {
+    var nav = document.querySelector('.bottom-nav');
+    if (!nav) return;
+    var from = metricForPage(fromPage);
+    var to = metricForPage(toPage || fromPage) || from;
+    if (!from || !to) return;
+    var p = clamp(progress || 0, 0, 1);
+    var x = from.x + (to.x - from.x) * p;
+    var w = from.w + (to.w - from.w) * p;
+    nav.style.setProperty('--liquid-x', x.toFixed(2) + 'px');
+    nav.style.setProperty('--liquid-w', w.toFixed(2) + 'px');
+    nav.setAttribute('data-liquid-ready', 'true');
+  };
+
+  function scheduleSync(delay) {
+    requestAnimationFrame(window.syncLiquidNav);
+    if (delay) setTimeout(window.syncLiquidNav, delay);
+  }
+
+  document.addEventListener('DOMContentLoaded', function () { scheduleSync(160); });
+  window.addEventListener('load', function () { scheduleSync(160); }, { passive: true });
+  window.addEventListener('resize', function () { setTimeout(window.syncLiquidNav, 80); }, { passive: true });
+  window.addEventListener('orientationchange', function () { setTimeout(window.syncLiquidNav, 260); }, { passive: true });
+  document.addEventListener('click', function (event) {
+    if (event.target && event.target.closest && event.target.closest('.bottom-nav .nav-item')) {
+      scheduleSync(110);
+    }
+  }, true);
+
+  if (window.MutationObserver) {
+    var nav = document.querySelector('.bottom-nav');
+    if (nav) {
+      new MutationObserver(function () { scheduleSync(80); }).observe(nav, {
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['class']
+      });
+    }
+  }
+
+  scheduleSync(160);
+})();
+</script>
+
+<style id="navbar-uniform-gutter-final-fix">
+/* FINAL UNIFORM-GUTTER NAVBAR
+   One geometry source only: the rail gutter is used for top, bottom, left,
+   right and the internal slots. The active bubble is calculated from the rail,
+   not from individual icons, so Home and Settings are always identical. */
+:root {
+  --liquid-nav-height: 66px;
+  --liquid-nav-gutter: 7px;
+  --liquid-nav-gap: 7px;
+  --liquid-nav-radius: 999px;
+  --liquid-nav-bottom: max(12px, calc(env(safe-area-inset-bottom, 0px) + 8px));
+}
+
+.bottom-nav {
+  position: fixed !important;
+  top: auto !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: var(--liquid-nav-bottom) !important;
+  transform: translate3d(-50%, 0, 0) !important;
+  -webkit-transform: translate3d(-50%, 0, 0) !important;
+  width: min(calc(100vw - 24px), 404px) !important;
+  height: var(--liquid-nav-height) !important;
+  min-height: var(--liquid-nav-height) !important;
+  margin: 0 !important;
+  padding: var(--liquid-nav-gutter) !important;
+  gap: var(--liquid-nav-gap) !important;
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  grid-template-rows: 1fr !important;
+  grid-auto-flow: column !important;
+  align-items: stretch !important;
+  justify-items: stretch !important;
+  direction: rtl !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+  border-radius: var(--liquid-nav-radius) !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.012) 34%, rgba(255,255,255,0.032)),
+    rgba(14, 16, 20, 0.46) !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  box-shadow:
+    0 18px 38px rgba(0,0,0,0.40),
+    inset 0 1px 0 rgba(255,255,255,0.06),
+    inset 0 -1px 0 rgba(0,0,0,0.18) !important;
+  backdrop-filter: blur(24px) saturate(108%) brightness(0.98) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(108%) brightness(0.98) !important;
+  z-index: 1500 !important;
+  contain: none !important;
+  will-change: transform !important;
+}
+
+.bottom-nav::before {
+  content: "";
+  position: absolute !important;
+  top: var(--liquid-nav-gutter) !important;
+  bottom: var(--liquid-nav-gutter) !important;
+  left: var(--liquid-x, var(--liquid-nav-gutter)) !important;
+  width: var(--liquid-w, calc((100% - (var(--liquid-nav-gutter) * 2) - (var(--liquid-nav-gap) * 4)) / 5)) !important;
+  height: auto !important;
+  max-width: none !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  opacity: 0;
+  box-sizing: border-box !important;
+  border-radius: var(--liquid-nav-radius) !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.03)),
+    rgba(255,255,255,0.052) !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  box-shadow:
+    0 10px 20px rgba(0,0,0,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    inset 0 -1px 0 rgba(0,0,0,0.10) !important;
+  backdrop-filter: blur(18px) saturate(104%) brightness(1.00) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(104%) brightness(1.00) !important;
+  transition:
+    left var(--liquid-nav-settle-ms, 680ms) cubic-bezier(0.16, 1, 0.30, 1),
+    width var(--liquid-nav-settle-ms, 680ms) cubic-bezier(0.16, 1, 0.30, 1),
+    opacity 0.18s ease,
+    transform 0.18s ease !important;
+}
+
+.bottom-nav[data-liquid-ready="true"]::before { opacity: 1 !important; }
+.bottom-nav.liquid-nav-dragging::before { transition: none !important; }
+.bottom-nav.liquid-nav-settling::before {
+  transition:
+    left var(--liquid-nav-settle-ms, 680ms) cubic-bezier(0.16, 1, 0.30, 1),
+    width var(--liquid-nav-settle-ms, 680ms) cubic-bezier(0.16, 1, 0.30, 1),
+    opacity 0.18s ease,
+    transform 0.18s ease !important;
+}
+.bottom-nav:has(.nav-item:active)::before { transform: scale(0.97); }
+
+.bottom-nav::after {
+  content: "";
+  position: absolute !important;
+  inset: 1px !important;
+  border-radius: inherit !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  background: linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.00) 30%) !important;
+  opacity: 0.25 !important;
+}
+
+.nav-item {
+  position: relative !important;
+  z-index: 2 !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  flex: unset !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+  border-radius: var(--liquid-nav-radius) !important;
+  background: transparent !important;
+  color: rgba(255,255,255,0.58) !important;
+  direction: ltr !important;
+  transition:
+    color 0.28s ease,
+    transform 0.16s ease,
+    filter 0.28s ease !important;
+}
+
+.nav-item.active {
+  background: transparent !important;
+  color: #fff !important;
+  filter: none !important;
+}
+
+.nav-item span { display: none !important; }
+
+.nav-item svg {
+  width: 23px !important;
+  height: 23px !important;
+  stroke-width: 2.1 !important;
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease !important;
+}
+
+.nav-item.active svg {
+  transform: scale(1.05) !important;
+  opacity: 1 !important;
+}
+
+.nav-item:active { transform: scale(0.94) !important; }
+
+.page {
+  padding-bottom: calc(var(--liquid-nav-height) + var(--liquid-nav-bottom) + 18px) !important;
+  scroll-padding-bottom: calc(var(--liquid-nav-height) + var(--liquid-nav-bottom) + 18px) !important;
+}
+.sub-page:not(.center-modal-page) {
+  padding-bottom: calc(var(--liquid-nav-height) + var(--liquid-nav-bottom) + 22px) !important;
+  scroll-padding-bottom: calc(var(--liquid-nav-height) + var(--liquid-nav-bottom) + 22px) !important;
+}
+
+@media (max-width: 360px) {
+  :root {
+    --liquid-nav-height: 62px;
+    --liquid-nav-gutter: 6px;
+    --liquid-nav-gap: 6px;
+  }
+  .bottom-nav { width: min(calc(100vw - 20px), 386px) !important; }
+  .nav-item svg { width: 21px !important; height: 21px !important; }
+}
+
+@media (min-width: 700px) {
+  :root {
+    --liquid-nav-height: 68px;
+    --liquid-nav-gutter: 7px;
+    --liquid-nav-gap: 7px;
+  }
+  .bottom-nav { width: min(calc(100vw - 48px), 448px) !important; }
+}
+
+@media (min-width: 900px) {
+  :root { --liquid-nav-bottom: 18px; }
+  .bottom-nav { width: min(528px, calc(100vw - 64px)) !important; }
+}
+</style>
+
+<script id="navbar-uniform-gutter-final-fix-script">
+(function () {
+  var PAGE_ORDER = ['dashboard', 'table', 'players', 'history', 'settings'];
+
+  function numberVar(el, name, fallback) {
+    var raw = getComputedStyle(el).getPropertyValue(name).trim();
+    var n = parseFloat(raw);
+    return Number.isFinite(n) ? n : fallback;
+  }
+
+  function clamp(n, min, max) {
+    return Math.max(min, Math.min(n, max));
+  }
+
+  function finalLiquidNavMetric(page) {
+    var nav = document.querySelector('.bottom-nav');
+    if (!nav) return null;
+
+    var count = PAGE_ORDER.length;
+    var logicalIndex = PAGE_ORDER.indexOf(page);
+    if (logicalIndex < 0) {
+      var nodes = Array.prototype.slice.call(nav.querySelectorAll('.nav-item'));
+      var item = nav.querySelector('.nav-item[data-page="' + page + '"]') || nav.querySelector('.nav-item.active') || nodes[0];
+      logicalIndex = Math.max(0, nodes.indexOf(item));
+      count = nodes.length || count;
+    }
+
+    var rect = nav.getBoundingClientRect();
+    var gutter = numberVar(nav, '--liquid-nav-gutter', 7);
+    var gap = numberVar(nav, '--liquid-nav-gap', gutter);
+    var usable = rect.width - (gutter * 2) - (gap * (count - 1));
+    var slotW = usable / count;
+    if (!Number.isFinite(slotW) || slotW <= 0) return null;
+
+    // RTL rail: dashboard/home is visually at the right edge, settings at the left edge.
+    var visualIndex = count - 1 - logicalIndex;
+    var x = gutter + visualIndex * (slotW + gap);
+    var w = slotW;
+
+    x = clamp(x, gutter, rect.width - gutter - w);
+    return { x: x, w: w };
+  }
+
+  function finalSetLiquidNavBetween(fromPage, toPage, progress) {
+    var nav = document.querySelector('.bottom-nav');
+    if (!nav) return;
+    var from = finalLiquidNavMetric(fromPage);
+    var to = finalLiquidNavMetric(toPage || fromPage) || from;
+    if (!from || !to) return;
+    var p = clamp(progress || 0, 0, 1);
+    var x = from.x + (to.x - from.x) * p;
+    var w = from.w + (to.w - from.w) * p;
+    nav.style.setProperty('--liquid-x', x.toFixed(2) + 'px');
+    nav.style.setProperty('--liquid-w', w.toFixed(2) + 'px');
+    nav.setAttribute('data-liquid-ready', 'true');
+  }
+
+  function finalSyncLiquidNav() {
+    var active = document.querySelector('.bottom-nav .nav-item.active') || document.querySelector('.bottom-nav .nav-item');
+    finalSetLiquidNavBetween(active ? active.getAttribute('data-page') : 'dashboard', null, 0);
+  }
+
+  window.getLiquidNavMetric = finalLiquidNavMetric;
+  window.setLiquidNavBetween = finalSetLiquidNavBetween;
+  window.syncLiquidNav = finalSyncLiquidNav;
+  try { getLiquidNavMetric = finalLiquidNavMetric; } catch (e) {}
+  try { setLiquidNavBetween = finalSetLiquidNavBetween; } catch (e) {}
+  try { syncLiquidNav = finalSyncLiquidNav; } catch (e) {}
+
+  function schedule() {
+    requestAnimationFrame(finalSyncLiquidNav);
+    setTimeout(finalSyncLiquidNav, 120);
+  }
+
+  document.addEventListener('DOMContentLoaded', schedule);
+  window.addEventListener('load', schedule, { passive: true });
+  window.addEventListener('resize', function () { setTimeout(finalSyncLiquidNav, 80); }, { passive: true });
+  window.addEventListener('orientationchange', function () { setTimeout(finalSyncLiquidNav, 260); }, { passive: true });
+  document.addEventListener('click', function (event) {
+    if (event.target && event.target.closest && event.target.closest('.bottom-nav .nav-item')) schedule();
+  }, true);
+
+  if (window.MutationObserver) {
+    var nav = document.querySelector('.bottom-nav');
+    if (nav) {
+      new MutationObserver(function () { schedule(); }).observe(nav, {
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['class']
+      });
+    }
+  }
+
+  schedule();
+})();
+</script>
+
+
+<!-- NAVBAR GEOMETRY HARD RESET: single absolute-slot model, no browser preview run -->
+<style id="navbar-absolute-slot-hard-reset">
+:root {
+  --liquid-nav-height: 64px;
+  --liquid-nav-gutter-x: 7px;
+  --liquid-nav-gutter-y: 5px;
+  --liquid-nav-gap: 7px;
+  --liquid-nav-count: 5;
+  --liquid-nav-radius: 999px;
+  --liquid-nav-bottom: max(12px, calc(env(safe-area-inset-bottom, 0px) + 8px));
+  --liquid-nav-slot: calc((100% - (var(--liquid-nav-gutter-x) * 2) - (var(--liquid-nav-gap) * 4)) / 5);
+}
+
+.bottom-nav {
+  position: fixed !important;
+  top: auto !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: var(--liquid-nav-bottom) !important;
+  transform: translate3d(-50%, 0, 0) !important;
+  -webkit-transform: translate3d(-50%, 0, 0) !important;
+  width: min(calc(100vw - 24px), 404px) !important;
+  max-width: none !important;
+  height: var(--liquid-nav-height) !important;
+  min-height: var(--liquid-nav-height) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  gap: 0 !important;
+  display: block !important;
+  direction: ltr !important;
+  overflow: hidden !important;
+  isolation: isolate !important;
+  box-sizing: border-box !important;
+  border-radius: var(--liquid-nav-radius) !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.012) 34%, rgba(255,255,255,0.030)),
+    rgba(14, 16, 20, 0.46) !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  box-shadow:
+    0 18px 38px rgba(0,0,0,0.40),
+    inset 0 1px 0 rgba(255,255,255,0.06),
+    inset 0 -1px 0 rgba(0,0,0,0.18) !important;
+  backdrop-filter: blur(24px) saturate(108%) brightness(0.98) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(108%) brightness(0.98) !important;
+  z-index: 1500 !important;
+  contain: none !important;
+  will-change: transform !important;
+}
+
+.bottom-nav::before {
+  content: "";
+  position: absolute !important;
+  top: var(--liquid-nav-gutter-y) !important;
+  bottom: var(--liquid-nav-gutter-y) !important;
+  left: var(--liquid-x, calc(var(--liquid-nav-gutter-x) + ((var(--liquid-nav-slot) + var(--liquid-nav-gap)) * 4))) !important;
+  width: var(--liquid-w, var(--liquid-nav-slot)) !important;
+  height: auto !important;
+  max-width: none !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  opacity: 0;
+  box-sizing: border-box !important;
+  border-radius: var(--liquid-nav-radius) !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.105), rgba(255,255,255,0.028)),
+    rgba(255,255,255,0.052) !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  box-shadow:
+    0 10px 20px rgba(0,0,0,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    inset 0 -1px 0 rgba(0,0,0,0.10) !important;
+  backdrop-filter: blur(18px) saturate(104%) brightness(1.00) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(104%) brightness(1.00) !important;
+  transition:
+    left var(--liquid-nav-settle-ms, 680ms) cubic-bezier(0.16, 1, 0.30, 1),
+    width var(--liquid-nav-settle-ms, 680ms) cubic-bezier(0.16, 1, 0.30, 1),
+    opacity 0.18s ease,
+    transform 0.18s ease !important;
+}
+
+.bottom-nav[data-liquid-ready="true"]::before { opacity: 1 !important; }
+.bottom-nav.liquid-nav-dragging::before { transition: none !important; }
+.bottom-nav.liquid-nav-settling::before {
+  transition:
+    left var(--liquid-nav-settle-ms, 680ms) cubic-bezier(0.16, 1, 0.30, 1),
+    width var(--liquid-nav-settle-ms, 680ms) cubic-bezier(0.16, 1, 0.30, 1),
+    opacity 0.18s ease,
+    transform 0.18s ease !important;
+}
+.bottom-nav:has(.nav-item:active)::before { transform: scale(0.985); }
+
+.bottom-nav::after {
+  content: "";
+  position: absolute !important;
+  inset: 1px !important;
+  border-radius: inherit !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  background: linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.00) 30%) !important;
+  opacity: 0.24 !important;
+}
+
+.bottom-nav .nav-item {
+  position: absolute !important;
+  top: var(--liquid-nav-gutter-y) !important;
+  bottom: var(--liquid-nav-gutter-y) !important;
+  left: var(--nav-slot-x) !important;
+  width: var(--liquid-nav-slot) !important;
+  height: auto !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  flex: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+  border-radius: var(--liquid-nav-radius) !important;
+  background: transparent !important;
+  color: rgba(255,255,255,var(--liquid-icon-alpha,0.58)) !important;
+  direction: ltr !important;
+  z-index: 2 !important;
+  transition:
+    color 0.28s ease,
+    transform 0.16s ease,
+    filter 0.28s ease !important;
+}
+
+.bottom-nav .nav-item[data-page="settings"]  { --nav-slot-i: 0; --nav-slot-x: var(--liquid-nav-gutter-x); }
+.bottom-nav .nav-item[data-page="history"]   { --nav-slot-i: 1; --nav-slot-x: calc(var(--liquid-nav-gutter-x) + ((var(--liquid-nav-slot) + var(--liquid-nav-gap)) * 1)); }
+.bottom-nav .nav-item[data-page="players"]   { --nav-slot-i: 2; --nav-slot-x: calc(var(--liquid-nav-gutter-x) + ((var(--liquid-nav-slot) + var(--liquid-nav-gap)) * 2)); }
+.bottom-nav .nav-item[data-page="table"]     { --nav-slot-i: 3; --nav-slot-x: calc(var(--liquid-nav-gutter-x) + ((var(--liquid-nav-slot) + var(--liquid-nav-gap)) * 3)); }
+.bottom-nav .nav-item[data-page="dashboard"] { --nav-slot-i: 4; --nav-slot-x: calc(var(--liquid-nav-gutter-x) + ((var(--liquid-nav-slot) + var(--liquid-nav-gap)) * 4)); --liquid-icon-nudge-x: 0.75px; }
+
+.bottom-nav .nav-item.active {
+  background: transparent !important;
+  color: rgba(255,255,255,var(--liquid-icon-alpha,1)) !important;
+  filter: none !important;
+}
+
+.bottom-nav .nav-item span { display: none !important; }
+
+.bottom-nav .nav-item svg {
+  display: block !important;
+  width: 23px !important;
+  height: 23px !important;
+  min-width: 23px !important;
+  min-height: 23px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform-box: fill-box !important;
+  transform-origin: center center !important;
+  stroke-width: 2.1 !important;
+  transform: translate3d(var(--liquid-icon-nudge-x, 0px), 0, 0) scale(var(--liquid-icon-scale,1)) !important;
+  transition:
+    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.2s ease !important;
+}
+
+.bottom-nav .nav-item.active svg {
+  transform: translate3d(var(--liquid-icon-nudge-x, 0px), 0, 0) scale(var(--liquid-icon-scale,1.05)) !important;
+  opacity: 1 !important;
+}
+
+.bottom-nav.liquid-nav-dragging .nav-item,
+.bottom-nav.liquid-nav-dragging .nav-item svg {
+  transition: none !important;
+}
+
+.bottom-nav.liquid-nav-settling .nav-item {
+  transition:
+    color var(--liquid-nav-settle-ms, 680ms) cubic-bezier(0.16, 1, 0.30, 1),
+    transform 0.16s ease !important;
+}
+.bottom-nav.liquid-nav-settling .nav-item svg {
+  transition:
+    transform var(--liquid-nav-settle-ms, 680ms) cubic-bezier(0.16, 1, 0.30, 1),
+    opacity var(--liquid-nav-settle-ms, 680ms) ease !important;
+}
+
+.bottom-nav .nav-item:active { transform: scale(0.94) !important; }
+
+.page {
+  padding-bottom: calc(var(--liquid-nav-height) + var(--liquid-nav-bottom) + 18px) !important;
+  scroll-padding-bottom: calc(var(--liquid-nav-height) + var(--liquid-nav-bottom) + 18px) !important;
+}
+.sub-page:not(.center-modal-page) {
+  padding-bottom: calc(var(--liquid-nav-height) + var(--liquid-nav-bottom) + 22px) !important;
+  scroll-padding-bottom: calc(var(--liquid-nav-height) + var(--liquid-nav-bottom) + 22px) !important;
+}
+
+@media (max-width: 360px) {
+  :root {
+    --liquid-nav-height: 62px;
+    --liquid-nav-gutter-x: 6px;
+    --liquid-nav-gutter-y: 5px;
+    --liquid-nav-gap: 6px;
+  }
+  .bottom-nav { width: min(calc(100vw - 20px), 386px) !important; }
+  .bottom-nav .nav-item svg { width: 21px !important; height: 21px !important; min-width: 21px !important; min-height: 21px !important; }
+}
+
+@media (min-width: 700px) {
+  :root {
+    --liquid-nav-height: 66px;
+    --liquid-nav-gutter-x: 8px;
+    --liquid-nav-gutter-y: 5px;
+    --liquid-nav-gap: 8px;
+  }
+  .bottom-nav { width: min(calc(100vw - 48px), 448px) !important; }
+}
+
+@media (min-width: 900px) {
+  :root { --liquid-nav-bottom: 18px; }
+  .bottom-nav { width: min(528px, calc(100vw - 64px)) !important; }
+}
+</style>
+
+<script id="navbar-absolute-slot-hard-reset-script">
+(function () {
+  var PAGE_ORDER = ['dashboard', 'table', 'players', 'history', 'settings'];
+  var VISUAL_INDEX = { settings: 0, history: 1, players: 2, table: 3, dashboard: 4 };
+
+  function cssNumber(el, name, fallback) {
+    var raw = getComputedStyle(el).getPropertyValue(name).trim();
+    var n = parseFloat(raw);
+    return Number.isFinite(n) ? n : fallback;
+  }
+
+  function clamp(n, min, max) {
+    return Math.max(min, Math.min(n, max));
+  }
+
+  function metric(page) {
+    var nav = document.querySelector('.bottom-nav');
+    if (!nav) return null;
+    var rect = nav.getBoundingClientRect();
+    var count = PAGE_ORDER.length;
+    var gx = cssNumber(nav, '--liquid-nav-gutter-x', 7);
+    var gap = cssNumber(nav, '--liquid-nav-gap', 7);
+    var usable = rect.width - (gx * 2) - (gap * (count - 1));
+    var slot = usable / count;
+    if (!Number.isFinite(slot) || slot <= 0) return null;
+
+    var i = VISUAL_INDEX[page];
+    if (!Number.isFinite(i)) {
+      var logical = PAGE_ORDER.indexOf(page);
+      i = logical >= 0 ? (count - 1 - logical) : 4;
+    }
+
+    var x = gx + i * (slot + gap);
+    var maxX = rect.width - gx - slot;
+    x = clamp(x, gx, maxX);
+    return { x: x, w: slot };
+  }
+
+  function setBetween(fromPage, toPage, progress) {
+    var nav = document.querySelector('.bottom-nav');
+    if (!nav) return;
+    var from = metric(fromPage);
+    var to = metric(toPage || fromPage) || from;
+    if (!from || !to) return;
+    var p = clamp(progress || 0, 0, 1);
+    var x = from.x + (to.x - from.x) * p;
+    var w = from.w + (to.w - from.w) * p;
+    nav.style.setProperty('--liquid-x', x.toFixed(2) + 'px');
+    nav.style.setProperty('--liquid-w', w.toFixed(2) + 'px');
+    nav.setAttribute('data-liquid-ready', 'true');
+  }
+
+  function sync() {
+    var active = document.querySelector('.bottom-nav .nav-item.active') || document.querySelector('.bottom-nav .nav-item[data-page="dashboard"]');
+    var page = active ? active.getAttribute('data-page') : 'dashboard';
+    setBetween(page, page, 0);
+  }
+
+  window.getLiquidNavMetric = metric;
+  window.setLiquidNavBetween = setBetween;
+  window.syncLiquidNav = sync;
+  try { getLiquidNavMetric = metric; } catch (e) {}
+  try { setLiquidNavBetween = setBetween; } catch (e) {}
+  try { syncLiquidNav = sync; } catch (e) {}
+
+  function schedule() {
+    requestAnimationFrame(sync);
+    setTimeout(sync, 60);
+    setTimeout(sync, 180);
+    setTimeout(sync, 360);
+  }
+
+  document.addEventListener('DOMContentLoaded', schedule);
+  window.addEventListener('load', schedule, { passive: true });
+  window.addEventListener('resize', function () { setTimeout(sync, 80); setTimeout(sync, 240); }, { passive: true });
+  window.addEventListener('orientationchange', function () { setTimeout(sync, 260); setTimeout(sync, 520); }, { passive: true });
+  document.addEventListener('click', function (event) {
+    if (event.target && event.target.closest && event.target.closest('.bottom-nav .nav-item')) schedule();
+  }, true);
+
+  if (window.MutationObserver) {
+    var nav = document.querySelector('.bottom-nav');
+    if (nav) {
+      new MutationObserver(function () { schedule(); }).observe(nav, {
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['class']
+      });
+    }
+  }
+
+  schedule();
+})();
+</script>
+
 </body>
 </html>
