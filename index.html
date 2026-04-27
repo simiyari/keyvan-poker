@@ -5666,12 +5666,12 @@ if(isPasswordSet()){showLockScreen();}else{renderDashboard();}
 <!-- iPhone/PWA placement: navbar is pulled down into the safe-area margin with --liquid-nav-bottom. -->
 <style id="final-liquid-navbar-and-page-swipe">
 :root {
-  --liquid-nav-height: 64px;
-  --liquid-nav-gutter-x: 7px;
-  --liquid-nav-gutter-y: 5px;
-  --liquid-nav-gap: 7px;
+  /* Clean iOS-style geometry: same math for every slot, no per-edge resizing. */
+  --liquid-nav-height: 70px;
+  --liquid-nav-gutter-x: 8px;
+  --liquid-nav-gutter-y: 8px;
+  --liquid-nav-gap: 8px;
   --liquid-nav-radius: 999px;
-  /* iPhone home-indicator balance: for modern iPhones resolves to about 21px. */
   --liquid-home-indicator-height: 5px;
   --liquid-home-indicator-outer-gap: clamp(6px, calc(env(safe-area-inset-bottom, 0px) * 0.24), 9px);
   --liquid-nav-bottom: calc((var(--liquid-home-indicator-outer-gap) * 2) + var(--liquid-home-indicator-height));
@@ -5692,7 +5692,7 @@ body.main-page-transitioning {
   bottom: var(--liquid-nav-bottom) !important;
   transform: translate3d(-50%, 0, 0) !important;
   -webkit-transform: translate3d(-50%, 0, 0) !important;
-  width: min(calc(100vw - 24px), 404px) !important;
+  width: min(calc(100vw - 24px), 414px) !important;
   max-width: none !important;
   height: var(--liquid-nav-height) !important;
   min-height: var(--liquid-nav-height) !important;
@@ -5706,13 +5706,13 @@ body.main-page-transitioning {
   box-sizing: border-box !important;
   border-radius: var(--liquid-nav-radius) !important;
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.012) 34%, rgba(255,255,255,0.030)),
-    rgba(14, 16, 20, 0.46) !important;
-  border: 1px solid rgba(255,255,255,0.08) !important;
+    linear-gradient(180deg, rgba(255,255,255,0.060), rgba(255,255,255,0.014) 38%, rgba(255,255,255,0.030)),
+    rgba(14, 16, 20, 0.48) !important;
+  border: 1px solid rgba(255,255,255,0.085) !important;
   box-shadow:
-    0 18px 38px rgba(0,0,0,0.40),
-    inset 0 1px 0 rgba(255,255,255,0.06),
-    inset 0 -1px 0 rgba(0,0,0,0.18) !important;
+    0 18px 42px rgba(0,0,0,0.40),
+    inset 0 1px 0 rgba(255,255,255,0.070),
+    inset 0 -1px 0 rgba(0,0,0,0.20) !important;
   backdrop-filter: blur(24px) saturate(108%) brightness(0.98) !important;
   -webkit-backdrop-filter: blur(24px) saturate(108%) brightness(0.98) !important;
   z-index: 1500 !important;
@@ -5735,15 +5735,15 @@ body.main-page-transitioning {
   box-sizing: border-box !important;
   border-radius: var(--liquid-nav-radius) !important;
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.105), rgba(255,255,255,0.028)),
-    rgba(255,255,255,0.052) !important;
-  border: 1px solid rgba(255,255,255,0.10) !important;
+    linear-gradient(180deg, rgba(255,255,255,0.118), rgba(255,255,255,0.030)),
+    rgba(255,255,255,0.060) !important;
+  border: 1px solid rgba(255,255,255,0.115) !important;
   box-shadow:
-    0 10px 20px rgba(0,0,0,0.22),
-    inset 0 1px 0 rgba(255,255,255,0.08),
+    0 10px 22px rgba(0,0,0,0.24),
+    inset 0 1px 0 rgba(255,255,255,0.090),
     inset 0 -1px 0 rgba(0,0,0,0.10) !important;
-  backdrop-filter: blur(18px) saturate(104%) brightness(1.00) !important;
-  -webkit-backdrop-filter: blur(18px) saturate(104%) brightness(1.00) !important;
+  backdrop-filter: blur(18px) saturate(105%) brightness(1.00) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(105%) brightness(1.00) !important;
   transition:
     left var(--liquid-nav-settle-ms, 620ms) cubic-bezier(0.16, 1, 0.30, 1),
     width var(--liquid-nav-settle-ms, 620ms) cubic-bezier(0.16, 1, 0.30, 1),
@@ -5759,7 +5759,7 @@ body.main-page-transitioning {
     width var(--liquid-nav-settle-ms, 620ms) cubic-bezier(0.16, 1, 0.30, 1),
     opacity 0.18s ease !important;
 }
-.bottom-nav:has(.nav-item:active)::before { transform: scale(0.985); }
+.bottom-nav:has(.nav-item:active)::before { transform: scale(0.992); }
 
 .bottom-nav::after {
   content: "";
@@ -5768,8 +5768,8 @@ body.main-page-transitioning {
   border-radius: inherit !important;
   pointer-events: none !important;
   z-index: 1 !important;
-  background: linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.00) 30%) !important;
-  opacity: 0.24 !important;
+  background: linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.00) 32%) !important;
+  opacity: 0.22 !important;
 }
 
 .bottom-nav .nav-item {
@@ -5804,7 +5804,7 @@ body.main-page-transitioning {
 .bottom-nav .nav-item[data-page="history"]   { --nav-slot-i: 1; --nav-slot-x: calc(var(--liquid-nav-gutter-x) + ((var(--liquid-nav-slot) + var(--liquid-nav-gap)) * 1)); }
 .bottom-nav .nav-item[data-page="players"]   { --nav-slot-i: 2; --nav-slot-x: calc(var(--liquid-nav-gutter-x) + ((var(--liquid-nav-slot) + var(--liquid-nav-gap)) * 2)); }
 .bottom-nav .nav-item[data-page="table"]     { --nav-slot-i: 3; --nav-slot-x: calc(var(--liquid-nav-gutter-x) + ((var(--liquid-nav-slot) + var(--liquid-nav-gap)) * 3)); }
-.bottom-nav .nav-item[data-page="dashboard"] { --nav-slot-i: 4; --nav-slot-x: calc(var(--liquid-nav-gutter-x) + ((var(--liquid-nav-slot) + var(--liquid-nav-gap)) * 4)); --liquid-icon-nudge-x: 0.75px; }
+.bottom-nav .nav-item[data-page="dashboard"] { --nav-slot-i: 4; --nav-slot-x: calc(var(--liquid-nav-gutter-x) + ((var(--liquid-nav-slot) + var(--liquid-nav-gap)) * 4)); --liquid-icon-nudge-x: 0.45px; }
 
 .bottom-nav .nav-item.active {
   background: transparent !important;
@@ -5816,15 +5816,15 @@ body.main-page-transitioning {
 
 .bottom-nav .nav-item svg {
   display: block !important;
-  width: 23px !important;
-  height: 23px !important;
-  min-width: 23px !important;
-  min-height: 23px !important;
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  min-height: 24px !important;
   margin: 0 !important;
   padding: 0 !important;
   transform-box: fill-box !important;
   transform-origin: center center !important;
-  stroke-width: 2.1 !important;
+  stroke-width: 2.08 !important;
   transform: translate3d(var(--liquid-icon-nudge-x, 0px), 0, 0) scale(var(--liquid-icon-scale,1)) !important;
   transition:
     transform var(--liquid-nav-settle-ms, 280ms) cubic-bezier(0.16, 1, 0.30, 1),
@@ -5832,7 +5832,7 @@ body.main-page-transitioning {
 }
 
 .bottom-nav .nav-item.active svg {
-  transform: translate3d(var(--liquid-icon-nudge-x, 0px), 0, 0) scale(var(--liquid-icon-scale,1.05)) !important;
+  transform: translate3d(var(--liquid-icon-nudge-x, 0px), 0, 0) scale(var(--liquid-icon-scale,1.06)) !important;
   opacity: 1 !important;
 }
 
@@ -5853,21 +5853,22 @@ body.main-page-transitioning {
 }
 
 @media (max-width: 360px) {
-  :root { --liquid-nav-height: 62px; --liquid-nav-gutter-x: 6px; --liquid-nav-gutter-y: 5px; --liquid-nav-gap: 6px; }
-  .bottom-nav { width: min(calc(100vw - 20px), 386px) !important; }
-  .bottom-nav .nav-item svg { width: 21px !important; height: 21px !important; min-width: 21px !important; min-height: 21px !important; }
+  :root { --liquid-nav-height: 66px; --liquid-nav-gutter-x: 7px; --liquid-nav-gutter-y: 7px; --liquid-nav-gap: 7px; }
+  .bottom-nav { width: min(calc(100vw - 20px), 396px) !important; }
+  .bottom-nav .nav-item svg { width: 22px !important; height: 22px !important; min-width: 22px !important; min-height: 22px !important; }
 }
 
 @media (min-width: 700px) {
-  :root { --liquid-nav-height: 66px; --liquid-nav-gutter-x: 8px; --liquid-nav-gutter-y: 5px; --liquid-nav-gap: 8px; }
-  .bottom-nav { width: min(calc(100vw - 48px), 448px) !important; }
+  :root { --liquid-nav-height: 72px; --liquid-nav-gutter-x: 9px; --liquid-nav-gutter-y: 9px; --liquid-nav-gap: 9px; }
+  .bottom-nav { width: min(calc(100vw - 48px), 456px) !important; }
 }
 
 @media (min-width: 900px) {
   :root { --liquid-nav-bottom: 18px; }
-  .bottom-nav { width: min(528px, calc(100vw - 64px)) !important; }
+  .bottom-nav { width: min(536px, calc(100vw - 64px)) !important; }
 }
 </style>
+
 
 <script id="final-liquid-navbar-and-page-swipe-script">
 (function () {
