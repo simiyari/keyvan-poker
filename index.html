@@ -6792,5 +6792,68 @@ body.has-custom-background .game-live-banner {
 }
 </style>
 
+
+
+<style id="live-banner-green-strengthen">
+/*
+  Stronger live-game green while keeping the glass/blur effect and readability.
+  Applies to the "بازی در جریان" banner on Home and Table pages.
+*/
+.game-live-banner {
+  background-color: rgba(7, 33, 16, 0.50) !important;
+  background-image:
+    radial-gradient(135% 125% at 8% 0%, rgba(64, 215, 105, 0.46), transparent 52%),
+    radial-gradient(120% 120% at 100% 100%, rgba(20, 145, 58, 0.34), transparent 56%),
+    linear-gradient(180deg, rgba(255,255,255,0.060), rgba(255,255,255,0.020) 34%, rgba(255,255,255,0.035)),
+    linear-gradient(135deg, rgba(7, 55, 22, 0.82), rgba(9, 96, 37, 0.62)) !important;
+  border-color: rgba(94, 230, 133, 0.30) !important;
+  box-shadow:
+    0 12px 30px rgba(0,0,0,0.22),
+    0 8px 28px rgba(34,169,74,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.080) !important;
+  backdrop-filter: blur(12px) saturate(128%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(128%) !important;
+}
+
+body.has-custom-background .game-live-banner {
+  background-color: rgba(7, 33, 16, 0.48) !important;
+  background-image:
+    radial-gradient(135% 125% at 8% 0%, rgba(64, 215, 105, 0.42), transparent 52%),
+    radial-gradient(120% 120% at 100% 100%, rgba(20, 145, 58, 0.30), transparent 56%),
+    linear-gradient(180deg, rgba(255,255,255,0.060), rgba(255,255,255,0.020) 34%, rgba(255,255,255,0.034)),
+    linear-gradient(135deg, rgba(7, 45, 20, 0.68), rgba(9, 86, 35, 0.54)) !important;
+  border-color: rgba(120, 238, 154, 0.24) !important;
+  box-shadow:
+    0 12px 28px rgba(0,0,0,0.18),
+    0 8px 26px rgba(34,169,74,0.10),
+    inset 0 1px 0 rgba(255,255,255,0.070) !important;
+}
+
+.game-live-banner .timer,
+.game-live-banner .glb-sub .num,
+.game-live-banner .comm-line .num,
+.game-live-banner [style*="font-size:16px"],
+.game-live-banner [style*="font-size:17px"] {
+  color: #fff !important;
+  text-shadow: 0 1px 12px rgba(0,0,0,0.30) !important;
+}
+
+.game-live-banner .glb-sub,
+.game-live-banner .comm-line {
+  color: rgba(248, 255, 250, 0.93) !important;
+}
+
+.game-live-banner .chip {
+  background: rgba(255,255,255,0.13) !important;
+  border-color: rgba(255,255,255,0.16) !important;
+  color: #fff !important;
+}
+
+.game-live-banner .live-dot {
+  background: #e8ffef !important;
+  box-shadow: 0 0 10px rgba(170,255,202,0.72) !important;
+}
+</style>
+
 </body>
 </html>
