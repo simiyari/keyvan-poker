@@ -5671,7 +5671,10 @@ if(isPasswordSet()){showLockScreen();}else{renderDashboard();}
   --liquid-nav-gutter-y: 5px;
   --liquid-nav-gap: 7px;
   --liquid-nav-radius: 999px;
-  --liquid-nav-bottom: clamp(2px, calc(env(safe-area-inset-bottom, 0px) - 26px), 12px);
+  /* iPhone home-indicator balance: for modern iPhones resolves to about 21px. */
+  --liquid-home-indicator-height: 5px;
+  --liquid-home-indicator-outer-gap: clamp(6px, calc(env(safe-area-inset-bottom, 0px) * 0.24), 9px);
+  --liquid-nav-bottom: calc((var(--liquid-home-indicator-outer-gap) * 2) + var(--liquid-home-indicator-height));
   --liquid-nav-count: 5;
   --liquid-nav-slot: calc((100% - (var(--liquid-nav-gutter-x) * 2) - (var(--liquid-nav-gap) * 4)) / 5);
 }
